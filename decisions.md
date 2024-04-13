@@ -98,7 +98,7 @@ Long Name                   | Better Name
 `func (this *ReportWriter)` | `func (w *ReportWriter)`
 `func (self *Scanner)`      | `func (s *Scanner)`
 
-[Receiver]: https://golang.org/ref/spec#Method_declarations
+[接收者]: https://golang.org/ref/spec#Method_declarations
 
 <a id="constant-names"></a>
 
