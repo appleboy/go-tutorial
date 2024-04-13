@@ -1,32 +1,25 @@
 <!--* toc_depth: 3 *-->
 
-# Go Style Guide
+# Go 風格指南
 
-https://google.github.io/styleguide/go/guide (English version)
+https://google.github.io/styleguide/go/guide (英文版)
 
-[Overview](index) | [Guide](guide) | [Decisions](decisions) |
-[Best practices](best-practices)
+[概覽](index) | [指南](guide) | [決策](decisions) |
+[最佳實踐](best-practices)
 
-**Note:** This is part of a series of documents that outline [Go Style](index)
-at Google. This document is **[normative](index#normative) and
-[canonical](index#canonical)**. See [the overview](index#about) for more
-information.
+**注意：** 這是一系列概述 Google 的 [Go 風格](index) 文件的一部分。本文件是 **[規範性](index#normative) 和 [典範性](index#canonical)** 的。更多資訊請見[概覽](index#about)。
 
 <a id="principles"></a>
 
-## Style principles
+## 風格原則
 
-There are a few overarching principles that summarize how to think about writing
-readable Go code. The following are attributes of readable code, in order of
-importance:
+有幾個總體原則概括了如何思考編寫可讀的 Go 代碼。以下是按重要性排序的可讀代碼的屬性：
 
-1.  **[Clarity]**: The code's purpose and rationale is clear to the reader.
-1.  **[Simplicity]**: The code accomplishes its goal in the simplest way
-    possible.
-1.  **[Concision]**: The code has a high signal-to-noise ratio.
-1.  **[Maintainability]**: The code is written such that it can be easily
-    maintained.
-1.  **[Consistency]**: The code is consistent with the broader Google codebase.
+1.  **[清晰性][Clarity]**：代碼的目的和理由對讀者來說是清楚的。
+1.  **[簡潔性][Simplicity]**：代碼以最簡單的方式實現其目標。
+1.  **[簡練性][Concision]**：代碼具有高信噪比。
+1.  **[可維護性][Maintainability]**：代碼的編寫使其易於維護。
+1.  **[一致性][Consistency]**：代碼與更廣泛的 Google 代碼庫保持一致。
 
 [Clarity]: #clarity
 [Simplicity]: #simplicity
@@ -36,142 +29,82 @@ importance:
 
 <a id="clarity"></a>
 
-### Clarity
+### 清晰性
 
-The core goal of readability is to produce code that is clear to the reader.
+可讀性的核心目標是產生對讀者來說清晰的代碼。
 
-Clarity is primarily achieved with effective naming, helpful commentary, and
-efficient code organization.
+清晰性主要通過有效的命名、有幫助的評論和高效的代碼組織來實現。
 
-Clarity is to be viewed through the lens of the reader, not the author of the
-code. It is more important that code be easy to read than easy to write. Clarity
-in code has two distinct facets:
+清晰性應該從讀者的角度來看，而不是代碼的作者。代碼易於閱讀比易於編寫更重要。代碼的清晰性有兩個不同的方面：
 
-*   [What is the code actually doing?](#clarity-purpose)
-*   [Why is the code doing what it does?](#clarity-rationale)
+*   [代碼實際上在做什麼？](#clarity-purpose)
+*   [代碼為什麼要這樣做？](#clarity-rationale)
 
 <a id="clarity-purpose"></a>
 
-#### What is the code actually doing?
+#### 代碼實際上在做什麼？
 
-Go is designed such that it should be relatively straightforward to see what the
-code is doing. In cases of uncertainty or where a reader may require prior
-knowledge in order to understand the code, it is worth investing time in order
-to make the code's purpose clearer for future readers. For example, it may help
-to:
+Go 的設計使得應該相對直觀地看到代碼在做什麼。在不確定的情況下，或者當讀者可能需要先驗知識才能理解代碼時，值得投入時間使代碼的目的對未來的讀者更清晰。例如，可能有助於：
 
-*   Use more descriptive variable names
-*   Add additional commentary
-*   Break up the code with whitespace and comments
-*   Refactor the code into separate functions/methods to make it more modular
+*   使用更描述性的變量名
+*   添加額外的評論
+*   用空白和評論分隔代碼
+*   將代碼重構為單獨的函數/方法使其更模塊化
 
-There is no one-size-fits-all approach here, but it is important to prioritize
-clarity when developing Go code.
+這裡沒有一刀切的方法，但在開發 Go 代碼時優先考慮清晰性是重要的。
 
 <a id="clarity-rationale"></a>
 
-#### Why is the code doing what it does?
+#### 代碼為什麼要這樣做？
 
-The code's rationale is often sufficiently communicated by the names of
-variables, functions, methods, or packages. Where it is not, it is important to
-add commentary. The "Why?" is especially important when the code contains
-nuances that a reader may not be familiar with, such as:
+代碼的理由通常通過變量、函數、方法或包的名稱充分傳達。在不是的情況下，添加評論很重要。當代碼包含讀者可能不熟悉的細微差別時，“為什麼？”尤其重要，例如：
 
-*   A nuance in the language, e.g., a closure will be capturing a loop variable,
-    but the closure is many lines away
-*   A nuance of the business logic, e.g., an access control check that needs to
-    distinguish between the actual user and someone impersonating a user
+*   語言的一個細微差別，例如，一個閉包將捕獲一個循環變量，但閉包距離很遠
+*   業務邏輯的一個細微差別，例如，一個需要區分實際用戶和冒充用戶的訪問控制檢查
 
-An API might require care to use correctly. For example, a piece of code may be
-intricate and difficult to follow for performance reasons, or a complex sequence
-of mathematical operations may use type conversions in an unexpected way. In
-these cases and many more, it is important that accompanying commentary and
-documentation explain these aspects so that future maintainers don't make a
-mistake and so that readers can understand the code without needing to
-reverse-engineer it.
+一個 API 可能需要小心使用。例如，一段代碼可能因為性能原因而錯綜複雜，難以跟隨，或者一系列複雜的數學操作可能以意想不到的方式使用類型轉換。在這些情況下，重要的是附帶的評論和文檔解釋這些方面，以便未來的維護者不會犯錯，並且讀者可以理解代碼而無需逆向工程。
 
-It is also important to be aware that some attempts to provide clarity (such as
-adding extra commentary) can actually obscure the code's purpose by adding
-clutter, restating what the code already says, contradicting the code, or adding
-maintenance burden to keep the comments up-to-date. Allow the code to speak for
-itself (e.g., by making the symbol names themselves self-describing) rather than
-adding redundant comments. It is often better for comments to explain why
-something is done, not what the code is doing.
+同樣重要的是要意識到，一些試圖提供清晰性的嘗試（例如添加額外的評論）實際上可能會通過添加雜亂、重述代碼已經說的話、與代碼矛盾或增加維護負擔來保持評論的最新狀態來模糊代碼的目的。允許代碼自己說話（例如，使符號名稱本身自我描述）而不是添加多餘的評論。評論通常更好地解釋為什麼要這樣做，而不是代碼在做什麼。
 
-The Google codebase is largely uniform and consistent. It is often the case that
-code that stands out (e.g., by using an unfamiliar pattern) is doing so for a
-good reason, typically for performance. Maintaining this property is important
-to make it clear to readers where they should focus their attention when reading
-a new piece of code.
+Google 的代碼庫在很大程度上是統一和一致的。通常情況下，代碼脫穎而出（例如，通過使用不熟悉的模式）是出於好的原因，通常是出於性能。保持這一特性對於讓讀者清楚他們在閱讀新代碼時應該專注的地方很重要。
 
-The standard library contains many examples of this principle in action. Among
-them:
+標準庫包含了許多這一原則的實例。其中包括：
 
-*   Maintainer comments in
-    [`package sort`](https://cs.opensource.google/go/go/+/refs/tags/go1.19.2:src/sort/sort.go).
-*   Good
-    [runnable examples in the same package](https://cs.opensource.google/go/go/+/refs/tags/go1.19.2:src/sort/example_search_test.go),
-    which benefit both users (they
-    [show up in godoc](https://pkg.go.dev/sort#pkg-examples)) and maintainers
-    (they [run as part of tests](decisions#examples)).
-*   [`strings.Cut`](https://pkg.go.dev/strings#Cut) is only four lines of code,
-    but they improve the
-    [clarity and correctness of callsites](https://github.com/golang/go/issues/46336).
+*   [`package sort`](https://cs.opensource.google/go/go/+/refs/tags/go1.19.2:src/sort/sort.go) 中的維護者評論。
+*   同一包中的好的
+    [可運行示例](https://cs.opensource.google/go/go/+/refs/tags/go1.19.2:src/sort/example_search_test.go)，
+    這對用戶（它們
+    [顯示在 godoc 中](https://pkg.go.dev/sort#pkg-examples)）和維護者（它們 [作為測試的一部分運行](decisions#examples)）都有益。
+*   [`strings.Cut`](https://pkg.go.dev/strings#Cut) 只有四行代碼，
+    但它們改善了
+    [調用點的清晰性和正確性](https://github.com/golang/go/issues/46336)。
 
 <a id="simplicity"></a>
 
-### Simplicity
+### 簡潔性
 
-Your Go code should be simple for those using, reading, and maintaining it.
+您的 Go 代碼應該對使用它、閱讀它和維護它的人來說是簡單的。
 
-Go code should be written in the simplest way that accomplishes its goals, both
-in terms of behavior and performance. Within the Google Go codebase, simple
-code:
+Go 代碼應該以實現其目標的最簡單方式編寫，無論是在行為還是性能方面。在 Google 的 Go 代碼庫中，簡單的代碼：
 
-*   Is easy to read from top to bottom
-*   Does not assume that you already know what it is doing
-*   Does not assume that you can memorize all of the preceding code
-*   Does not have unnecessary levels of abstraction
-*   Does not have names that call attention to something mundane
-*   Makes the propagation of values and decisions clear to the reader
-*   Has comments that explain why, not what, the code is doing to avoid future
-    deviation
-*   Has documentation that stands on its own
-*   Has useful errors and useful test failures
-*   May often be mutually exclusive with "clever" code
+*   從上到下易於閱讀
+*   不假設你已經知道它在做什麼
+*   不假設你能記住所有前面的代碼
+*   沒有不必要的抽象層次
+*   沒有引起注意某些平凡事物的名稱
+*   讓值和決策的傳播對讀者清晰
+*   有評論解釋為什麼，而不是代碼在做什麼，以避免未來的偏差
+*   有獨立的文檔
+*   有有用的錯誤和有用的測試失敗
+*   經常與“聰明”的代碼相互排斥
 
-Tradeoffs can arise between code simplicity and API usage simplicity. For
-example, it may be worthwhile to have the code be more complex so that the end
-user of the API may more easily call the API correctly. In contrast, it may also
-be worthwhile to leave a bit of extra work to the end user of the API so that
-the code remains simple and easy to understand.
+在代碼簡單性和 API 使用簡單性之間可能會出現權衡。例如，可能值得讓代碼更複雜，以便最終用戶更容易正確調用 API。相反，也可能值得留下一些額外的工作給 API 的最終用戶，以便代碼保持簡單易懂。
 
-When code needs complexity, the complexity should be added deliberately. This is
-typically necessary if additional performance is required or where there are
-multiple disparate customers of a particular library or service. Complexity may
-be justified, but it should come with accompanying documentation so that clients
-and future maintainers are able to understand and navigate the complexity. This
-should be supplemented with tests and examples that demonstrate its correct
-usage, especially if there is both a "simple" and a "complex" way to use the
-code.
+當代碼需要複雜性時，應該有意識地添加複雜性。這通常是必要的，如果需要額外的性能或有多個不同的客戶使用特定的庫或服務。複雜性可能是合理的，但它應該伴隨著相應的文檔，以便客戶和未來的維護者能夠理解和應對複雜性。這應該通過測試和示例補充，這些測試和示例展示了其正確的使用方式，特別是如果有“簡單”和“複雜”的使用代碼的方式。
 
-This principle does not imply that complex code cannot or should not be written
-in Go or that Go code is not allowed to be complex. We strive for a codebase
-that avoids unnecessary complexity so that when complexity does appear, it
-indicates that the code in question requires care to understand and maintain.
-Ideally, there should be accompanying commentary that explains the rationale and
-identifies the care that should be taken. This often arises when optimizing code
-for performance; doing so often requires a more complex approach, like
-preallocating a buffer and reusing it throughout a goroutine lifetime. When a
-maintainer sees this, it should be a clue that the code in question is
-performance-critical, and that should influence the care that is taken when
-making future changes. If employed unnecessarily, on the other hand, this
-complexity is a burden on those who need to read or change the code in the
-future.
+這一原則並不意味著複雜的代碼不能或不應該用 Go 編寫，或者 Go 代碼不允許複雜。我們努力實現一個代碼庫，避免不必要的複雜性，以便當複雜性出現時，它表明有問題的代碼需要小心理解和維護。理想情況下，應該有附帶的評論解釋理由並識別應該採取的護理。這經常出現在為性能優化代碼時；這樣做通常需要更複雜的方法，比如預分配一個緩衝區並在一個 goroutine 的生命週期內重複使用它。當維護者看到這一點時，應該是一個線索，表明有問題的代碼是性能關鍵的，這應該影響未來變更時採取的護理。另一方面，如果不必要地使用，這種複雜性對於未來需要閱讀或更改代碼的人來說是一種負擔。
 
-If code turns out to be very complex when its purpose should be simple, this is
-often a signal to revisit the implementation to see if there is a simpler way to
-accomplish the same thing.
+如果代碼的目的應該很簡單，但結果非常複雜，這通常是重新審視實現以查看是否有更簡單的方法來實現相同事物的信號。
 
 <a id="least-mechanism"></a>
 
