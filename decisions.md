@@ -271,40 +271,33 @@ Go 源代碼應該避免不必要的重複。一個常見的來源是重複的�
 
 <a id="repetitive-with-type"></a>
 
-#### Package vs. exported symbol name
+#### 套件與導出符號名稱
 
-When naming exported symbols, the name of the package is always visible outside
-your package, so redundant information between the two should be reduced or
-eliminated. If a package exports only one type and it is named after the package
-itself, the canonical name for the constructor is `New` if one is required.
+在命名導出符號時，套件的名稱在套件外總是可見的，因此兩者之間的冗餘信息應該被減少或消除。如果一個套件只導出一種類型，且以套件本身命名，則構造函數的標準名稱為 `New`（如果需要的話）。
 
-> **Examples:** Repetitive Name -> Better Name
+> **範例：** 重複的名稱 -> 更好的名稱
 >
 > *   `widget.NewWidget` -> `widget.New`
 > *   `widget.NewWidgetWithName` -> `widget.NewWithName`
 > *   `db.LoadFromDatabase` -> `db.Load`
 > *   `goatteleportutil.CountGoatsTeleported` -> `gtutil.CountGoatsTeleported`
->     or `goatteleport.Count`
-> *   `myteampb.MyTeamMethodRequest` -> `mtpb.MyTeamMethodRequest` or
+>     或 `goatteleport.Count`
+> *   `myteampb.MyTeamMethodRequest` -> `mtpb.MyTeamMethodRequest` 或
 >     `myteampb.MethodRequest`
 
 <a id="repetitive-with-type"></a>
 
-#### Variable name vs. type
+#### 變量名稱與類型
 
-The compiler always knows the type of a variable, and in most cases it is also
-clear to the reader what type a variable is by how it is used. It is only
-necessary to clarify the type of a variable if its value appears twice in the
-same scope.
+編譯器總是知道一個變量的類型，在大多數情況下，讀者也能通過變量的使用方式清楚地知道變量的類型。只有在同一作用域內變量的值出現兩次時，才需要明確變量的類型。
 
-Repetitive Name               | Better Name
+重複的名稱               | 更好的名稱
 ----------------------------- | ----------------------
 `var numUsers int`            | `var users int`
 `var nameString string`       | `var name string`
 `var primaryProject *Project` | `var primary *Project`
 
-If the value appears in multiple forms, this can be clarified either with an
-extra word like `raw` and `parsed` or with the underlying representation:
+如果值以多種形式出現，可以通過額外的單詞如 `raw` 和 `parsed` 或底層表示來進行說明：
 
 ```go
 // 好的範例:
@@ -320,16 +313,13 @@ limit, err := strconv.Atoi(limitRaw)
 
 <a id="repetitive-in-context"></a>
 
-#### External context vs. local names
+#### 外部上下文與本地名稱
 
-Names that include information from their surrounding context often create extra
-noise without benefit. The package name, method name, type name, function name,
-import path, and even filename can all provide context that automatically
-qualifies all names within.
+包含來自其周圍上下文信息的名稱經常創造額外的噪音而沒有好處。套件名稱、方法名稱、類型名稱、函數名稱、導入路徑，甚至檔案名稱都可以提供自動資格所有內部名稱的上下文。
 
 ```go
 // 不好的範例:
-// In package "ads/targeting/revenue/reporting"
+// 在套件 "ads/targeting/revenue/reporting"
 type AdsTargetingRevenueReport struct{}
 
 func (p *Project) ProjectName() string
@@ -337,7 +327,7 @@ func (p *Project) ProjectName() string
 
 ```go
 // 好的範例:
-// In package "ads/targeting/revenue/reporting"
+// 在套件 "ads/targeting/revenue/reporting"
 type Report struct{}
 
 func (p *Project) Name() string
@@ -345,19 +335,19 @@ func (p *Project) Name() string
 
 ```go
 // 不好的範例:
-// In package "sqldb"
+// 在套件 "sqldb"
 type DBConnection struct{}
 ```
 
 ```go
 // 好的範例:
-// In package "sqldb"
+// 在套件 "sqldb"
 type Connection struct{}
 ```
 
 ```go
 // 不好的範例:
-// In package "ads/targeting"
+// 在套件 "ads/targeting"
 func Process(in *pb.FooProto) *Report {
     adsTargetingID := in.GetAdsTargetingID()
 }
@@ -365,15 +355,13 @@ func Process(in *pb.FooProto) *Report {
 
 ```go
 // 好的範例:
-// In package "ads/targeting"
+// 在套件 "ads/targeting"
 func Process(in *pb.FooProto) *Report {
     id := in.GetAdsTargetingID()
 }
 ```
 
-Repetition should generally be evaluated in the context of the user of the
-symbol, rather than in isolation. For example, the following code has lots of
-names that may be fine in some circumstances, but redundant in context:
+重複通常應該在使用符號的用戶的上下文中評估，而不是孤立地。例如，以下代碼有很多名稱在某些情況下可能是好的，但在上下文中是多餘的：
 
 ```go
 // 不好的範例:
@@ -387,8 +375,7 @@ func (db *DB) UserCount() (userCount int, err error) {
 }
 ```
 
-Instead, information about names that are clear from context or usage can often
-be omitted:
+相反，從上下文或使用中清楚的名稱信息通常可以省略：
 
 ```go
 // 好的範例:
@@ -403,80 +390,55 @@ func (db *DB) UserCount() (int, error) {
 
 <a id="commentary"></a>
 
-## Commentary
+## 註解
 
-The conventions around commentary (which include what to comment, what style to
-use, how to provide runnable examples, etc.) are intended to support the
-experience of reading the documentation of a public API. See
-[Effective Go](http://golang.org/doc/effective_go.html#commentary) for more
-information.
+關於註解的慣例（包括該評論什麼、使用什麼風格、如何提供可運行的範例等）旨在支持閱讀公共 API 文檔的體驗。有關更多信息，請參見 [Effective Go](http://golang.org/doc/effective_go.html#commentary)。
 
-The best practices document's section on [documentation conventions] discusses
-this further.
+最佳實踐文件的 [文檔慣例] 部分進一步討論了這個問題。
 
-**Best Practice:** Use [doc preview] during development and code review to see
-whether the documentation and runnable examples are useful and are presented the
-way you expect them to be.
+**最佳實踐：** 在開發和代碼審查期間使用 [doc preview]，以查看文檔和可運行範例是否有用，並且是否按照您期望的方式呈現。
 
-**Tip:** Godoc uses very little special formatting; lists and code snippets
-should usually be indented to avoid linewrapping. Apart from indentation,
-decoration should generally be avoided.
+**提示：** Godoc 使用的特殊格式化非常少；列表和代碼片段通常應該縮進以避免換行。除了縮進，通常應避免裝飾。
 
 [doc preview]: best-practices#documentation-preview
-[documentation conventions]:  best-practices#documentation-conventions
+[文檔慣例]:  best-practices#documentation-conventions
 
 <a id="comment-line-length"></a>
 
-### Comment line length
+### 註解行長
 
-Ensure that commentary is readable from source even on narrow screens.
+確保即使在窄屏幕上也能從源代碼中閱讀註解。
 
-When a comment gets too long, it is recommended to wrap it into multiple
-single-line comments. When possible, aim for comments that will read well on an
-80-column wide terminal, however this is not a hard cut-off; there is no fixed
-line length limit for comments in Go. The standard library, for example, often
-chooses to break a comment based on punctuation, which sometimes leaves the
-individual lines closer to the 60-70 character mark.
+當註解太長時，建議將其拆分為多個單行註解。盡可能瞄準在 80 列寬的終端上閱讀良好的註解，但這不是一個硬性截止；Go 中沒有固定的註解行長限制。例如，標準庫通常選擇根據標點符號來斷開註解，這有時會使個別行接近 60-70 個字符標記。
 
-There is plenty of existing code in which comments exceed 80 characters in
-length. This guidance should not be used as a justification to change such code
-as part of a readability review (see [consistency](guide#consistency)), though
-teams are encouraged to opportunistically update comments to follow this
-guideline as a part of other refactors. The primary goal of this guideline is to
-ensure that all Go readability mentors make the same recommendation when and if
-recommendations are made.
+有很多現有代碼中的註解超過了 80 個字符的長度。這個指南不應該被用作在可讀性審查中更改此類代碼的理由（參見 [一致性](guide#consistency)），儘管鼓勵團隊在其他重構的過程中抓住機會更新註解以遵循這一指南。這個指南的主要目標是確保所有 Go 可讀性導師在提出建議時做出相同的建議。
 
-See this [post from The Go Blog on documentation] for more on commentary.
+有關註解的更多信息，請參見 [The Go Blog 上的文章關於文檔]。
 
-[post from The Go Blog on documentation]: https://blog.golang.org/godoc-documenting-go-code
+[The Go Blog 上的文章關於文檔]: https://blog.golang.org/godoc-documenting-go-code
 
 ```text
 # 好的範例:
-// This is a comment paragraph.
-// The length of individual lines doesn't matter in Godoc;
-// but the choice of wrapping makes it easy to read on narrow screens.
+// 這是一段註解。
+// 個別行的長度在 Godoc 中並不重要；
+// 但選擇換行的方式使其在窄屏幕上易於閱讀。
 //
-// Don't worry too much about the long URL:
+// 不用太擔心長 URL：
 // https://supercalifragilisticexpialidocious.example.com:8080/Animalia/Chordata/Mammalia/Rodentia/Geomyoidea/Geomyidae/
 //
-// Similarly, if you have other information that is made awkward
-// by too many line breaks, use your judgment and include a long line
-// if it helps rather than hinders.
+// 同樣，如果您有其他信息因過多的換行而變得尷尬，
+// 請運用您的判斷，如果包含長行有助於而不是妨礙，則包含它。
 ```
 
-Avoid comments that will wrap repeatedly on small screens, which is a poor
-reader experience.
+避免會在小屏幕上反复換行的註解，這會導致糟糕的閱讀體驗。
 
 ```text
 # 不好的範例:
-// This is a comment paragraph. The length of individual lines doesn't matter in
-Godoc;
-// but the choice of wrapping causes jagged lines on narrow screens or in code
-review,
-// which can be annoying, especially when in a comment block that will wrap
-repeatedly.
+// 這是一段註解。個別行的長度在 Godoc 中並不重要；
+// 但選擇換行的方式會在窄屏幕或代碼審查中造成參差不齊的行，
+// 這可能很煩人，尤其是在一個會反复換行的註解塊中。
 //
-// Don't worry too much about the long URL:
+// 不用太擔心長 URL：
 // https://supercalifragilisticexpialidocious.example.com:8080/Animalia/Chordata/Mammalia/Rodentia/Geomyoidea/Geomyidae/
 ```
 
