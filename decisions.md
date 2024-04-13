@@ -1,127 +1,95 @@
 <!--* toc_depth: 3 *-->
 
-# Go Style Decisions
+# Go 風格決策
 
-https://google.github.io/styleguide/go/decisions (English version)
+https://google.github.io/styleguide/go/decisions (英文版)
 
-[Overview](index) | [Guide](guide) | [Decisions](decisions) |
-[Best practices](best-practices)
+[概覽](index) | [指南](guide) | [決策](decisions) |
+[最佳實踐](best-practices)
 
-**Note:** This is part of a series of documents that outline [Go Style](index)
-at Google. This document is **[normative](index#normative) but not
-[canonical](index#canonical)**, and is subordinate to the
-[core style guide](guide). See [the overview](index#about) for more information.
+**注意：** 這是一系列概述 Google 的 [Go 風格](index) 文件的一部分。本文件是 **[規範性](index#normative) 但非 [典範性](index#canonical)**，並且從屬於 [核心風格指南](guide)。更多資訊請見[概覽](index#about)。
 
 <a id="about"></a>
 
-## About
+## 關於
 
-This document contains style decisions intended to unify and provide standard
-guidance, explanations, and examples for the advice given by the Go readability
-mentors.
+本文件包含旨在統一並提供標準指導、解釋和範例的風格決策，以供 Go 可讀性導師提供建議。
 
-This document is **not exhaustive** and will grow over time. In cases where
-[the core style guide](guide) contradicts the advice given here, **the style
-guide takes precedence**, and this document should be updated accordingly.
+本文件**非詳盡無遺**，將隨著時間的推移而增長。在 [核心風格指南](guide) 與此處提供的建議相矛盾的情況下，**風格指南優先**，並且本文件應相應更新。
 
-See [the Overview](https://google.github.io/styleguide/go#about) for the full
-set of Go Style documents.
+查看 [概覽](https://google.github.io/styleguide/go#about) 以獲得完整的 Go 風格文件集。
 
-The following sections have moved from style decisions to another part of the
-guide:
+以下部分已從風格決策移至指南的其他部分：
 
-*   **MixedCaps**: see [guide#mixed-caps](guide#mixed-caps)
+*   **混合大小寫**：見 [指南#混合大小寫](guide#mixed-caps)
     <a id="mixed-caps"></a>
 
-*   **Formatting**: see [guide#formatting](guide#formatting)
+*   **格式化**：見 [指南#格式化](guide#formatting)
     <a id="formatting"></a>
 
-*   **Line Length**: see [guide#line-length](guide#line-length)
+*   **行長**：見 [指南#行長](guide#line-length)
     <a id="line-length"></a>
 
 <a id="naming"></a>
 
-## Naming
+## 命名
 
-See the naming section within [the core style guide](guide#naming) for
-overarching guidance on naming. The following sections provide further
-clarification on specific areas within naming.
+有關命名的總體指導，請參見 [核心風格指南](guide#naming) 中的命名部分。以下部分對命名的特定領域提供了進一步的澄清。
 
 <a id="underscores"></a>
 
-### Underscores
+### 底線
 
-Names in Go should in general not contain underscores. There are three
-exceptions to this principle:
+Go 中的名稱一般不應包含底線。這個原則有三個例外：
 
-1.  Package names that are only imported by generated code may contain
-    underscores. See [package names](#package-names) for more detail around how
-    to choose multi-word package names.
-1.  Test, Benchmark and Example function names within `*_test.go` files may
-    include underscores.
-1.  Low-level libraries that interoperate with the operating system or cgo may
-    reuse identifiers, as is done in [`syscall`]. This is expected to be very
-    rare in most codebases.
+1.  僅由生成的代碼導入的套件名稱可能包含底線。有關如何選擇多詞套件名稱的更多細節，請參見 [套件名稱](#package-names)。
+1.  `*_test.go` 文件中的測試、基準測試和示例函數名稱可能包含底線。
+1.  與操作系統或 cgo 互操作的低級庫可能會重用標識符，如 [`syscall`] 所做的那樣。這在大多數代碼庫中預期非常罕見。
 
 [`syscall`]: https://pkg.go.dev/syscall#pkg-constants
 
 <a id="package-names"></a>
 
-### Package names
+### 套件名稱
 
 <a id="TOC-PackageNames"></a>
 
-Go package names should be short and contain only lowercase letters. A package
-name composed of multiple words should be left unbroken in all lowercase. For
-example, the package [`tabwriter`] is not named `tabWriter`, `TabWriter`, or
-`tab_writer`.
+Go 套件名稱應該短且僅包含小寫字母。由多個單詞組成的套件名稱應該保持不間斷的全小寫。例如，套件 [`tabwriter`] 不是命名為 `tabWriter`、`TabWriter` 或 `tab_writer`。
 
-Avoid selecting package names that are likely to be [shadowed] by commonly used
-local variable names. For example, `usercount` is a better package name than
-`count`, since `count` is a commonly used variable name.
+避免選擇可能被常用的局部變量名稱 [遮蔽] 的套件名稱。例如，`usercount` 是一個比 `count` 更好的套件名稱，因為 `count` 是一個常用的變量名稱。
 
-Go package names should not have underscores. If you need to import a package
-that does have one in its name (usually from generated or third party code), it
-must be renamed at import time to a name that is suitable for use in Go code.
+Go 套件名稱不應有底線。如果您需要導入一個包含底線的套件名稱（通常來自生成的或第三方代碼），則必須在導入時重命名為適合在 Go 代碼中使用的名稱。
 
-An exception to this is that package names that are only imported by generated
-code may contain underscores. Specific examples include:
+此規則的例外是，僅由生成的代碼導入的套件名稱可能包含底線。具體例子包括：
 
-*   Using the `_test` suffix for an external test package, for example an
-    integration test
+*   使用 `_test` 後綴的外部測試套件，例如集成測試
 
-*   Using the `_test` suffix for
-    [package-level documentation examples](https://go.dev/blog/examples)
+*   使用 `_test` 後綴的
+    [套件級文檔示例](https://go.dev/blog/examples)
 
 [`tabwriter`]: https://pkg.go.dev/text/tabwriter
-[shadowed]: best-practices#shadowing
+[遮蔽]: best-practices#shadowing
 
-Avoid uninformative package names like `util`, `utility`, `common`, `helper`,
-and so on. See more about
-[so-called "utility packages"](best-practices#util-packages).
+避免使用像 `util`、`utility`、`common`、`helper` 等無信息性的套件名稱。更多關於
+[所謂的 "工具套件"](best-practices#util-packages)。
 
-When an imported package is renamed (e.g. `import foopb
-"path/to/foo_go_proto"`), the local name for the package must comply with the
-rules above, as the local name dictates how the symbols in the package are
-referenced in the file. If a given import is renamed in multiple files,
-particularly in the same or nearby packages, the same local name should be used
-wherever possible for consistency.
+當導入的套件被重命名時（例如 `import foopb "path/to/foo_go_proto"`），套件的本地名稱必須遵守上述規則，因為本地名稱決定了文件中如何引用該套件中的符號。如果在多個文件中重命名了給定的導入，特別是在相同或相鄰的套件中，應盡可能使用相同的本地名稱以保持一致性。
 
 <!--#include file="/go/g3doc/style/includes/special-name-exception.md"-->
 
-See also: [Go blog post about package names](https://go.dev/blog/package-names).
+另見：[Go 博客關於套件名稱的文章](https://go.dev/blog/package-names)。
 
 <a id="receiver-names"></a>
 
-### Receiver names
+### 接收者名稱
 
 <a id="TOC-ReceiverNames"></a>
 
-[Receiver] variable names must be:
+[接收者] 變量名稱必須是：
 
-*   Short (usually one or two letters in length)
-*   Abbreviations for the type itself
-*   Applied consistently to every receiver for that type
+*   短的（通常是一到兩個字母長）
+*   該類型本身的縮寫
+*   對該類型的每個接收者一致應用
 
 Long Name                   | Better Name
 --------------------------- | -------------------------
