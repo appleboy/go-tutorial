@@ -102,16 +102,12 @@ Long Name                   | Better Name
 
 <a id="constant-names"></a>
 
-### Constant names
+### 常量名稱
 
-Constant names must use [MixedCaps] like all other names in Go. ([Exported]
-constants start with uppercase, while unexported constants start with
-lowercase.) This applies even when it breaks conventions in other languages.
-Constant names should not be a derivative of their values and should instead
-explain what the value denotes.
+常量名稱必須使用 [混合大小寫]，就像 Go 中的所有其他名稱一樣。（[導出] 的常量以大寫開頭，而未導出的常量以小寫開頭。）即使這樣做打破了其他語言中的慣例也適用。常量名稱不應該是其值的衍生物，而應該解釋該值表示什麼。
 
 ```go
-// Good:
+// 好的：
 const MaxPacketSize = 512
 
 const (
@@ -121,24 +117,22 @@ const (
 )
 ```
 
-[MixedCaps]: guide#mixed-caps
-[Exported]: https://tour.golang.org/basics/3
+[混合大小寫]: guide#mixed-caps
+[導出]: https://tour.golang.org/basics/3
 
-Do not use non-MixedCaps constant names or constants with a `K` prefix.
+不要使用非混合大小寫的常量名稱或帶有 `K` 前綴的常量。
 
 ```go
-// Bad:
+// 不好的範例:
 const MAX_PACKET_SIZE = 512
 const kMaxBufferSize = 1024
 const KMaxUsersPergroup = 500
 ```
 
-Name constants based on their role, not their values. If a constant does not
-have a role apart from its value, then it is unnecessary to define it as a
-constant.
+根據常量的角色命名，而不是它們的值。如果一個常量除了它的值之外沒有其他角色，那麼將它定義為常量是不必要的。
 
 ```go
-// Bad:
+// 不好的範例
 const Twelve = 12
 
 const (
@@ -151,38 +145,29 @@ const (
 
 <a id="initialisms"></a>
 
-### Initialisms
+### 首字母縮略詞
 
 <a id="TOC-Initialisms"></a>
 
-Words in names that are initialisms or acronyms (e.g., `URL` and `NATO`) should
-have the same case. `URL` should appear as `URL` or `url` (as in `urlPony`, or
-`URLPony`), never as `Url`. This also applies to `ID` when it is short for
-"identifier"; write `appID` instead of `appId`.
+名稱中作為首字母縮略詞或縮寫的單詞（例如，`URL` 和 `NATO`）應該具有相同的大小寫。`URL` 應該出現為 `URL` 或 `url`（如在 `urlPony` 或 `URLPony` 中），永遠不應該是 `Url`。這也適用於 `ID` 當它是 "identifier" 的縮寫時；寫作 `appID` 而不是 `appId`。
 
-*   In names with multiple initialisms (e.g. `XMLAPI` because it contains `XML`
-    and `API`), each letter within a given initialism should have the same case,
-    but each initialism in the name does not need to have the same case.
-*   In names with an initialism containing a lowercase letter (e.g. `DDoS`,
-    `iOS`, `gRPC`), the initialism should appear as it would in standard prose,
-    unless you need to change the first letter for the sake of [exportedness].
-    In these cases, the entire initialism should be the same case (e.g. `ddos`,
-    `IOS`, `GRPC`).
+*   在包含多個首字母縮略詞的名稱中（例如 `XMLAPI` 因為它包含 `XML` 和 `API`），給定首字母縮略詞內的每個字母應該具有相同的大小寫，但名稱中的每個首字母縮略詞不需要具有相同的大小寫。
+*   在包含含有小寫字母的首字母縮略詞的名稱中（例如 `DDoS`、`iOS`、`gRPC`），首字母縮略詞應該出現如同在標準散文中一樣，除非您需要為了 [導出性] 改變第一個字母。在這些情況下，整個首字母縮略詞應該是相同的大小寫（例如 `ddos`、`IOS`、`GRPC`）。
 
-[exportedness]: https://golang.org/ref/spec#Exported_identifiers
+[導出性]: https://golang.org/ref/spec#Exported_identifiers
 
-<!-- Keep this table narrow. If it must grow wider, replace with a list. -->
+<!-- 保持這個表格窄。如果必須變寬，用列表替換。 -->
 
-Initialism(s) | Scope      | Correct  | Incorrect
+首字母縮略詞 | 範圍       | 正確      | 錯誤
 ------------- | ---------- | -------- | --------------------------------------
-XML API       | Exported   | `XMLAPI` | `XmlApi`, `XMLApi`, `XmlAPI`, `XMLapi`
-XML API       | Unexported | `xmlAPI` | `xmlapi`, `xmlApi`
-iOS           | Exported   | `IOS`    | `Ios`, `IoS`
-iOS           | Unexported | `iOS`    | `ios`
-gRPC          | Exported   | `GRPC`   | `Grpc`
-gRPC          | Unexported | `gRPC`   | `grpc`
-DDoS          | Exported   | `DDoS`   | `DDOS`, `Ddos`
-DDoS          | Unexported | `ddos`   | `dDoS`, `dDOS`
+XML API       | 導出       | `XMLAPI` | `XmlApi`, `XMLApi`, `XmlAPI`, `XMLapi`
+XML API       | 未導出     | `xmlAPI` | `xmlapi`, `xmlApi`
+iOS           | 導出       | `IOS`    | `Ios`, `IoS`
+iOS           | 未導出     | `iOS`    | `ios`
+gRPC          | 導出       | `GRPC`   | `Grpc`
+gRPC          | 未導出     | `gRPC`   | `grpc`
+DDoS          | 導出       | `DDoS`   | `DDOS`, `Ddos`
+DDoS          | 未導出     | `ddos`   | `dDoS`, `dDOS`
 
 <!--#include file="/go/g3doc/style/includes/special-name-exception.md"-->
 
@@ -192,125 +177,99 @@ DDoS          | Unexported | `ddos`   | `dDoS`, `dDOS`
 
 <a id="TOC-Getters"></a>
 
-Function and method names should not use a `Get` or `get` prefix, unless the
-underlying concept uses the word "get" (e.g. an HTTP GET). Prefer starting the
-name with the noun directly, for example use `Counts` over `GetCounts`.
+函數和方法名稱不應使用 `Get` 或 `get` 前綴，除非底層概念使用了 "get" 這個詞（例如一個 HTTP GET）。優先直接以名詞開頭命名，例如使用 `Counts` 而不是 `GetCounts`。
 
-If the function involves performing a complex computation or executing a remote
-call, a different word like `Compute` or `Fetch` can be used in place of `Get`,
-to make it clear to a reader that the function call may take time and could
-block or fail.
+如果函數涉及執行複雜計算或執行遠程調用，可以使用 `Compute` 或 `Fetch` 等不同的詞代替 `Get`，以便讀者清楚地知道函數調用可能需要時間，並且可能會阻塞或失敗。
 
 <!--#include file="/go/g3doc/style/includes/special-name-exception.md"-->
 
 <a id="variable-names"></a>
 
-### Variable names
+### 變量名稱
 
 <a id="TOC-VariableNames"></a>
 
-The general rule of thumb is that the length of a name should be proportional to
-the size of its scope and inversely proportional to the number of times that it
-is used within that scope. A variable created at file scope may require multiple
-words, whereas a variable scoped to a single inner block may be a single word or
-even just a character or two, to keep the code clear and avoid extraneous
-information.
+一般的經驗法則是，名稱的長度應該與其範圍的大小成正比，與它在該範圍內使用的次數成反比。在文件範圍創建的變量可能需要多個單詞，而在單個內部塊範圍內的變量可能只是一個單詞甚至只是一兩個字符，以保持代碼清晰並避免多餘的資訊。
 
-Here is a rough baseline. These numeric guidelines are not strict rules. Apply
-judgement based on context, [clarity], and [concision].
+這裡是一個大致的基線。這些數字指南不是嚴格的規則。基於上下文、[清晰性] 和 [簡練性] 應用判斷。
 
-*   A small scope is one in which one or two small operations are performed, say
-    1-7 lines.
-*   A medium scope is a few small or one large operation, say 8-15 lines.
-*   A large scope is one or a few large operations, say 15-25 lines.
-*   A very large scope is anything that spans more than a page (say, more than
-    25 lines).
+*   小範圍是執行一兩個小操作的範圍，比如 1-7 行。
+*   中等範圍是幾個小操作或一個大操作，比如 8-15 行。
+*   大範圍是一個或幾個大操作，比如 15-25 行。
+*   非常大的範圍是跨越超過一頁的任何範圍（比如，超過 25 行）。
 
-[clarity]: guide#clarity
-[concision]: guide#concision
+[清晰性]: guide#clarity
+[簡練性]: guide#concision
 
-A name that might be perfectly clear (e.g., `c` for a counter) within a small
-scope could be insufficient in a larger scope and would require clarification to
-remind the reader of its purpose further along in the code. A scope in which
-there are many variables, or variables that represent similar values or
-concepts, may necessitate longer variable names than the scope suggests.
+在小範圍內可能非常清晰的名稱（例如，`c` 用於計數器）在更大的範圍內可能不夠，並且需要澄清以提醒讀者在代碼中更遠的地方其用途。在有許多變量的範圍內，或者變量代表相似的值或概念，可能需要比範圍建議的更長的變量名稱。
 
-The specificity of the concept can also help to keep a variable's name concise.
-For example, assuming there is only a single database in use, a short variable
-name like `db` that might normally be reserved for very small scopes may remain
-perfectly clear even if the scope is very large. In this case, a single word
-`database` is likely acceptable based on the size of the scope, but is not
-required as `db` is a very common shortening for the word with few alternate
-interpretations.
+概念的具體性也可以幫助保持變量名稱的簡練。例如，假設只使用一個數據庫，一個短變量名稱如 `db` 通常可能保留給非常小的範圍，即使範圍非常大也可能保持完全清晰。在這種情況下，單詞 `database` 基於範圍的大小可能是可以接受的，但不是必需的，因為 `db` 是該單詞的非常常見的縮寫，幾乎沒有其他解釋。
 
-The name of a local variable should reflect what it contains and how it is being
-used in the current context, rather than where the value originated. For
-example, it is often the case that the best local variable name is not the same
-as the struct or protocol buffer field name.
+局部變量的名稱應該反映它包含的內容以及它在當前上下文中的使用方式，而不是值的來源。例如，通常情況下，最好的局部變量名稱與結構或協議緩衝區字段名稱不同。
 
-In general:
+一般來說：
 
-*   Single-word names like `count` or `options` are a good starting point.
-*   Additional words can be added to disambiguate similar names, for example
-    `userCount` and `projectCount`.
-*   Do not simply drop letters to save typing. For example `Sandbox` is
-    preferred over `Sbx`, particularly for exported names.
-*   Omit [types and type-like words] from most variable names.
-    *   For a number, `userCount` is a better name than `numUsers` or
-        `usersInt`.
-    *   For a slice, `users` is a better name than `userSlice`.
-    *   It is acceptable to include a type-like qualifier if there are two
-        versions of a value in scope, for example you might have an input stored
-        in `ageString` and use `age` for the parsed value.
-*   Omit words that are clear from the [surrounding context]. For example, in
-    the implementation of a `UserCount` method, a local variable called
-    `userCount` is probably redundant; `count`, `users`, or even `c` are just as
-    readable.
+*   單詞名稱如 `count` 或 `options` 是一個好的起點。
+*   可以添加額外的單詞來消除相似名稱的歧義，例如 `userCount` 和 `projectCount`。
+*   不要簡單地刪除字母來節省打字。例如，`Sandbox` 比 `Sbx` 更好，特別是對於導出的名稱。
+*   從大多數變量名稱中省略 [類型和類型化的詞]。
+    *   對於一個數字，`userCount` 是一個比 `numUsers` 或 `usersInt` 更好的名稱。
+    *   對於一個切片，`users` 是一個比 `userSlice` 更好的名稱。
+    *   如果範圍內有兩個版本的值，可以接受包含類型化的限定詞，例如你可能有一個存儲在 `ageString` 中的輸入，並使用 `age` 作為解析後的值。
+*   省略從 [周圍上下文] 中清楚的詞。例如，在 `UserCount` 方法的實現中，一個叫做 `userCount` 的局部變量可能是多餘的；`count`、`users` 或甚至 `c` 一樣可讀。
 
-[types and type-like words]: #repetitive-with-type
-[surrounding context]: #repetitive-in-context
+[類型和類型化的詞]: #repetitive-with-type
+[周圍上下文]: #repetitive-in-context
 
 <a id="v"></a>
 
-#### Single-letter variable names
+#### 單字母變量名稱
 
-Single-letter variable names can be a useful tool to minimize
-[repetition](#repetition), but can also make code needlessly opaque. Limit their
-use to instances where the full word is obvious and where it would be repetitive
-for it to appear in place of the single-letter variable.
+單字母變量名稱可以是一個有用的工具來最小化
+[重複](#repetition)，但也可能使代碼不必要地晦澀。將它們的使用限制在完整單詞是明顯的情況下，並且如果單字母變量代替完整單詞會重複。
 
-In general:
+一般來說：
 
-*   For a [method receiver variable], a one-letter or two-letter name is
-    preferred.
-*   Using familiar variable names for common types is often helpful:
-    *   `r` for an `io.Reader` or `*http.Request`
-    *   `w` for an `io.Writer` or `http.ResponseWriter`
-*   Single-letter identifiers are acceptable as integer loop variables,
-    particularly for indices (e.g., `i`) and coordinates (e.g., `x` and `y`).
-*   Abbreviations can be acceptable loop identifiers when the scope is short,
-    for example `for _, n := range nodes { ... }`.
+*   對於 [方法接收者變量]，一個字母或兩個字母的名稱是首選。
+*   對於常見類型使用熟悉的變量名稱通常很有幫助：
+    *   `r` 用於 `io.Reader` 或 `*http.Request`
+    *   `w` 用於 `io.Writer` 或 `http.ResponseWriter`
+*   單字母標識符作為整數循環變量是可以接受的，特別是對於索引（例如，`i`）和坐標（例如，`x` 和 `y`）。
+*   當範圍短時，縮寫可以作為可接受的循環標識符，例如 `for _, n := range nodes { ... }`。
 
-[method receiver variable]: #receiver-names
+[方法接收者變量]: #receiver-names
 
 <a id="repetition"></a>
 
-### Repetition
+### 重複
 
 <!--
-Note to future editors:
+未來編輯者注意：
 
-Do not use the term "stutter" to refer to cases when a name is repetitive.
+不要使用 "stutter" 這個詞來指代名稱重複的情況。
 -->
 
-A piece of Go source code should avoid unnecessary repetition. One common source
-of this is repetitive names, which often include unnecessary words or repeat
-their context or type. Code itself can also be unnecessarily repetitive if the
-same or a similar code segment appears multiple times in close proximity.
+Go 源代碼應該避免不必要的重複。一個常見的來源是重複的名稱，這些名稱經常包含不必要的詞或重複它們的上下文或類型。如果相同或類似的代碼段在接近的位置多次出現，代碼本身也可能是不必要地重複的。
 
-Repetitive naming can come in many forms, including:
+重複命名可以有多種形式，包括：
 
 <a id="repetitive-with-package"></a>
+
+#### 套件與導出符號名稱
+
+在命名導出符號時，套件名稱在套件外部始終可見，因此應該減少或消除兩者之間的冗餘資訊。如果一個套件只導出一種類型，並且它以套件本身命名，如果需要構造函數，則標準名稱為 `New`。
+
+> **例子：** 重複的名稱 -> 更好的名稱
+>
+> *   `widget.NewWidget` -> `widget.New`
+> *   `widget.NewWidgetWithName` -> `widget.NewWithName`
+> *   `db.LoadFromDatabase` -> `db.Load`
+> *   `goatteleportutil.CountGoatsTeleported` -> `gtutil.CountGoatsTeleported`
+>     或 `goatteleport.Count`
+> *   `myteampb.MyTeamMethodRequest` -> `mtpb.MyTeamMethodRequest` 或
+>     `myteampb.MethodRequest`
+
+<a id="repetitive-with-type"></a>
 
 #### Package vs. exported symbol name
 
@@ -348,13 +307,13 @@ If the value appears in multiple forms, this can be clarified either with an
 extra word like `raw` and `parsed` or with the underlying representation:
 
 ```go
-// Good:
+// 好的範例:
 limitStr := r.FormValue("limit")
 limit, err := strconv.Atoi(limitStr)
 ```
 
 ```go
-// Good:
+// 好的範例:
 limitRaw := r.FormValue("limit")
 limit, err := strconv.Atoi(limitRaw)
 ```
@@ -369,7 +328,7 @@ import path, and even filename can all provide context that automatically
 qualifies all names within.
 
 ```go
-// Bad:
+// 不好的範例:
 // In package "ads/targeting/revenue/reporting"
 type AdsTargetingRevenueReport struct{}
 
@@ -377,7 +336,7 @@ func (p *Project) ProjectName() string
 ```
 
 ```go
-// Good:
+// 好的範例:
 // In package "ads/targeting/revenue/reporting"
 type Report struct{}
 
@@ -385,19 +344,19 @@ func (p *Project) Name() string
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 // In package "sqldb"
 type DBConnection struct{}
 ```
 
 ```go
-// Good:
+// 好的範例:
 // In package "sqldb"
 type Connection struct{}
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 // In package "ads/targeting"
 func Process(in *pb.FooProto) *Report {
     adsTargetingID := in.GetAdsTargetingID()
@@ -405,7 +364,7 @@ func Process(in *pb.FooProto) *Report {
 ```
 
 ```go
-// Good:
+// 好的範例:
 // In package "ads/targeting"
 func Process(in *pb.FooProto) *Report {
     id := in.GetAdsTargetingID()
@@ -417,7 +376,7 @@ symbol, rather than in isolation. For example, the following code has lots of
 names that may be fine in some circumstances, but redundant in context:
 
 ```go
-// Bad:
+// 不好的範例:
 func (db *DB) UserCount() (userCount int, err error) {
     var userCountInt64 int64
     if dbLoadError := db.LoadFromDatabase("count(distinct users)", &userCountInt64); dbLoadError != nil {
@@ -432,7 +391,7 @@ Instead, information about names that are clear from context or usage can often
 be omitted:
 
 ```go
-// Good:
+// 好的範例:
 func (db *DB) UserCount() (int, error) {
     var count int64
     if err := db.Load("count(distinct users)", &count); err != nil {
@@ -492,7 +451,7 @@ See this [post from The Go Blog on documentation] for more on commentary.
 [post from The Go Blog on documentation]: https://blog.golang.org/godoc-documenting-go-code
 
 ```text
-# Good:
+# 好的範例:
 // This is a comment paragraph.
 // The length of individual lines doesn't matter in Godoc;
 // but the choice of wrapping makes it easy to read on narrow screens.
@@ -509,7 +468,7 @@ Avoid comments that will wrap repeatedly on small screens, which is a poor
 reader experience.
 
 ```text
-# Bad:
+# 不好的範例:
 // This is a comment paragraph. The length of individual lines doesn't matter in
 Godoc;
 // but the choice of wrapping causes jagged lines on narrow screens or in code
@@ -534,7 +493,7 @@ described. An article ("a", "an", "the") can precede the name to make it read
 more naturally.
 
 ```go
-// Good:
+// 好的範例:
 // A Request represents a request to run a command.
 type Request struct { ...
 
@@ -551,7 +510,7 @@ A documentation comment applies to the following symbol, or the group of fields
 if it appears in a struct.
 
 ```go
-// Good:
+// 好的範例:
 // Options configure the group management service.
 type Options struct {
     // General setup:
@@ -592,7 +551,7 @@ for struct fields) can be simple phrases that assume the field name is the
 subject.
 
 ```go
-// Good:
+// 好的範例:
 // A Server handles serving quotes from the collected works of Shakespeare.
 type Server struct {
     // BaseDir points to the base directory under which Shakespeare's works are stored.
@@ -639,7 +598,7 @@ name of the function itself and the type of the result parameters are often
 sufficiently clear.
 
 ```go
-// Good:
+// 好的範例:
 func (n *Node) Parent1() *Node
 func (n *Node) Parent2() (*Node, error)
 ```
@@ -648,7 +607,7 @@ If a function returns two or more parameters of the same type, adding names can
 be useful.
 
 ```go
-// Good:
+// 好的範例:
 func (n *Node) Children() (left, right *Node, err error)
 ```
 
@@ -656,7 +615,7 @@ If the caller must take action on particular result parameters, naming them can
 help suggest what the action is:
 
 ```go
-// Good:
+// 好的範例:
 // WithTimeout returns a context that will be canceled no later than d duration
 // from now.
 //
@@ -673,7 +632,7 @@ Don't use named result parameters when the names produce
 [unnecessary repetition](#repetitive-with-type).
 
 ```go
-// Bad:
+// 不好的範例:
 func (n *Node) Parent1() (node *Node)
 func (n *Node) Parent2() (node *Node, err error)
 ```
@@ -713,7 +672,7 @@ Package comments must appear immediately above the package clause with no blank
 line between the comment and the package name. Example:
 
 ```go
-// Good:
+// 好的範例:
 // Package math provides basic constants and mathematical functions.
 //
 // This package does not guarantee bit-identical results across architectures.
@@ -727,7 +686,7 @@ Comments for `main` packages have a slightly different form, where the name of
 the `go_binary` rule in the BUILD file takes the place of the package name.
 
 ```go
-// Good:
+// 好的範例:
 // The seed_generator command is a utility that generates a Finch seed file
 // from a set of JSON study configs.
 package main
@@ -739,7 +698,7 @@ it is required even though it does not strictly match the spelling of the
 command-line invocation.
 
 ```go
-// Good:
+// 好的範例:
 // Binary seed_generator ...
 // Command seed_generator ...
 // Program seed_generator ...
@@ -763,7 +722,7 @@ Tips:
     (for binaries) and template examples.
 
     ```go
-    // Good:
+    // 好的範例:
     /*
     The seed_generator command is a utility that generates a Finch seed file
     from a set of JSON study configs.
@@ -801,7 +760,7 @@ their names, and their aliases must have a `pb` suffix. See
 [proto and stub best practices]: best-practices#import-protos
 
 ```go
-// Good:
+// 好的範例:
 import (
     fspb "path/to/package/foo_service_go_proto"
 )
@@ -817,7 +776,7 @@ may include the version number.
 packages in vendored directories.
 
 ```go
-// Good:
+// 好的範例:
 import (
     core "github.com/kubernetes/api/core/v1"
     meta "github.com/kubernetes/apimachinery/pkg/apis/meta/v1beta1"
@@ -842,7 +801,7 @@ Imports should be organized in two groups:
 *   Other (project and vendored) packages
 
 ```go
-// Good:
+// 好的範例:
 package main
 
 import (
@@ -869,7 +828,7 @@ this:
 Example:
 
 ```go
-// Good:
+// 好的範例:
 package main
 
 import (
@@ -954,7 +913,7 @@ Do **not** use this feature in the Google codebase; it makes it harder to tell
 where the functionality is coming from.
 
 ```go
-// Bad:
+// 不好的範例:
 package foo_test
 
 import (
@@ -966,7 +925,7 @@ var myThing = Bar() // Bar defined in package foo; no qualification needed.
 ```
 
 ```go
-// Good:
+// 好的範例:
 package foo_test
 
 import (
@@ -991,7 +950,7 @@ Use `error` to signal that a function can fail. By convention, `error` is the
 last result parameter.
 
 ```go
-// Good:
+// 好的範例:
 func Good() error { /* ... */ }
 ```
 
@@ -1002,7 +961,7 @@ otherwise. Commonly, the non-error return values are their zero values, but this
 cannot be assumed.
 
 ```go
-// Good:
+// 好的範例:
 func GoodLookup() (*Result, error) {
     // ...
     if err != nil {
@@ -1018,7 +977,7 @@ can get wrapped into an interface and thus become a non-nil value (see the
 [Go FAQ entry on the topic][nil error]).
 
 ```go
-// Bad:
+// 不好的範例:
 func Bad() *os.PathError { /*...*/ }
 ```
 
@@ -1040,12 +999,12 @@ because error strings usually appear within other context before being printed
 to the user.
 
 ```go
-// Bad:
+// 不好的範例:
 err := fmt.Errorf("Something bad happened.")
 ```
 
 ```go
-// Good:
+// 好的範例:
 err := fmt.Errorf("something bad happened")
 ```
 
@@ -1054,7 +1013,7 @@ failure, API response, or other UI) depends, but should typically be
 capitalized.
 
 ```go
-// Good:
+// 好的範例:
 log.Infof("Operation aborted: %v", err)
 log.Errorf("Operation aborted: %v", err)
 t.Errorf("Op(%q) failed unexpectedly; err=%v", args, err)
@@ -1082,7 +1041,7 @@ In the rare circumstance where it is appropriate to ignore or discard an error
 fail), an accompanying comment should explain why this is safe.
 
 ```go
-// Good:
+// 好的範例:
 var b *bytes.Buffer
 
 n, _ := b.Write(p) // never returns a non-nil error
@@ -1105,7 +1064,7 @@ null, or the empty string to signal errors or missing results. This is known as
 in-band error handling.
 
 ```go
-// Bad:
+// 不好的範例:
 // Lookup returns the value for key or -1 if there is no mapping for key.
 func Lookup(key string) int
 ```
@@ -1114,7 +1073,7 @@ Failing to check for an in-band error value can lead to bugs and can attribute
 errors to the wrong function.
 
 ```go
-// Bad:
+// 不好的範例:
 // The following line returns an error that Parse failed for the input value,
 // whereas the failure was that there is no mapping for missingKey.
 return Parse(Lookup(missingKey))
@@ -1128,7 +1087,7 @@ an error or a boolean when no explanation is needed, and should be the final
 return value.
 
 ```go
-// Good:
+// 好的範例:
 // Lookup returns the value for key or ok=false if there is no mapping for key.
 func Lookup(key string) (value string, ok bool)
 ```
@@ -1139,7 +1098,7 @@ causes a compile-time error, since `Lookup(key)` has 2 outputs.
 Returning errors in this way encourages more robust and explicit error handling:
 
 ```go
-// Good:
+// 好的範例:
 value, ok := Lookup(key)
 if !ok {
     return fmt.Errorf("no value for %q", key)
@@ -1169,7 +1128,7 @@ Code that runs if the terminal condition is not met should appear after the `if`
 block, and should not be indented in an `else` clause.
 
 ```go
-// Good:
+// 好的範例:
 if err != nil {
     // error handling
     return // or continue, etc.
@@ -1178,7 +1137,7 @@ if err != nil {
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 if err != nil {
     // error handling
 } else {
@@ -1192,7 +1151,7 @@ if err != nil {
 > statement:
 >
 > ```go
-> // Good:
+> // 好的範例:
 > x, err := f()
 > if err != nil {
 >   // error handling
@@ -1203,7 +1162,7 @@ if err != nil {
 > ```
 >
 > ```go
-> // Bad:
+> // 不好的範例:
 > if x, err := f(); err != nil {
 >   // error handling
 >   return
@@ -1246,7 +1205,7 @@ current package.
 *   Include field names for types from other packages.
 
     ```go
-    // Good:
+    // 好的範例:
     // https://pkg.go.dev/encoding/csv#Reader
     r := csv.Reader{
       Comma: ',',
@@ -1261,14 +1220,14 @@ current package.
     needed to avoid unnecessary coupling.
 
     ```go
-    // Bad:
+    // 不好的範例:
     r := csv.Reader{',', '#', 4, false, false, false, false}
     ```
 
 *   For package-local types, field names are optional.
 
     ```go
-    // Good:
+    // 好的範例:
     okay := Type{42}
     also := internalType{4, 2}
     ```
@@ -1280,7 +1239,7 @@ current package.
     <!-- TODO: Maybe a better example here that doesn't have many fields. -->
 
     ```go
-    // Good:
+    // 好的範例:
     okay := StructWithLotsOfFields{
       field1: 1,
       field2: "two",
@@ -1304,12 +1263,12 @@ line as a value in a multi-line struct literal. In these cases, the line should
 end with a comma and the closing brace should appear on the next line.
 
 ```go
-// Good:
+// 好的範例:
 good := []*Type{{Key: "value"}}
 ```
 
 ```go
-// Good:
+// 好的範例:
 good := []*Type{
     {Key: "multi"},
     {Key: "line"},
@@ -1317,14 +1276,14 @@ good := []*Type{
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 bad := []*Type{
     {Key: "multi"},
     {Key: "line"}}
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 bad := []*Type{
     {
         Key: "value"},
@@ -1343,7 +1302,7 @@ literals is only permitted when both of the following are true.
     other expression)
 
 ```go
-// Good:
+// 好的範例:
 good := []*Type{
     { // Not cuddled
         Field: "value",
@@ -1355,7 +1314,7 @@ good := []*Type{
 ```
 
 ```go
-// Good:
+// 好的範例:
 good := []*Type{{ // Cuddled correctly
     Field: "value",
 }, {
@@ -1364,7 +1323,7 @@ good := []*Type{{ // Cuddled correctly
 ```
 
 ```go
-// Good:
+// 好的範例:
 good := []*Type{
     first, // Can't be cuddled
     {Field: "second"},
@@ -1372,7 +1331,7 @@ good := []*Type{
 ```
 
 ```go
-// Good:
+// 好的範例:
 okay := []*pb.Type{pb.Type_builder{
     Field: "first", // Proto Builders may be cuddled to save vertical space
 }.Build(), pb.Type_builder{
@@ -1381,7 +1340,7 @@ okay := []*pb.Type{pb.Type_builder{
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 bad := []*Type{
     first,
     {
@@ -1400,7 +1359,7 @@ project, when the repetitive type names are on lines that are far apart and can
 remind the reader of the context.
 
 ```go
-// Good:
+// 好的範例:
 good := []*Type{
     {A: 42},
     {A: 43},
@@ -1408,7 +1367,7 @@ good := []*Type{
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 repetitive := []*Type{
     &Type{A: 42},
     &Type{A: 43},
@@ -1416,7 +1375,7 @@ repetitive := []*Type{
 ```
 
 ```go
-// Good:
+// 好的範例:
 good := map[Type1]*Type2{
     {A: 1}: {B: 2},
     {A: 3}: {B: 4},
@@ -1424,7 +1383,7 @@ good := map[Type1]*Type2{
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 repetitive := map[Type1]*Type2{
     Type1{A: 1}: &Type2{B: 2},
     Type1{A: 3}: &Type2{B: 4},
@@ -1448,7 +1407,7 @@ following struct draws attention to the only option that is being specified.
 [Zero-value]: https://golang.org/ref/spec#The_zero_value
 
 ```go
-// Bad:
+// 不好的範例:
 import (
   "github.com/golang/leveldb"
   "github.com/golang/leveldb/db"
@@ -1471,7 +1430,7 @@ ldb := leveldb.Open("/my/table", &db.Options{
 ```
 
 ```go
-// Good:
+// 好的範例:
 import (
   "github.com/golang/leveldb"
   "github.com/golang/leveldb/db"
@@ -1549,7 +1508,7 @@ slice. Built-in functions like `len` and `cap` behave as expected on `nil`
 slices.
 
 ```go
-// Good:
+// 好的範例:
 import "fmt"
 
 var s []int         // nil
@@ -1568,12 +1527,12 @@ source of a return value), prefer the nil initialization to reduce the risk of
 bugs by callers.
 
 ```go
-// Good:
+// 好的範例:
 var t []string
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 t := []string{}
 ```
 
@@ -1581,14 +1540,14 @@ Do not create APIs that force their clients to make distinctions between nil and
 the empty slice.
 
 ```go
-// Good:
+// 好的範例:
 // Ping pings its targets.
 // Returns hosts that successfully responded.
 func Ping(hosts []string) ([]string, error) { ... }
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 // Ping pings its targets and returns a list of hosts
 // that successfully responded. Can be empty if the input was empty.
 // nil signifies that a system error occurred.
@@ -1603,7 +1562,7 @@ than `== nil`.
 This implementation accepts both `nil` and zero-length slices as "empty":
 
 ```go
-// Good:
+// 好的範例:
 // describeInts describes s with the given prefix, unless s is empty.
 func describeInts(prefix string, s []int) {
     if len(s) == 0 {
@@ -1616,7 +1575,7 @@ func describeInts(prefix string, s []int) {
 Instead of relying on the distinction as a part of the API:
 
 ```go
-// Bad:
+// 不好的範例:
 func maybeInts() []int { /* ... */ }
 
 // describeInts describes s with the given prefix; pass nil to skip completely.
@@ -1645,7 +1604,7 @@ indented code block. If this is unavoidable, leave a space to separate the code
 in the block from the wrapped line.
 
 ```go
-// Bad:
+// 不好的範例:
 if longCondition1 && longCondition2 &&
     // Conditions 3 and 4 have the same indentation as the code within the if.
     longCondition3 && longCondition4 {
@@ -1672,7 +1631,7 @@ break the line in a way that does not make subsequent lines look like part of
 the function body in a confusing way:
 
 ```go
-// Bad:
+// 不好的範例:
 func (r *SomeType) SomeLongFunctionName(foo1, foo2, foo3 string,
     foo4, foo5, foo6 int) {
     foo7 := bar(foo1)
@@ -1686,7 +1645,7 @@ the call sites of functions that would otherwise have many arguments.
 Lines can often be shortened by factoring out local variables.
 
 ```go
-// Good:
+// 好的範例:
 local := helper(some, parameters, here)
 good := foo.Call(list, of, parameters, local)
 ```
@@ -1695,12 +1654,12 @@ Similarly, function and method calls should not be separated based solely on
 line length.
 
 ```go
-// Good:
+// 好的範例:
 good := foo.Call(long, list, of, parameters, all, on, one, line)
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 bad := foo.Call(long, list, of, parameters,
     with, arbitrary, line, breaks)
 ```
@@ -1710,12 +1669,12 @@ Instead, use an [option struct](best-practices#option-structure) or add more
 detail to the function documentation.
 
 ```go
-// Good:
+// 好的範例:
 good := server.New(ctx, server.Options{Port: 42})
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 bad := server.New(
     ctx,
     42, // Port
@@ -1727,7 +1686,7 @@ call is too long), it is always permissible to add line breaks if it aids in
 understanding the call.
 
 ```go
-// Good:
+// 好的範例:
 canvas.RenderCube(cube,
     x0, y0, z0,
     x0, y0, z1,
@@ -1750,14 +1709,14 @@ lines. The decision about where the line breaks should go is best made based on
 semantic groupings of inputs, rather than based purely on line length.
 
 ```go
-// Good:
+// 好的範例:
 log.Warningf("Database key (%q, %d, %q) incompatible in transaction started by (%q, %d, %q)",
     currentCustomer, currentOffset, currentKey,
     txCustomer, txOffset, txKey)
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 log.Warningf("Database key (%q, %d, %q) incompatible in"+
     " transaction started by (%q, %d, %q)",
     currentCustomer, currentOffset, currentKey, txCustomer,
@@ -1772,7 +1731,7 @@ An `if` statement should not be line broken; multi-line `if` clauses can lead to
 [indentation confusion](#indentation-confusion).
 
 ```go
-// Bad:
+// 不好的範例:
 // The second if statement is aligned with the code within the if block, causing
 // indentation confusion.
 if db.CurrentStatusIs(db.InTransaction) &&
@@ -1785,7 +1744,7 @@ If the short-circuit behavior is not required, the boolean operands can be
 extracted directly:
 
 ```go
-// Good:
+// 好的範例:
 inTransaction := db.CurrentStatusIs(db.InTransaction)
 keysMatch := db.ValuesEqual(db.TransactionKey(), row.Key())
 if inTransaction && keysMatch {
@@ -1797,7 +1756,7 @@ There may also be other locals that can be extracted, especially if the
 conditional is already repetitive:
 
 ```go
-// Good:
+// 好的範例:
 uid := user.GetUniqueUserID()
 if db.UserIsAdmin(uid) || db.UserHasPermission(uid, perms.ViewServerConfig) || db.UserHasPermission(uid, perms.CreateGroup) {
     // ...
@@ -1805,7 +1764,7 @@ if db.UserIsAdmin(uid) || db.UserHasPermission(uid, perms.ViewServerConfig) || d
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 if db.UserIsAdmin(user.GetUniqueUserID()) || db.UserHasPermission(user.GetUniqueUserID(), perms.ViewServerConfig) || db.UserHasPermission(user.GetUniqueUserID(), perms.CreateGroup) {
     // ...
 }
@@ -1816,7 +1775,7 @@ ensure that the [braces match](#literal-matching-braces) to avoid
 [indentation confusion](#indentation-confusion).
 
 ```go
-// Good:
+// 好的範例:
 if err := db.RunInTransaction(func(tx *db.TX) error {
     return tx.Execute(userUpdate, x, y, z)
 }); err != nil {
@@ -1825,7 +1784,7 @@ if err := db.RunInTransaction(func(tx *db.TX) error {
 ```
 
 ```go
-// Good:
+// 好的範例:
 if _, err := client.Update(ctx, &upb.UserUpdateRequest{
     ID:   userID,
     User: user,
@@ -1839,7 +1798,7 @@ can always let the line simply be long if there is no elegant way to refactor
 it:
 
 ```go
-// Good:
+// 好的範例:
 for i, max := 0, collection.Size(); i < max && !collection.HasPendingWriters(); i++ {
     // ...
 }
@@ -1848,7 +1807,7 @@ for i, max := 0, collection.Size(); i < max && !collection.HasPendingWriters(); 
 Often, though, there is:
 
 ```go
-// Good:
+// 好的範例:
 for i, max := 0, collection.Size(); i < max; i++ {
     if collection.HasPendingWriters() {
         break
@@ -1860,7 +1819,7 @@ for i, max := 0, collection.Size(); i < max; i++ {
 `switch` and `case` statements should also remain on a single line.
 
 ```go
-// Good:
+// 好的範例:
 switch good := db.TransactionStatus(); good {
 case db.TransactionStarting, db.TransactionActive, db.TransactionWaiting:
     // ...
@@ -1872,7 +1831,7 @@ default:
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 switch bad := db.TransactionStatus(); bad {
 case db.TransactionStarting,
     db.TransactionActive,
@@ -1890,7 +1849,7 @@ If the line is excessively long, indent all cases and separate them with a blank
 line to avoid [indentation confusion](#indentation-confusion):
 
 ```go
-// Good:
+// 好的範例:
 switch db.TransactionStatus() {
 case
     db.TransactionStarting,
@@ -1910,7 +1869,7 @@ In conditionals comparing a variable to a constant, place the variable value on
 the left hand side of the equality operator:
 
 ```go
-// Good:
+// 好的範例:
 if result == "foo" {
   // ...
 }
@@ -1920,7 +1879,7 @@ Instead of the less clear phrasing where the constant comes first
 (["Yoda style conditionals"](https://en.wikipedia.org/wiki/Yoda_conditions)):
 
 ```go
-// Bad:
+// 不好的範例:
 if "foo" == result {
   // ...
 }
@@ -1945,7 +1904,7 @@ In general, do not copy a value of type `T` if its methods are associated with
 the pointer type, `*T`.
 
 ```go
-// Bad:
+// 不好的範例:
 b1 := bytes.Buffer{}
 b2 := b1
 ```
@@ -1957,7 +1916,7 @@ contain fields that should not be copied.
 These are acceptable:
 
 ```go
-// Good:
+// 好的範例:
 type Record struct {
   buf bytes.Buffer
   // other fields omitted
@@ -1973,7 +1932,7 @@ func Consumer(r *Record) {...}
 But these are usually wrong:
 
 ```go
-// Bad:
+// 不好的範例:
 type Record struct {
   buf bytes.Buffer
   // other fields omitted
@@ -2026,7 +1985,7 @@ exclusively at
 [regexp.MustCompile](https://golang.org/pkg/regexp/#MustCompile)).
 
 ```go
-// Good:
+// 好的範例:
 func MustParse(version string) *Version {
     v, err := Parse(version)
     if err != nil {
@@ -2046,7 +2005,7 @@ for example in struct fields of [table driven tests](#table-driven-tests), as
 functions that return errors cannot be directly assigned to a struct field.
 
 ```go
-// Good:
+// 好的範例:
 func mustMarshalAny(t *testing.T, m proto.Message) *anypb.Any {
   t.Helper()
   any, err := anypb.New(m)
@@ -2090,7 +2049,7 @@ They should not be used when
 with some refactoring):
 
 ```go
-// Bad:
+// 不好的範例:
 func Version(o *servicepb.Object) (*version.Version, error) {
     // Return error instead of using Must functions.
     v := version.MustParse(o.GetVersionString())
@@ -2115,7 +2074,7 @@ needed can cause other subtle and hard-to-diagnose problems. Sending on a
 channel that has been closed causes a panic.
 
 ```go
-// Bad:
+// 不好的範例:
 ch := make(chan int)
 ch <- 42
 close(ch)
@@ -2136,7 +2095,7 @@ Code that follows best practices around context usage often helps make this
 clear. It is conventionally managed with a `context.Context`:
 
 ```go
-// Good:
+// 好的範例:
 func (w *Worker) Run(ctx context.Context) error {
     // ...
     for item := range w.q {
@@ -2156,7 +2115,7 @@ In contrast, the following code is careless about when its spawned goroutines
 finish:
 
 ```go
-// Bad:
+// 不好的範例:
 func (w *Worker) Run() {
     // ...
     for item := range w.q {
@@ -2240,7 +2199,7 @@ Do not export interfaces that the users of the package do not need.
 [tott-438]: https://testing.googleblog.com/2017/08/code-health-eliminate-yagni-smells.html
 
 ```go
-// Good:
+// 好的範例:
 package consumer // consumer.go
 
 type Thinger interface { Thing() bool }
@@ -2249,7 +2208,7 @@ func Foo(t Thinger) string { ... }
 ```
 
 ```go
-// Good:
+// 好的範例:
 package consumer // consumer_test.go
 
 type fakeThinger struct{ ... }
@@ -2259,7 +2218,7 @@ if Foo(fakeThinger{...}) == "x" { ... }
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 package producer
 
 type Thinger interface { Thing() bool }
@@ -2271,7 +2230,7 @@ func NewThinger() Thinger { return defaultThinger{ ... } }
 ```
 
 ```go
-// Good:
+// 好的範例:
 package producer
 
 type Thinger struct{ ... }
@@ -2370,7 +2329,7 @@ The list below spells out each case in further detail:
     slice, use a value rather than a pointer.
 
     ```go
-    // Good:
+    // 好的範例:
     type Buffer []byte
 
     func (b Buffer) Len() int { return len(b) }
@@ -2379,7 +2338,7 @@ The list below spells out each case in further detail:
 *   If the method needs to mutate the receiver, the receiver must be a pointer.
 
     ```go
-    // Good:
+    // 好的範例:
     type Counter int
 
     func (c *Counter) Inc() { *c++ }
@@ -2395,7 +2354,7 @@ The list below spells out each case in further detail:
     are [`sync.Mutex`] and other synchronization types.
 
     ```go
-    // Good:
+    // 好的範例:
     type Counter struct {
         mu    sync.Mutex
         total int
@@ -2425,7 +2384,7 @@ The list below spells out each case in further detail:
     intention of mutability clear to the reader.
 
     ```go
-    // Good:
+    // 好的範例:
     type Counter struct {
         m *Metric
     }
@@ -2439,7 +2398,7 @@ The list below spells out each case in further detail:
     does not need to be modified, use a value.
 
     ```go
-    // Good:
+    // 好的範例:
     type User string
 
     func (u User) String() { return string(u) }
@@ -2449,7 +2408,7 @@ The list below spells out each case in further detail:
     pointer.
 
     ```go
-    // Good:
+    // 好的範例:
     // See https://pkg.go.dev/net/http#Header.
     type Header map[string][]string
 
@@ -2461,7 +2420,7 @@ The list below spells out each case in further detail:
     right choice.
 
     ```go
-    // Good:
+    // 好的範例:
     // See https://pkg.go.dev/time#Time.
     type Time struct { /* omitted */ }
 
@@ -2498,7 +2457,7 @@ C-style behavior. Use a comment rather than `break` if you want to clarify the
 purpose of an empty clause.
 
 ```go
-// Good:
+// 好的範例:
 switch x {
 case "A", "B":
     buf.WriteString(x)
@@ -2510,7 +2469,7 @@ default:
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 switch x {
 case "A", "B":
     buf.WriteString(x)
@@ -2593,14 +2552,14 @@ Go's format functions (`fmt.Printf` etc.) have a `%q` verb which prints strings
 inside double-quotation marks.
 
 ```go
-// Good:
+// 好的範例:
 fmt.Printf("value %q looks like English text", someText)
 ```
 
 Prefer using `%q` over doing the equivalent manually, using `%s`:
 
 ```go
-// Bad:
+// 不好的範例:
 fmt.Printf("value \"%s\" looks like English text", someText)
 // Avoid manually wrapping strings with single-quotes too:
 fmt.Printf("value '%s' looks like English text", someText)
@@ -2638,14 +2597,14 @@ name should be in snake case, and the variable name should be the equivalent
 name in camel case.
 
 ```go
-// Good:
+// 好的範例:
 var (
     pollInterval = flag.Duration("poll_interval", time.Minute, "Interval to use for polling.")
 )
 ```
 
 ```go
-// Bad:
+// 不好的範例:
 var (
     poll_interval = flag.Int("pollIntervalSeconds", 60, "Interval to use for polling in seconds.")
 )
@@ -2771,7 +2730,7 @@ The convention that `context.Context` comes first in functions also applies to
 test helpers.
 
 ```go
-// Good:
+// 好的範例:
 func readTestFile(ctx context.Context, t *testing.T, path string) string {}
 ```
 
@@ -2827,7 +2786,7 @@ unseeded, the generator is completely predictable. Seeded with
 `crypto/rand`'s Reader, and if you need text, print to hexadecimal or base64.
 
 ```go
-// Good:
+// 好的範例:
 import (
     "crypto/rand"
     // "encoding/base64"
@@ -2880,7 +2839,7 @@ to other test helpers as well). For more on the distinction between test helpers
 and assertion libraries, see [best practices](best-practices#test-functions).
 
 ```go
-// Bad:
+// 不好的範例:
 var obj BlogPost
 
 assert.IsNotNil(t, "obj", obj)
@@ -2894,7 +2853,7 @@ Assertion libraries tend to either stop the test early (if `assert` calls
 right:
 
 ```go
-// Bad:
+// 不好的範例:
 package assert
 
 func IsNotNil(t *testing.T, name string, val any) {
@@ -2923,7 +2882,7 @@ Assertion libraries often factor out comparisons and equality checks. Prefer
 using standard libraries such as [`cmp`] and [`fmt`] instead:
 
 ```go
-// Good:
+// 好的範例:
 var got BlogPost
 
 want := BlogPost{
@@ -2941,7 +2900,7 @@ error that can be used in the test's failure message instead of passing
 `*testing.T` and calling its error reporting methods:
 
 ```go
-// Good:
+// 好的範例:
 func postLength(p BlogPost) int { return len(p.Body) }
 
 func TestBlogPost_VeritableRant(t *testing.T) {
@@ -3028,7 +2987,7 @@ a struct before comparing them. Just compare the return values individually and
 print them.
 
 ```go
-// Good:
+// 好的範例:
 val, multi, tail, err := strconv.UnquoteChar(`\"Fran & Freddie's Diner\"`, '"')
 if err != nil {
   t.Fatalf(...)
@@ -3104,7 +3063,7 @@ handled by `==`, such as slices. Use [`cmp.Equal`] for equality comparison and
 [`cmp.Diff`] to obtain a human-readable diff between objects.
 
 ```go
-// Good:
+// 好的範例:
 want := &Doc{
     Type:     "blogPost",
     Comments: 2,
@@ -3123,7 +3082,7 @@ passed the [`protocmp.Transform`] option.
 <!-- The order of want and got here is deliberate. See comment in #print-diffs. -->
 
 ```go
-// Good:
+// 好的範例:
 if diff := cmp.Diff(want, got, protocmp.Transform()); diff != "" {
     t.Errorf("Foo() returned unexpected difference in protobuf messages (-want +got):\n%s", diff)
 }
@@ -3289,7 +3248,7 @@ some other error, then consider using [`errors.Is`] or `cmp` with
 > the want field a `bool`. You can then use a simple comparison with `!=`.
 >
 > ```go
-> // Good:
+> // 好的範例:
 > err := f(test.input)
 > gotErr := err != nil
 > if gotErr != test.wantErr {
@@ -3347,7 +3306,7 @@ Subtests may be run individually using flags to the [Go test runner] or Bazel
 > since they have [special meaning for test filters].
 >
 > > ```sh
-> > # Bad:
+> > # 不好的範例:
 > > # Assuming TestTime and t.Run("America/New_York", ...)
 > > bazel test :mytest --test_filter="Time/New_York"    # Runs nothing!
 > > bazel test :mytest --test_filter="Time//New_York"   # Correct, but awkward.
@@ -3357,7 +3316,7 @@ To [identify the inputs] of the function, include them in the test's failure
 messages, where they won't be escaped by the test runner.
 
 ```go
-// Good:
+// 好的範例:
 func TestTranslate(t *testing.T) {
     data := []struct {
         name, desc, srcLang, dstLang, srcText, wantDstText string
@@ -3386,7 +3345,7 @@ func TestTranslate(t *testing.T) {
 Here are a few examples of things to avoid:
 
 ```go
-// Bad:
+// 不好的範例:
 // Too wordy.
 t.Run("check that there is no mention of scratched records or hovercrafts", ...)
 // Slashes cause problems on the command line.
@@ -3421,7 +3380,7 @@ different names or add extra facilities such as subtests or setup and cleanup
 functions. Always keep [useful test failures](#useful-test-failures) in mind.
 
 ```go
-// Good:
+// 好的範例:
 func TestCompare(t *testing.T) {
     compareTests := []struct {
         a, b string
@@ -3482,7 +3441,7 @@ conditional behavior inside the test case. The extra clarity from the
 duplication between the test cases is necessary for readability.
 
 ```go
-// Good:
+// 好的範例:
 type decodeCase struct {
     name   string
     input  string
@@ -3534,7 +3493,7 @@ type of `Codex` is used per test case in the case setup. (The highlighted parts
 run afoul of the advice from [TotT: Data Driven Traps!][tott-97] .)
 
 ```go
-// Bad:
+// 不好的範例:
 type decodeCase struct {
   name   string
   input  string
@@ -3587,7 +3546,7 @@ your tests or printing the inputs. Nobody wants to go through your test table
 and count the entries in order to figure out which test case is failing.
 
 ```go
-// Bad:
+// 不好的範例:
 tests := []struct {
     input, want string
 }{
@@ -3627,7 +3586,7 @@ a [context](#contexts) parameter, if present, and before any remaining
 parameters.
 
 ```go
-// Good:
+// 好的範例:
 func TestSomeFunction(t *testing.T) {
     golden := readFile(t, "testdata/golden-result.txt")
     // ... tests against golden ...
@@ -3677,7 +3636,7 @@ To write a test in the same package:
 *   Do not explicitly import the package to be tested
 
 ```build
-# Good:
+# 好的範例:
 go_library(
     name = "foo",
     srcs = ["foo.go"],
@@ -3717,7 +3676,7 @@ package as the code being tested. In these cases, use a package name with the
 *   If an integration test does not have an obvious library that it belongs to
 
     ```go
-    // Good:
+    // 好的範例:
     package gmailintegration_test
 
     import "testing"
@@ -3726,7 +3685,7 @@ package as the code being tested. In these cases, use a package name with the
 *   If defining the tests in the same package results in circular dependencies
 
     ```go
-    // Good:
+    // 好的範例:
     package fireworks_test
 
     import (
