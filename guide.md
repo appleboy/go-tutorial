@@ -108,66 +108,40 @@ Go 代碼應該以實現其目標的最簡單方式編寫，無論是在行為�
 
 <a id="least-mechanism"></a>
 
-#### Least mechanism
+#### 最少機制
 
-Where there are several ways to express the same idea, prefer the one that uses
-the most standard tools. Sophisticated machinery often exists, but should not be
-employed without reason. It is easy to add complexity to code as needed, whereas
-it is much harder to remove existing complexity after it has been found to be
-unnecessary.
+當有幾種方式可以表達相同的想法時，優先選擇使用最標準工具的那一個。復雜的機制經常存在，但不應該無故使用。向代碼中添加復雜性很容易，而在發現不必要後移除現有復雜性則要困難得多。
 
-1.  Aim to use a core language construct (for example a channel, slice, map,
-    loop, or struct) when sufficient for your use case.
-2.  If there isn't one, look for a tool within the standard library (like an
-    HTTP client or a template engine).
-3.  Finally, consider whether there is a core library in the Google codebase
-    that is sufficient before introducing a new dependency or creating your own.
+1.  當足夠滿足您的用例時，優先使用核心語言構造（例如通道、切片、映射、循環或結構）。
+2.  如果沒有，尋找標準庫中的工具（如 HTTP 客戶端或模板引擎）。
+3.  最後，考慮在引入新依賴或創建自己的東西之前，Google 代碼庫中是否有足夠的核心庫。
 
-As an example, consider production code that contains a flag bound to a variable
-with a default value which must be overridden in tests. Unless intending to test
-the program's command-line interface itself (say, with `os/exec`), it is simpler
-and therefore preferable to override the bound value directly rather than by
-using `flag.Set`.
+例如，考慮包含一個綁定到具有默認值的變量的標誌的生產代碼，該默認值必須在測試中覆蓋。除非打算測試程序的命令行界面本身（比如使用 `os/exec`），直接覆蓋綁定值而不是使用 `flag.Set` 更簡單，因此更可取。
 
-Similarly, if a piece of code requires a set membership check, a boolean-valued
-map (e.g., `map[string]bool`) often suffices. Libraries that provide set-like
-types and functionality should only be used if more complicated operations are
-required that are impossible or overly complicated with a map.
+同樣，如果一段代碼需要一個集合成員資格檢查，一個布爾值映射（例如 `map[string]bool`）通常就足夠了。只有在需要更複雜的操作且無法或過於複雜地使用映射時，才應該使用提供類似集合類型和功能的庫。
 
 <a id="concision"></a>
 
-### Concision
+### 簡練性
 
-Concise Go code has a high signal-to-noise ratio. It is easy to discern the
-relevant details, and the naming and structure guide the reader through these
-details.
+簡練的 Go 代碼具有高信噪比。相關細節容易辨識，命名和結構引導讀者了解這些細節。
 
-There are many things that can get in the way of surfacing the most salient
-details at any given time:
+有許多事情可能妨礙在任何特定時間顯示最突出的細節：
 
-*   Repetitive code
-*   Extraneous syntax
-*   [Opaque names](#naming)
-*   Unnecessary abstraction
-*   Whitespace
+*   重複的代碼
+*   多餘的語法
+*   [不透明的名稱](#naming)
+*   不必要的抽象
+*   空白
 
-Repetitive code especially obscures the differences between each
-nearly-identical section, and requires a reader to visually compare similar
-lines of code to find the changes. [Table-driven testing] is a good example of a
-mechanism that can concisely factor out the common code from the important
-details of each repetition, but the choice of which pieces to include in the
-table will have an impact on how easy the table is to understand.
+重複的代碼尤其掩蓋了每個幾乎相同部分之間的差異，並要求讀者視覺比較類似的代碼行以找到變化。[表驅動測試]是一個好的機制，可以簡潔地從每次重複的重要細節中提取出共同的代碼，但選擇哪些部分包含在表中將影響表的易於理解程度。
 
-When considering multiple ways to structure code, it is worth considering which
-way makes important details the most apparent.
+在考慮多種結構代碼的方式時，值得考慮哪種方式使重要細節最為明顯。
 
-Understanding and using common code constructions and idioms are also important
-for maintaining a high signal-to-noise ratio. For example, the following code
-block is very common in [error handling], and the reader can quickly understand
-the purpose of this block.
+理解和使用常見的代碼構造和慣用語也對於保持高信噪比很重要。例如，以下代碼塊在[錯誤處理]中非常常見，讀者可以快速理解這個塊的目的。
 
 ```go
-// Good:
+// 好的：
 if err := doSomething(); err != nil {
     // ...
 }
@@ -190,36 +164,21 @@ if err := doSomething(); err == nil { // if NO error
 
 <a id="maintainability"></a>
 
-### Maintainability
+### 可維護性
 
-Code is edited many more times than it is written. Readable code not only makes
-sense to a reader who is trying to understand how it works, but also to the
-programmer who needs to change it. Clarity is key.
+代碼被編輯的次數比被寫的次數多得多。可讀的代碼不僅對試圖理解其運作方式的讀者有意義，對需要更改它的程序員也有意義。清晰是關鍵。
 
-Maintainable code:
+可維護的代碼:
 
-*   Is easy for a future programmer to modify correctly
-*   Has APIs that are structured so that they can grow gracefully
-*   Is clear about the assumptions that it makes and chooses abstractions that
-    map to the structure of the problem, not to the structure of the code
-*   Avoids unnecessary coupling and doesn't include features that are not used
-*   Has a comprehensive test suite to ensure promised behaviors are maintained
-    and important logic is correct, and the tests provide clear, actionable
-    diagnostics in case of failure
+* 方便未來的程序員正確修改
+* 擁有結構化的 API，使其可以優雅地成長
+* 清楚它所做的假設，選擇映射到問題結構而非代碼結構的抽象
+* 避免不必要的耦合，不包括未使用的功能
+* 擁有全面的測試套件以確保維護承諾的行為並確保重要邏輯正確，並且測試在失敗時提供清晰、可操作的診斷
 
-When using abstractions like interfaces and types which by definition remove
-information from the context in which they are used, it is important to ensure
-that they provide sufficient benefit. Editors and IDEs can connect directly to a
-method definition and show the corresponding documentation when a concrete type
-is used, but can only refer to an interface definition otherwise. Interfaces are
-a powerful tool, but come with a cost, since the maintainer may need to
-understand the specifics of the underlying implementation in order to correctly
-use the interface, which must be explained within the interface documentation or
-at the call-site.
+在使用接口和類型等抽象時，這些抽象本質上從它們被使用的上下文中移除了資訊，確保它們提供足夠的好處很重要。當使用具體類型時，編輯器和 IDE 可以直接連接到方法定義並顯示相應的文檔，但否則只能參考接口定義。接口是一個強大的工具，但帶來了成本，因為維護者可能需要理解底層實現的具體情況才能正確使用接口，這必須在接口文檔或調用現場解釋。
 
-Maintainable code also avoids hiding important details in places that are easy
-to overlook. For example, in each of the following lines of code, the presence
-or lack of a single character is critical to understand the line:
+可維護的代碼還避免在容易忽視的地方隱藏重要細節。例如，在以下每行代碼中，單個字符的存在或缺乏對於理解該行至關重要：
 
 ```go
 // Bad:
@@ -235,9 +194,7 @@ if user, err = db.UserByID(userID); err != nil {
 leap := (year%4 == 0) && (!(year%100 == 0) || (year%400 == 0))
 ```
 
-Neither of these are incorrect, but both could be written in a more explicit
-fashion, or could have an accompanying comment that calls attention to the
-important behavior:
+這兩者都不是錯誤的，但都可以用更明確的方式書寫，或者可以有一個附帶的評論來提醒注意重要的行為:
 
 ```go
 // Good:
