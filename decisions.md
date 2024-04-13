@@ -305,12 +305,6 @@ limitStr := r.FormValue("limit")
 limit, err := strconv.Atoi(limitStr)
 ```
 
-```go
-// 好的範例:
-limitRaw := r.FormValue("limit")
-limit, err := strconv.Atoi(limitRaw)
-```
-
 <a id="repetitive-in-context"></a>
 
 #### 外部上下文與本地名稱
