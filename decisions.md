@@ -438,15 +438,11 @@ func (db *DB) UserCount() (int, error) {
 
 <a id="doc-comments"></a>
 
-### Doc comments
+### 文件註解
 
 <a id="TOC-DocComments"></a>
 
-All top-level exported names must have doc comments, as should unexported type
-or function declarations with unobvious behavior or meaning. These comments
-should be [full sentences] that begin with the name of the object being
-described. An article ("a", "an", "the") can precede the name to make it read
-more naturally.
+所有頂層導出名稱必須有文件註解，未導出的類型或函數聲明如果行為或含義不明顯也應該有。這些註解應該是以被描述對象的名稱開頭的[完整句子]。名稱前可以加上冠詞（"a", "an", "the"）使其讀起來更自然。
 
 ```go
 // 好的範例:
@@ -457,13 +453,11 @@ type Request struct { ...
 func Encode(w io.Writer, req *Request) { ...
 ```
 
-Doc comments appear in [Godoc](https://pkg.go.dev/) and are surfaced by IDEs,
-and therefore should be written for anyone using the package.
+文件註解出現在 [Godoc](https://pkg.go.dev/) 中，並且會被 IDE 展示，因此應該為使用套件的任何人編寫。
 
-[full sentences]: #comment-sentences
+[完整句子]: #comment-sentences
 
-A documentation comment applies to the following symbol, or the group of fields
-if it appears in a struct.
+文件註解適用於以下符號，或者如果它出現在結構體中則適用於字段群。
 
 ```go
 // 好的範例:
@@ -482,29 +476,19 @@ type Options struct {
 }
 ```
 
-**Best Practice:** If you have doc comments for unexported code, follow the same
-custom as if it were exported (namely, starting the comment with the unexported
-name). This makes it easy to export it later by simply replacing the unexported
-name with the newly-exported one across both comments and code.
+**最佳實踐：** 如果您對未導出的代碼有文件註解，請遵循與其被導出時相同的習慣（即，註解以未導出的名稱開頭）。這樣通過簡單替換註解和代碼中的未導出名稱與新導出的名稱，就容易將其後來導出。
 
 <a id="comment-sentences"></a>
 
-### Comment sentences
+### 註解句子
 
 <a id="TOC-CommentSentences"></a>
 
-Comments that are complete sentences should be capitalized and punctuated like
-standard English sentences. (As an exception, it is okay to begin a sentence
-with an uncapitalized identifier name if it is otherwise clear. Such cases are
-probably best done only at the beginning of a paragraph.)
+完整句子的註解應該像標準英語句子一樣使用大寫並加上標點符號。（作為一個例外，如果其他方面清楚，以未大寫的標識符名稱開始一個句子是可以接受的。這種情況最好只在段落的開頭進行。）
 
-Comments that are sentence fragments have no such requirements for punctuation
-or capitalization.
+句子片段的註解對於標點符號或大寫沒有這樣的要求。
 
-[Documentation comments] should always be complete sentences, and as such should
-always be capitalized and punctuated. Simple end-of-line comments (especially
-for struct fields) can be simple phrases that assume the field name is the
-subject.
+[文件註解] 應該總是完整句子，因此應該總是使用大寫和標點符號。簡單的行尾註解（特別是對於結構體字段）可以是假設字段名是主題的簡單短語。
 
 ```go
 // 好的範例:
@@ -523,35 +507,29 @@ type Server struct {
 }
 ```
 
-[Documentation comments]: #doc-comments
+[文件註解]: #doc-comments
 
 <a id="examples"></a>
 
-### Examples
+### 範例
 
 <a id="TOC-Examples"></a>
 
-Packages should clearly document their intended usage. Try to provide a
-[runnable example]; examples show up in Godoc. Runnable examples belong in the
-test file, not the production source file. See this example ([Godoc], [source]).
+套件應該清楚地記錄其預期用法。嘗試提供一個[可運行的範例]；範例會出現在 Godoc 中。可運行的範例屬於測試文件，而不是生產源文件。參見此範例（[Godoc]，[源代碼]）。
 
-[runnable example]: http://blog.golang.org/examples
+[可運行的範例]: http://blog.golang.org/examples
 [Godoc]: https://pkg.go.dev/time#example-Duration
-[source]: https://cs.opensource.google/go/go/+/HEAD:src/time/example_test.go
+[源代碼]: https://cs.opensource.google/go/go/+/HEAD:src/time/example_test.go
 
-If it isn't feasible to provide a runnable example, example code can be provided
-within code comments. As with other code and command-line snippets in comments,
-it should follow standard formatting conventions.
+如果不可行提供一個可運行的範例，範例代碼可以在代碼註解中提供。與註解中的其他代碼和命令行片段一樣，它應該遵循標準格式化慣例。
 
 <a id="named-result-parameters"></a>
 
-### Named result parameters
+### 命名結果參數
 
 <a id="TOC-NamedResultParameters"></a>
 
-When naming parameters, consider how function signatures appear in Godoc. The
-name of the function itself and the type of the result parameters are often
-sufficiently clear.
+在命名參數時，考慮函數簽名在 Godoc 中的顯示方式。函數本身的名稱和結果參數的類型通常已經足夠清楚。
 
 ```go
 // 好的範例:
@@ -559,16 +537,14 @@ func (n *Node) Parent1() *Node
 func (n *Node) Parent2() (*Node, error)
 ```
 
-If a function returns two or more parameters of the same type, adding names can
-be useful.
+如果函數返回兩個或多個相同類型的參數，添加名稱可能會有用。
 
 ```go
 // 好的範例:
 func (n *Node) Children() (left, right *Node, err error)
 ```
 
-If the caller must take action on particular result parameters, naming them can
-help suggest what the action is:
+如果調用者必須對特定結果參數採取行動，命名它們可以幫助建議什麼是行動：
 
 ```go
 // 好的範例:
@@ -580,12 +556,9 @@ help suggest what the action is:
 func WithTimeout(parent Context, d time.Duration) (ctx Context, cancel func())
 ```
 
-In the code above, cancellation is a particular action a caller must take.
-However, were the result parameters written as `(Context, func())` alone, it
-would be unclear what is meant by "cancel function".
+在上面的代碼中，取消是調用者必須採取的特定行動。然而，如果結果參數僅寫為 `(Context, func())`，則不清楚所指的“取消函數”是什麼。
 
-Don't use named result parameters when the names produce
-[unnecessary repetition](#repetitive-with-type).
+不要在名稱產生[不必要的重複](#repetitive-with-type)時使用命名結果參數。
 
 ```go
 // 不好的範例:
@@ -593,28 +566,19 @@ func (n *Node) Parent1() (node *Node)
 func (n *Node) Parent2() (node *Node, err error)
 ```
 
-Don't name result parameters in order to avoid declaring a variable inside the
-function. This practice results in unnecessary API verbosity at the cost of
-minor implementation brevity.
+不要為了避免在函數內聲明一個變量而命名結果參數。這種做法導致不必要的 API 冗長，代價是輕微的實現簡潔。
 
-[Naked returns] are acceptable only in a small function. Once it's a
-medium-sized function, be explicit with your returned values. Similarly, do not
-name result parameters just because it enables you to use naked returns.
-[Clarity](guide#clarity) is always more important than saving a few lines in
-your function.
+[裸返回] 只在小函數中是可接受的。一旦它是一個中等大小的函數，請明確地返回您的值。同樣，不要僅因為它使您能夠使用裸返回就命名結果參數。[清晰度](guide#clarity)總是比在函數中節省幾行更重要。
 
-It is always acceptable to name a result parameter if its value must be changed
-in a deferred closure.
+如果必須在延遲閉包中更改結果參數的值，則命名結果參數始終是可接受的。
 
-> **Tip:** Types can often be clearer than names in function signatures.
-> [GoTip #38: Functions as Named Types] demonstrates this.
+> **提示：** 在函數簽名中，類型往往比名稱更清晰。
+> [GoTip #38: 函數作為命名類型] 展示了這一點。
 >
-> In, [`WithTimeout`] above, the real code uses a [`CancelFunc`] instead of a
-> raw `func()` in the result parameter list and requires little effort to
-> document.
+> 在上面的 [`WithTimeout`] 中，真正的代碼使用了一個 [`CancelFunc`] 而不是原始的 `func()` 作為結果參數列表，並且很少需要文檔來說明。
 
-[Naked returns]: https://tour.golang.org/basics/7
-[GoTip #38: Functions as Named Types]: https://google.github.io/styleguide/go/index.html#gotip
+[裸返回]: https://tour.golang.org/basics/7
+[GoTip #38: 函數作為命名類型]: https://google.github.io/styleguide/go/index.html#gotip
 [`WithTimeout`]: https://pkg.go.dev/context#WithTimeout
 [`CancelFunc`]: https://pkg.go.dev/context#CancelFunc
 
