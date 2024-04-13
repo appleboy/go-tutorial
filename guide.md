@@ -217,145 +217,98 @@ var (
 leap := leap4 && (!leap100 || leap400)
 ```
 
-In the same way, a helper function that hides critical logic or an important
-edge-case could make it easy for a future change to fail to account for it
-properly.
+在同樣的方式下，一個隱藏關鍵邏輯或重要邊界情況的輔助函數可能會讓未來的更改未能適當地考慮到它。
 
-Predictable names are another feature of maintainable code. A user of a package
-or a maintainer of a piece of code should be able to predict the name of a
-variable, method, or function in a given context. Function parameters and
-receiver names for identical concepts should typically share the same name, both
-to keep documentation understandable and to facilitate refactoring code with
-minimal overhead.
+可預測的名稱是可維護代碼的另一個特點。包的使用者或代碼的維護者應該能夠在給定的上下文中預測變量、方法或函數的名稱。對於相同概念的函數參數和接收者名稱通常應該共享相同的名稱，既為了保持文檔的可理解性，也為了便於以最小的開銷重構代碼。
 
-Maintainable code minimizes its dependencies (both implicit and explicit).
-Depending on fewer packages means fewer lines of code that can affect behavior.
-Avoiding dependencies on internal or undocumented behavior makes code less
-likely to impose a maintenance burden when those behaviors change in the future.
+可維護的代碼最小化其依賴性（無論是隱式的還是顯式的）。依賴較少的包意味著可以影響行為的代碼行更少。避免依賴內部或未記載的行為使代碼不太可能在未來這些行為變化時帶來維護負擔。
 
-When considering how to structure or write code, it is worth taking the time to
-think through ways in which the code may evolve over time. If a given approach
-is more conducive to easier and safer future changes, that is often a good
-trade-off, even if it means a slightly more complicated design.
+在考慮如何結構化或編寫代碼時，值得花時間思考代碼可能隨時間演變的方式。如果某種方法更有利於更容易和更安全的未來變更，那通常是一個好的權衡，即使它意味著略微複雜的設計。
 
 <a id="consistency"></a>
 
-### Consistency
+### 一致性
 
-Consistent code is code that looks, feels, and behaves like similar code
-throughout the broader codebase, within the context of a team or package, and
-even within a single file.
+一致的代碼是看起來、感覺和行為像整個代碼庫中類似代碼的代碼，在團隊或包的上下文中，甚至在單個文件中也是如此。
 
-Consistency concerns do not override any of the principles above, but if a tie
-must be broken, it is often beneficial to break it in favor of consistency.
+一致性問題不會取代上述任何原則，但如果必須打破平手，通常有利於一致性來打破它。
 
-Consistency within a package is often the most immediately important level of
-consistency. It can be very jarring if the same problem is approached in
-multiple ways throughout a package, or if the same concept has many names within
-a file. However, even this should not override documented style principles or
-global consistency.
+包內的一致性通常是最直接重要的一致性層次。如果同一問題在一個包中以多種方式處理，或者同一概念在一個文件中有許多名稱，可能會非常不協調。然而，即使是這樣，也不應該取代記載的風格原則或全局一致性。
 
 <a id="core"></a>
 
-## Core guidelines
+## 核心指南
 
-These guidelines collect the most important aspects of Go style that all Go code
-is expected to follow. We expect that these principles be learned and followed
-by the time readability is granted. These are not expected to change frequently,
-and new additions will have to clear a high bar.
+這些指南收集了所有 Go 代碼都預期遵循的 Go 風格最重要的方面。我們期望這些原則在獲得可讀性認可時被學習和遵循。這些不預期會經常變化，新的添加必須通過高標準。
 
-The guidelines below expand on the recommendations in [Effective Go], which
-provide a common baseline for Go code across the entire community.
+以下指南擴展了 [Effective Go] 中的建議，為整個社區的 Go 代碼提供了共同的基線。
 
 [Effective Go]: https://go.dev/doc/effective_go
 
 <a id="formatting"></a>
 
-### Formatting
+### 格式化
 
-All Go source files must conform to the format outputted by the `gofmt` tool.
-This format is enforced by a presubmit check in the Google codebase.
-[Generated code] should generally also be formatted (e.g., by using
-[`format.Source`]), as it is also browsable in Code Search.
+所有 Go 源文件必須符合 `gofmt` 工具輸出的格式。這種格式由 Google 代碼庫中的預提交檢查強制執行。[生成的代碼] 通常也應該格式化（例如，使用 [`format.Source`]），因為它也可以在代碼搜索中瀏覽。
 
-[Generated code]: https://docs.bazel.build/versions/main/be/general.html#genrule
+[生成的代碼]: https://docs.bazel.build/versions/main/be/general.html#genrule
 [`format.Source`]: https://pkg.go.dev/go/format#Source
 
 <a id="mixed-caps"></a>
 
-### MixedCaps
+### 混合大小寫
 
-Go source code uses `MixedCaps` or `mixedCaps` (camel case) rather than
-underscores (snake case) when writing multi-word names.
+Go 源代碼在寫多詞名稱時使用 `MixedCaps` 或 `mixedCaps`（駝峰式大小寫）而不是下劃線（蛇形大小寫）。
 
-This applies even when it breaks conventions in other languages. For example, a
-constant is `MaxLength` (not `MAX_LENGTH`) if exported and `maxLength` (not
-`max_length`) if unexported.
+即使這樣做打破了其他語言中的慣例，也適用。例如，如果一個常量被導出，則為 `MaxLength`（不是 `MAX_LENGTH`），如果未導出，則為 `maxLength`（不是 `max_length`）。
 
-Local variables are considered [unexported] for the purpose of choosing the
-initial capitalization.
+局部變量被視為 [未導出] 用於選擇初始大寫。
 
 <!--#include file="/go/g3doc/style/includes/special-name-exception.md"-->
 
-[unexported]: https://go.dev/ref/spec#Exported_identifiers
+[未導出]: https://go.dev/ref/spec#Exported_identifiers
 
 <a id="line-length"></a>
 
-### Line length
+### 行長
 
-There is no fixed line length for Go source code. If a line feels too long,
-prefer refactoring instead of splitting it. If it is already as short as it is
-practical for it to be, the line should be allowed to remain long.
+Go 源代碼沒有固定的行長。如果一行感覺太長，優先重構而不是分割它。如果它已經盡可能短了，則應該允許該行保持長度。
 
-Do not split a line:
+不要分割一行：
 
-*   Before an [indentation change](decisions#indentation-confusion) (e.g.,
-    function declaration, conditional)
-*   To make a long string (e.g., a URL) fit into multiple shorter lines
+*   在 [縮進變化](decisions#indentation-confusion) 之前（例如，函數聲明、條件）
+*   為了使長字符串（例如，URL）適應多個較短的行
 
 <a id="naming"></a>
 
-### Naming
+### 命名
 
-Naming is more art than science. In Go, names tend to be somewhat shorter than
-in many other languages, but the same [general guidelines] apply. Names should:
+命名更多的是藝術而不是科學。在 Go 中，名稱傾向於比許多其他語言短一些，但相同的 [一般指南] 適用。名稱應該：
 
-*   Not feel [repetitive](decisions#repetition) when they are used
-*   Take the context into consideration
-*   Not repeat concepts that are already clear
+*   在使用時不感覺 [重複](decisions#repetition)
+*   考慮上下文
+*   不重複已經清楚的概念
 
-You can find more specific guidance on naming in [decisions](decisions#naming).
+您可以在 [決策](decisions#naming) 中找到更具體的命名指導。
 
-[general guidelines]: https://testing.googleblog.com/2017/10/code-health-identifiernamingpostforworl.html
+[一般指南]: https://testing.googleblog.com/2017/10/code-health-identifiernamingpostforworl.html
 
 <a id="local-consistency"></a>
 
-### Local consistency
+### 本地一致性
 
-Where the style guide has nothing to say about a particular point of style,
-authors are free to choose the style that they prefer, unless the code in close
-proximity (usually within the same file or package, but sometimes within a team
-or project directory) has taken a consistent stance on the issue.
+在風格指南對某一特定風格點沒有任何說法的地方，作者可以自由選擇他們喜歡的風格，除非在近處的代碼（通常在同一文件或包中，但有時在團隊或項目目錄中）已經在該問題上採取了一致的立場。
 
-Examples of **valid** local style considerations:
+**有效** 本地風格考慮的例子：
 
-*   Use of `%s` or `%v` for formatted printing of errors
-*   Usage of buffered channels in lieu of mutexes
+*   使用 `%s` 或 `%v` 進行格式化打印錯誤
+*   使用緩衝通道代替互斥鎖
 
-Examples of **invalid** local style considerations:
+**無效** 本地風格考慮的例子：
 
-*   Line length restrictions for code
-*   Use of assertion-based testing libraries
+*   代碼的行長限制
+*   使用基於斷言的測試庫
 
-If the local style disagrees with the style guide but the readability impact is
-limited to one file, it will generally be surfaced in a code review for which a
-consistent fix would be outside the scope of the CL in question. At that point,
-it is appropriate to file a bug to track the fix.
+如果本地風格與風格指南不一致，但可讀性影響僅限於一個文件，通常會在代碼審查中提出，對於一致的修復將超出問題 CL 的範圍。在這一點上，適合提出一個錯誤來跟踪修復。
 
-If a change would worsen an existing style deviation, expose it in more API
-surfaces, expand the number of files in which the deviation is present, or
-introduce an actual bug, then local consistency is no longer a valid
-justification for violating the style guide for new code. In these cases, it is
-appropriate for the author to clean up the existing codebase in the same CL,
-perform a refactor in advance of the current CL, or find an alternative that at
-least does not make the local problem worse.
+如果更改會惡化現有的風格偏差，暴露更多的 API 表面，擴大偏差存在的文件數量，或引入實際錯誤，那麼本地一致性不再是違反新代碼風格指南的有效理由。在這些情況下，作者應該清理同一 CL 中的現有代碼庫，提前進行重構，或找到至少不會使本地問題惡化的替代方案。
