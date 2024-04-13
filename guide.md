@@ -141,18 +141,16 @@ Go 代碼應該以實現其目標的最簡單方式編寫，無論是在行為�
 理解和使用常見的代碼構造和慣用語也對於保持高信噪比很重要。例如，以下代碼塊在[錯誤處理]中非常常見，讀者可以快速理解這個塊的目的。
 
 ```go
-// 好的：
+// 好的範例:
 if err := doSomething(); err != nil {
     // ...
 }
 ```
 
-If code looks very similar to this but is subtly different, a reader may not
-notice the change. In cases like this, it is worth intentionally ["boosting"]
-the signal of the error check by adding a comment to call attention to it.
+如果代碼看起來與此非常相似但略有不同，讀者可能不會注意到變化。在這種情況下，值得故意["提升"]錯誤檢查的信號，通過添加評論來引起注意。
 
 ```go
-// Good:
+// 好的範例:
 if err := doSomething(); err == nil { // if NO error
     // ...
 }
@@ -181,7 +179,7 @@ if err := doSomething(); err == nil { // if NO error
 可維護的代碼還避免在容易忽視的地方隱藏重要細節。例如，在以下每行代碼中，單個字符的存在或缺乏對於理解該行至關重要：
 
 ```go
-// Bad:
+// 不好的範例:
 // The use of = instead of := can change this line completely.
 if user, err = db.UserByID(userID); err != nil {
     // ...
@@ -189,7 +187,7 @@ if user, err = db.UserByID(userID); err != nil {
 ```
 
 ```go
-// Bad:
+// 不好範例:
 // The ! in the middle of this line is very easy to miss.
 leap := (year%4 == 0) && (!(year%100 == 0) || (year%400 == 0))
 ```
@@ -197,7 +195,7 @@ leap := (year%4 == 0) && (!(year%100 == 0) || (year%400 == 0))
 這兩者都不是錯誤的，但都可以用更明確的方式書寫，或者可以有一個附帶的評論來提醒注意重要的行為:
 
 ```go
-// Good:
+// 好的範例:
 u, err := db.UserByID(userID)
 if err != nil {
     return fmt.Errorf("invalid origin user: %s", err)
@@ -206,7 +204,7 @@ user = u
 ```
 
 ```go
-// Good:
+// 好的範例:
 // Gregorian leap years aren't just year%4 == 0.
 // See https://en.wikipedia.org/wiki/Leap_year#Algorithm.
 var (
