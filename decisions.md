@@ -21,13 +21,13 @@ https://google.github.io/styleguide/go/decisions (英文版)
 
 以下部分已從風格決策移至指南的其他部分：
 
-*   **混合大小寫**：見 [指南#混合大小寫](guide#mixed-caps)
+* **混合大小寫**：見 [指南#混合大小寫](guide#mixed-caps)
     <a id="mixed-caps"></a>
 
-*   **格式化**：見 [指南#格式化](guide#formatting)
+* **格式化**：見 [指南#格式化](guide#formatting)
     <a id="formatting"></a>
 
-*   **行長**：見 [指南#行長](guide#line-length)
+* **行長**：見 [指南#行長](guide#line-length)
     <a id="line-length"></a>
 
 <a id="naming"></a>
@@ -42,9 +42,9 @@ https://google.github.io/styleguide/go/decisions (英文版)
 
 Go 中的名稱一般不應包含底線。這個原則有三個例外：
 
-1.  僅由生成的代碼導入的套件名稱可能包含底線。有關如何選擇多詞套件名稱的更多細節，請參見 [套件名稱](#package-names)。
-1.  `*_test.go` 文件中的測試、基準測試和示例函數名稱可能包含底線。
-1.  與操作系統或 cgo 互操作的低級庫可能會重用標識符，如 [`syscall`] 所做的那樣。這在大多數代碼庫中預期非常罕見。
+1. 僅由生成的代碼導入的套件名稱可能包含底線。有關如何選擇多詞套件名稱的更多細節，請參見 [套件名稱](#package-names)。
+1. `*_test.go` 文件中的測試、基準測試和示例函數名稱可能包含底線。
+1. 與操作系統或 cgo 互操作的低級庫可能會重用標識符，如 [`syscall`] 所做的那樣。這在大多數代碼庫中預期非常罕見。
 
 [`syscall`]: https://pkg.go.dev/syscall#pkg-constants
 
@@ -62,9 +62,9 @@ Go 套件名稱不應有底線。如果您需要導入一個包含底線的套�
 
 此規則的例外是，僅由生成的代碼導入的套件名稱可能包含底線。具體例子包括：
 
-*   使用 `_test` 後綴的外部測試套件，例如集成測試
+* 使用 `_test` 後綴的外部測試套件，例如集成測試
 
-*   使用 `_test` 後綴的
+* 使用 `_test` 後綴的
     [套件級文檔示例](https://go.dev/blog/examples)
 
 [`tabwriter`]: https://pkg.go.dev/text/tabwriter
@@ -87,9 +87,9 @@ Go 套件名稱不應有底線。如果您需要導入一個包含底線的套�
 
 [接收者] 變量名稱必須是：
 
-*   短的（通常是一到兩個字母長）
-*   該類型本身的縮寫
-*   對該類型的每個接收者一致應用
+* 短的（通常是一到兩個字母長）
+* 該類型本身的縮寫
+* 對該類型的每個接收者一致應用
 
 Long Name                   | Better Name
 --------------------------- | -------------------------
@@ -151,8 +151,8 @@ const (
 
 名稱中作為首字母縮略詞或縮寫的單詞（例如，`URL` 和 `NATO`）應該具有相同的大小寫。`URL` 應該出現為 `URL` 或 `url`（如在 `urlPony` 或 `URLPony` 中），永遠不應該是 `Url`。這也適用於 `ID` 當它是 "identifier" 的縮寫時；寫作 `appID` 而不是 `appId`。
 
-*   在包含多個首字母縮略詞的名稱中（例如 `XMLAPI` 因為它包含 `XML` 和 `API`），給定首字母縮略詞內的每個字母應該具有相同的大小寫，但名稱中的每個首字母縮略詞不需要具有相同的大小寫。
-*   在包含含有小寫字母的首字母縮略詞的名稱中（例如 `DDoS`、`iOS`、`gRPC`），首字母縮略詞應該出現如同在標準散文中一樣，除非您需要為了 [導出性] 改變第一個字母。在這些情況下，整個首字母縮略詞應該是相同的大小寫（例如 `ddos`、`IOS`、`GRPC`）。
+* 在包含多個首字母縮略詞的名稱中（例如 `XMLAPI` 因為它包含 `XML` 和 `API`），給定首字母縮略詞內的每個字母應該具有相同的大小寫，但名稱中的每個首字母縮略詞不需要具有相同的大小寫。
+* 在包含含有小寫字母的首字母縮略詞的名稱中（例如 `DDoS`、`iOS`、`gRPC`），首字母縮略詞應該出現如同在標準散文中一樣，除非您需要為了 [導出性] 改變第一個字母。在這些情況下，整個首字母縮略詞應該是相同的大小寫（例如 `ddos`、`IOS`、`GRPC`）。
 
 [導出性]: https://golang.org/ref/spec#Exported_identifiers
 
@@ -193,10 +193,10 @@ DDoS          | 未導出     | `ddos`   | `dDoS`, `dDOS`
 
 這裡是一個大致的基線。這些數字指南不是嚴格的規則。基於上下文、[清晰性] 和 [簡練性] 應用判斷。
 
-*   小範圍是執行一兩個小操作的範圍，比如 1-7 行。
-*   中等範圍是幾個小操作或一個大操作，比如 8-15 行。
-*   大範圍是一個或幾個大操作，比如 15-25 行。
-*   非常大的範圍是跨越超過一頁的任何範圍（比如，超過 25 行）。
+* 小範圍是執行一兩個小操作的範圍，比如 1-7 行。
+* 中等範圍是幾個小操作或一個大操作，比如 8-15 行。
+* 大範圍是一個或幾個大操作，比如 15-25 行。
+* 非常大的範圍是跨越超過一頁的任何範圍（比如，超過 25 行）。
 
 [清晰性]: guide#clarity
 [簡練性]: guide#concision
@@ -209,14 +209,14 @@ DDoS          | 未導出     | `ddos`   | `dDoS`, `dDOS`
 
 一般來說：
 
-*   單詞名稱如 `count` 或 `options` 是一個好的起點。
-*   可以添加額外的單詞來消除相似名稱的歧義，例如 `userCount` 和 `projectCount`。
-*   不要簡單地刪除字母來節省打字。例如，`Sandbox` 比 `Sbx` 更好，特別是對於導出的名稱。
-*   從大多數變量名稱中省略 [類型和類型化的詞]。
-    *   對於一個數字，`userCount` 是一個比 `numUsers` 或 `usersInt` 更好的名稱。
-    *   對於一個切片，`users` 是一個比 `userSlice` 更好的名稱。
-    *   如果範圍內有兩個版本的值，可以接受包含類型化的限定詞，例如你可能有一個存儲在 `ageString` 中的輸入，並使用 `age` 作為解析後的值。
-*   省略從 [周圍上下文] 中清楚的詞。例如，在 `UserCount` 方法的實現中，一個叫做 `userCount` 的局部變量可能是多餘的；`count`、`users` 或甚至 `c` 一樣可讀。
+* 單詞名稱如 `count` 或 `options` 是一個好的起點。
+* 可以添加額外的單詞來消除相似名稱的歧義，例如 `userCount` 和 `projectCount`。
+* 不要簡單地刪除字母來節省打字。例如，`Sandbox` 比 `Sbx` 更好，特別是對於導出的名稱。
+* 從大多數變量名稱中省略 [類型和類型化的詞]。
+    * 對於一個數字，`userCount` 是一個比 `numUsers` 或 `usersInt` 更好的名稱。
+    * 對於一個切片，`users` 是一個比 `userSlice` 更好的名稱。
+    * 如果範圍內有兩個版本的值，可以接受包含類型化的限定詞，例如你可能有一個存儲在 `ageString` 中的輸入，並使用 `age` 作為解析後的值。
+* 省略從 [周圍上下文] 中清楚的詞。例如，在 `UserCount` 方法的實現中，一個叫做 `userCount` 的局部變量可能是多餘的；`count`、`users` 或甚至 `c` 一樣可讀。
 
 [類型和類型化的詞]: #repetitive-with-type
 [周圍上下文]: #repetitive-in-context
@@ -230,12 +230,12 @@ DDoS          | 未導出     | `ddos`   | `dDoS`, `dDOS`
 
 一般來說：
 
-*   對於 [方法接收者變量]，一個字母或兩個字母的名稱是首選。
-*   對於常見類型使用熟悉的變量名稱通常很有幫助：
-    *   `r` 用於 `io.Reader` 或 `*http.Request`
-    *   `w` 用於 `io.Writer` 或 `http.ResponseWriter`
-*   單字母標識符作為整數循環變量是可以接受的，特別是對於索引（例如，`i`）和坐標（例如，`x` 和 `y`）。
-*   當範圍短時，縮寫可以作為可接受的循環標識符，例如 `for _, n := range nodes { ... }`。
+* 對於 [方法接收者變量]，一個字母或兩個字母的名稱是首選。
+* 對於常見類型使用熟悉的變量名稱通常很有幫助：
+    * `r` 用於 `io.Reader` 或 `*http.Request`
+    * `w` 用於 `io.Writer` 或 `http.ResponseWriter`
+* 單字母標識符作為整數循環變量是可以接受的，特別是對於索引（例如，`i`）和坐標（例如，`x` 和 `y`）。
+* 當範圍短時，縮寫可以作為可接受的循環標識符，例如 `for _, n := range nodes { ... }`。
 
 [方法接收者變量]: #receiver-names
 
@@ -261,12 +261,12 @@ Go 源代碼應該避免不必要的重複。一個常見的來源是重複的�
 
 > **例子：** 重複的名稱 -> 更好的名稱
 >
-> *   `widget.NewWidget` -> `widget.New`
-> *   `widget.NewWidgetWithName` -> `widget.NewWithName`
-> *   `db.LoadFromDatabase` -> `db.Load`
-> *   `goatteleportutil.CountGoatsTeleported` -> `gtutil.CountGoatsTeleported`
+> * `widget.NewWidget` -> `widget.New`
+> * `widget.NewWidgetWithName` -> `widget.NewWithName`
+> * `db.LoadFromDatabase` -> `db.Load`
+> * `goatteleportutil.CountGoatsTeleported` -> `gtutil.CountGoatsTeleported`
 >     或 `goatteleport.Count`
-> *   `myteampb.MyTeamMethodRequest` -> `mtpb.MyTeamMethodRequest` 或
+> * `myteampb.MyTeamMethodRequest` -> `mtpb.MyTeamMethodRequest` 或
 >     `myteampb.MethodRequest`
 
 <a id="repetitive-with-type"></a>
@@ -277,12 +277,12 @@ Go 源代碼應該避免不必要的重複。一個常見的來源是重複的�
 
 > **範例：** 重複的名稱 -> 更好的名稱
 >
-> *   `widget.NewWidget` -> `widget.New`
-> *   `widget.NewWidgetWithName` -> `widget.NewWithName`
-> *   `db.LoadFromDatabase` -> `db.Load`
-> *   `goatteleportutil.CountGoatsTeleported` -> `gtutil.CountGoatsTeleported`
+> * `widget.NewWidget` -> `widget.New`
+> * `widget.NewWidgetWithName` -> `widget.NewWithName`
+> * `db.LoadFromDatabase` -> `db.Load`
+> * `goatteleportutil.CountGoatsTeleported` -> `gtutil.CountGoatsTeleported`
 >     或 `goatteleport.Count`
-> *   `myteampb.MyTeamMethodRequest` -> `mtpb.MyTeamMethodRequest` 或
+> * `myteampb.MyTeamMethodRequest` -> `mtpb.MyTeamMethodRequest` 或
 >     `myteampb.MethodRequest`
 
 <a id="repetitive-with-type"></a>
@@ -622,11 +622,11 @@ package main
 
 Tips:
 
-*   示例命令行調用和 API 使用可以是有用的文檔。對於 Godoc 格式，縮進包含代碼的註解行。
+* 示例命令行調用和 API 使用可以是有用的文檔。對於 Godoc 格式，縮進包含代碼的註解行。
 
-*   如果沒有明顯的主文件，或者如果套件註解非常長，則可以接受將文檔註解放在一個名為 `doc.go` 的文件中，該文件僅包含註解和套件子句。
+* 如果沒有明顯的主文件，或者如果套件註解非常長，則可以接受將文檔註解放在一個名為 `doc.go` 的文件中，該文件僅包含註解和套件子句。
 
-*   多行註解可以代替多個單行註解。如果文檔包含可能需要從源文件中複製和粘貼的部分，這主要是有用的，如示例命令行（對於二進制文件）和模板示例。
+* 多行註解可以代替多個單行註解。如果文檔包含可能需要從源文件中複製和粘貼的部分，這主要是有用的，如示例命令行（對於二進制文件）和模板示例。
 
     ```go
     // 好的範例:
@@ -638,7 +638,7 @@ Tips:
     package template
     ```
 
-*   旨在供維護者使用且適用於整個文件的註解通常放在導入聲明之後。這些在 Godoc 中不會顯示，也不受上述套件註解規則的約束。
+* 旨在供維護者使用且適用於整個文件的註解通常放在導入聲明之後。這些在 Godoc 中不會顯示，也不受上述套件註解規則的約束。
 
 <a id="imports"></a>
 
@@ -683,9 +683,9 @@ import (
 
 引入應該組織成兩組：
 
-*   標準庫套件
+* 標準庫套件
 
-*   其他（專案和 vendored）套件
+* 其他（專案和 vendored）套件
 
 ```go
 // 好的範例:
@@ -707,8 +707,8 @@ import (
 
 如果您想要一個單獨的組，則可以將專案套件分成多個組，只要這些組有一些意義即可。這樣做的常見原因包括：
 
-*   重新命名的引入
-*   為了它們的副作用而引入的套件
+* 重新命名的引入
+* 為了它們的副作用而引入的套件
 
 範例:
 
@@ -751,17 +751,17 @@ Gofmt 負責按引入路徑對每組進行排序。然而，它不會自動將�
 
 這類套件的一些例子包括：
 
-*   [time/tzdata](https://pkg.go.dev/time/tzdata)
+* [time/tzdata](https://pkg.go.dev/time/tzdata)
 
-*   [image/jpeg](https://pkg.go.dev/image/jpeg) 在圖像處理代碼中
+* [image/jpeg](https://pkg.go.dev/image/jpeg) 在圖像處理代碼中
 
 避免在庫套件中進行空白引入，即使庫間接依賴於它們。將副作用引入限制在主套件中有助於控制依賴關係，並使得撰寫依賴不同引入的測試成為可能，而不會產生衝突或浪費建構成本。
 
 以下是此規則的唯一例外：
 
-*   您可以使用空白引入來繞過 [nogo 靜態檢查器] 中對禁止引入的檢查。
+* 您可以使用空白引入來繞過 [nogo 靜態檢查器] 中對禁止引入的檢查。
 
-*   您可以在使用 `//go:embed` 編譯器指令的源文件中，空白引入 [embed](https://pkg.go.dev/embed) 套件。
+* 您可以在使用 `//go:embed` 編譯器指令的源文件中，空白引入 [embed](https://pkg.go.dev/embed) 套件。
 
 **提示：** 如果您創建了一個在生產中間接依賴副作用引入的庫套件，請記錄預期的使用方式。
 
@@ -877,9 +877,9 @@ t.Errorf("Op(%q) failed unexpectedly; err=%v", args, err)
 
 遇到錯誤的代碼應該有意識地選擇如何處理它。通常不適合使用 `_` 變量來丟棄錯誤。如果函數返回一個錯誤，請執行以下操作之一：
 
-*   立即處理並解決錯誤。
-*   將錯誤返回給調用者。
-*   在特殊情況下，調用 [`log.Fatal`] 或（如果絕對必要）`panic`。
+* 立即處理並解決錯誤。
+* 將錯誤返回給調用者。
+* 在特殊情況下，調用 [`log.Fatal`] 或（如果絕對必要）`panic`。
 
 **注意：** `log.Fatalf` 不是標準庫日誌。參見 [#logging]。
 
@@ -1020,7 +1020,7 @@ Go 擁有異常強大的[複合字面量語法]，可以用單一表達式來表
 
 對於在當前套件外定義的類型，結構字面量必須指定**字段名稱**。
 
-*   包括來自其他套件的類型的字段名稱。
+* 包括來自其他套件的類型的字段名稱。
 
     ```go
     // 好的範例:
@@ -1039,7 +1039,7 @@ Go 擁有異常強大的[複合字面量語法]，可以用單一表達式來表
     r := csv.Reader{',', '#', 4, false, false, false, false}
     ```
 
-*   對於套件內部類型，字段名稱是可選的。
+* 對於套件內部類型，字段名稱是可選的。
 
     ```go
     // 好的範例:
@@ -1103,8 +1103,8 @@ bad := []*Type{
 
 對於切片和數組字面量，只有在以下兩個條件都滿足時，才允許去掉大括號之間的空白（也就是所謂的「緊靠」它們）。
 
-*   [縮進匹配](#literal-matching-braces)
-*   內部值也是字面量或 proto 構建器（即不是變量或其他表達式）
+* [縮進匹配](#literal-matching-braces)
+* 內部值也是字面量或 proto 構建器（即不是變量或其他表達式）
 
 ```go
 // 好的範例:
@@ -1394,9 +1394,9 @@ if longCondition1 && longCondition2 &&
 
 請參閱以下部分以獲得具體指南和示例：
 
-*   [函數格式化](#func-formatting)
-*   [條件和循環](#conditional-formatting)
-*   [字面量格式化](#literal-formatting)
+* [函數格式化](#func-formatting)
+* [條件和循環](#conditional-formatting)
+* [字面量格式化](#literal-formatting)
 
 <a id="func-formatting"></a>
 
@@ -1834,15 +1834,15 @@ func (w *Worker) Run() {
 
 這段代碼看起來可能沒問題，但存在幾個潛在問題：
 
-*   代碼在生產中可能有未定義的行為，即使操作系統釋放了資源，程序也可能無法乾淨地終止。
-*   由於代碼的不確定生命週期，測試代碼意義不大。
-*   如上所述，代碼可能泄漏資源。
+* 代碼在生產中可能有未定義的行為，即使操作系統釋放了資源，程序也可能無法乾淨地終止。
+* 由於代碼的不確定生命週期，測試代碼意義不大。
+* 如上所述，代碼可能泄漏資源。
 
 另見：
 
-*   [永遠不要啟動一個 goroutine 而不知道它將如何停止][cheney-stop]
-*   重新思考傳統並發模式：[幻燈片][rethinking-slides]，[視頻][rethinking-video]
-*   [Go 程序何時結束]
+* [永遠不要啟動一個 goroutine 而不知道它將如何停止][cheney-stop]
+* 重新思考傳統並發模式：[幻燈片][rethinking-slides]，[視頻][rethinking-video]
+* [Go 程序何時結束]
 
 [同步函數]: #synchronous-functions
 [cheney-stop]: https://dave.cheney.net/2016/12/22/never-start-a-goroutine-without-knowing-how-it-will-stop
@@ -1934,15 +1934,15 @@ func NewThinger() Thinger { return Thinger{ ... } }
 
 一般來說：
 
-*   [寫代碼，不要設計類型]。來自 Robert Griesemer 和 Ian Lance Taylor 的 GopherCon 演講。
-*   如果你有幾種類型共享一個有用的統一介面，考慮使用該介面來建模解決方案。可能不需要泛型。
-*   否則，不要依賴 `any` 類型和過度的[類型切換](https://tour.golang.org/methods/16)，考慮使用泛型。
+* [寫代碼，不要設計類型]。來自 Robert Griesemer 和 Ian Lance Taylor 的 GopherCon 演講。
+* 如果你有幾種類型共享一個有用的統一介面，考慮使用該介面來建模解決方案。可能不需要泛型。
+* 否則，不要依賴 `any` 類型和過度的[類型切換](https://tour.golang.org/methods/16)，考慮使用泛型。
 
 另見：
 
-*   [在 Go 中使用泛型]，Ian Lance Taylor 的演講
+* [在 Go 中使用泛型]，Ian Lance Taylor 的演講
 
-*   Go 網頁上的[泛型教程]
+* Go 網頁上的[泛型教程]
 
 [泛型教程]: https://go.dev/doc/tutorial/generics
 [類型參數]: https://go.dev/design/43651-type-parameters
@@ -1974,7 +1974,7 @@ func NewThinger() Thinger { return Thinger{ ... } }
 
 下面的列表進一步詳細說明了每種情況：
 
-*   如果接收器是一個切片且方法不重新切片或重新分配切片，使用值而不是指針。
+* 如果接收器是一個切片且方法不重新切片或重新分配切片，使用值而不是指針。
 
     ```go
     // 好的範例:
@@ -1983,7 +1983,7 @@ func NewThinger() Thinger { return Thinger{ ... } }
     func (b Buffer) Len() int { return len(b) }
     ```
 
-*   如果方法需要改變接收器，接收器必須是一個指針。
+* 如果方法需要改變接收器，接收器必須是一個指針。
 
     ```go
     // 好的範例:
@@ -1997,7 +1997,7 @@ func NewThinger() Thinger { return Thinger{ ... } }
     func (q *Queue) Push(x Item) { *q = append([]Item{x}, *q...) }
     ```
 
-*   如果接收器是一個包含[不能安全複製]的字段的結構體，使用指針接收器。常見例子是 [`sync.Mutex`] 和其他同步類型。
+* 如果接收器是一個包含[不能安全複製]的字段的結構體，使用指針接收器。常見例子是 [`sync.Mutex`] 和其他同步類型。
 
     ```go
     // 好的範例:
@@ -2015,11 +2015,11 @@ func NewThinger() Thinger { return Thinger{ ... } }
 
     **提示：** 檢查類型的 [Godoc] 以獲取關於它是否安全或不安全複製的信息。
 
-*   如果接收器是一個“大型”結構體或數組，指針接收器可能更有效。傳遞一個結構體等同於將其所有字段或元素作為參數傳遞給方法。如果這看起來太大而無法[按值傳遞]，指針是一個好選擇。
+* 如果接收器是一個“大型”結構體或數組，指針接收器可能更有效。傳遞一個結構體等同於將其所有字段或元素作為參數傳遞給方法。如果這看起來太大而無法[按值傳遞]，指針是一個好選擇。
 
-*   對於將與修改接收器的其他函數同時調用或運行的方法，如果這些修改不應該對你的方法可見，使用值；否則使用指針。
+* 對於將與修改接收器的其他函數同時調用或運行的方法，如果這些修改不應該對你的方法可見，使用值；否則使用指針。
 
-*   如果接收器是一個結構體或數組，其任何元素是指向可能被改變的東西的指針，優先選擇指針接收器以使可變性的意圖對讀者清晰。
+* 如果接收器是一個結構體或數組，其任何元素是指向可能被改變的東西的指針，優先選擇指針接收器以使可變性的意圖對讀者清晰。
 
     ```go
     // 好的範例:
@@ -2032,7 +2032,7 @@ func NewThinger() Thinger { return Thinger{ ... } }
     }
     ```
 
-*   如果接收器是一個[內建類型]，如整數或字符串，不需要被修改，使用值。
+* 如果接收器是一個[內建類型]，如整數或字符串，不需要被修改，使用值。
 
     ```go
     // 好的範例:
@@ -2041,7 +2041,7 @@ func NewThinger() Thinger { return Thinger{ ... } }
     func (u User) String() { return string(u) }
     ```
 
-*   如果接收器是一個映射、函數或通道，使用值而不是指針。
+* 如果接收器是一個映射、函數或通道，使用值而不是指針。
 
     ```go
     // 好的範例:
@@ -2051,7 +2051,7 @@ func NewThinger() Thinger { return Thinger{ ... } }
     func (h Header) Add(key, value string) { /* 省略 */ }
     ```
 
-*   如果接收器是一個“小型”數組或結構體，本質上是一個沒有可變字段和指針的值類型，值接收器通常是正確的選擇。
+* 如果接收器是一個“小型”數組或結構體，本質上是一個沒有可變字段和指針的值類型，值接收器通常是正確的選擇。
 
     ```go
     // 好的範例:
@@ -2061,7 +2061,7 @@ func NewThinger() Thinger { return Thinger{ ... } }
     func (t Time) Add(d Duration) Time { /* 省略 */ }
     ```
 
-*   如有疑問，使用指針接收器。
+* 如有疑問，使用指針接收器。
 
 作為一般指導原則，傾向於使一個類型的方法要麼全部是指針方法，要麼全部是值方法。
 
@@ -2141,7 +2141,7 @@ default:
 
 另見：
 
-*   Bryan Mills 的演講 "Rethinking Classical Concurrency Patterns"：[幻燈片][rethinking-slides]，[視頻][rethinking-video]
+* Bryan Mills 的演講 "Rethinking Classical Concurrency Patterns"：[幻燈片][rethinking-slides]，[視頻][rethinking-video]
 
 <a id="type-aliases"></a>
 
@@ -2219,9 +2219,9 @@ var (
 
 另見：
 
-*   [每週提示 #45: 避免標誌，特別是在庫代碼中][totw-45]
-*   [Go 提示 #10: 配置結構體和標誌](https://google.github.io/styleguide/go/index.html#gotip)
-*   [Go 提示 #80: 依賴注入原則](https://google.github.io/styleguide/go/index.html#gotip)
+* [每週提示 #45: 避免標誌，特別是在庫代碼中][totw-45]
+* [Go 提示 #10: 配置結構體和標誌](https://google.github.io/styleguide/go/index.html#gotip)
+* [Go 提示 #80: 依賴注入原則](https://google.github.io/styleguide/go/index.html#gotip)
 
 [標準 `flag` 包]: https://golang.org/pkg/flag/
 [混合大小寫]: guide#mixed-caps
@@ -2240,8 +2240,8 @@ Google 代碼庫中的 Go 程序使用標準 [`log`] 包的一個變體。它具
 
 另見：
 
-*   關於[錯誤日誌記錄](best-practices#error-logging)和[自定義詳細級別](best-practices#vlog)的最佳實踐
-*   何時以及如何使用 log 包來[停止程序](best-practices#checks-and-panics)
+* 關於[錯誤日誌記錄](best-practices#error-logging)和[自定義詳細級別](best-practices#vlog)的最佳實踐
+* 何時以及如何使用 log 包來[停止程序](best-practices#checks-and-panics)
 
 [`log`]: https://pkg.go.dev/log
 [`log/slog`]: https://pkg.go.dev/log/slog
@@ -2267,16 +2267,16 @@ func F(ctx context.Context /* other arguments */) {}
 
 例外情況有：
 
-*   在 HTTP 處理器中，上下文來自 [`req.Context()`](https://pkg.go.dev/net/http#Request.Context)。
-*   在流式 RPC 方法中，上下文來自流。
+* 在 HTTP 處理器中，上下文來自 [`req.Context()`](https://pkg.go.dev/net/http#Request.Context)。
+* 在流式 RPC 方法中，上下文來自流。
 
     使用 gRPC 流的代碼從生成的服務器類型中的 `Context()` 方法訪問上下文，該方法實現了 `grpc.ServerStream`。參見 [gRPC 生成代碼文檔](https://grpc.io/docs/languages/go/generated-code/)。
 
-*   在入口點函數中（見下面的例子），使用 [`context.Background()`](https://pkg.go.dev/context/#Background)。
+* 在入口點函數中（見下面的例子），使用 [`context.Background()`](https://pkg.go.dev/context/#Background)。
 
-    *   在二進制目標中：`main`
-    *   在通用代碼和庫中：`init`
-    *   在測試中：`TestXXX`、`BenchmarkXXX`、`FuzzXXX`
+    * 在二進制目標中：`main`
+    * 在通用代碼和庫中：`init`
+    * 在測試中：`TestXXX`、`BenchmarkXXX`、`FuzzXXX`
 
 > **注意**：在調用鏈中間的代碼很少需要使用 `context.Background()` 創建自己的基礎上下文。總是優先從你的調用者那裡獲取上下文，除非它是錯誤的上下文。
 >
@@ -2299,7 +2299,7 @@ Google 代碼庫中必須啟動可以在父上下文被取消後運行的後台�
 
 另見：
 
-*   [上下文和結構體]
+* [上下文和結構體]
 
 [上下文和結構體]: https://go.dev/blog/context-and-structs
 
@@ -2353,10 +2353,10 @@ func Key() string {
 
 在不閱讀測試源碼的情況下，應該能夠診斷出測試的失敗原因。測試應該提供有幫助的消息來詳細說明：
 
-*   導致失敗的原因
-*   什麼輸入導致了錯誤
-*   實際結果
-*   預期的結果
+* 導致失敗的原因
+* 什麼輸入導致了錯誤
+* 實際結果
+* 預期的結果
 
 下面概述了實現此目標的具體慣例。
 
@@ -2436,9 +2436,9 @@ func TestBlogPost_VeritableRant(t *testing.T) {
 
 另見：
 
-*   [相等性比較和差異](#types-of-equality)
-*   [打印差異](#print-diffs)
-*   有關測試輔助工具和斷言輔助工具之間區別的更多信息，請參見[最佳實踐](best-practices#test-functions)
+* [相等性比較和差異](#types-of-equality)
+* [打印差異](#print-diffs)
+* 有關測試輔助工具和斷言輔助工具之間區別的更多信息，請參見[最佳實踐](best-practices#test-functions)
 
 [有用的失敗消息]: #useful-test-failures
 [`fmt`]: https://golang.org/pkg/fmt/
@@ -2569,7 +2569,7 @@ if diff := cmp.Diff(want, got, protocmp.Transform()); diff != "" {
 
 現有代碼可能使用以下較舊的庫，並可能繼續使用它們以保持一致性：
 
-*   [`pretty`] 產生美觀的差異報告。然而，它相當故意地將視覺表示相同的值視為等值。特別是，`pretty` 不會捕捉到 nil 切片和空切片之間的差異，對於具有相同字段的不同介面實現不敏感，並且可以使用嵌套映射作為與結構體值比較的基礎。它還在產生差異之前將整個值序列化為字符串，因此不適合比較大值。默認情況下，它比較未導出的字段，這使它對依賴性中的實現細節的變化很敏感。因此，不適合在 protobuf 消息上使用 `pretty`。
+* [`pretty`] 產生美觀的差異報告。然而，它相當故意地將視覺表示相同的值視為等值。特別是，`pretty` 不會捕捉到 nil 切片和空切片之間的差異，對於具有相同字段的不同介面實現不敏感，並且可以使用嵌套映射作為與結構體值比較的基礎。它還在產生差異之前將整個值序列化為字符串，因此不適合比較大值。默認情況下，它比較未導出的字段，這使它對依賴性中的實現細節的變化很敏感。因此，不適合在 protobuf 消息上使用 `pretty`。
 
 [`pretty`]: https://pkg.go.dev/github.com/kylelemons/godebug/pretty
 
@@ -2587,14 +2587,14 @@ The conventional failure message, which is suitable for most Go tests, is
 `YourFunc(%v) = %v, want %v`. However, there are cases that may call for more or
 less detail:
 
-*   Tests performing complex interactions should describe the interactions too.
+* Tests performing complex interactions should describe the interactions too.
     For example, if the same `YourFunc` is called several times, identify which
     call failed the test. If it's important to know any extra state of the
     system, include that in the failure output (or at least in the logs).
-*   If the data is a complex struct with significant boilerplate, it is
+* If the data is a complex struct with significant boilerplate, it is
     acceptable to describe only the important parts in the message, but do not
     overly obscure the data.
-*   Setup failures do not require the same level of detail. If a test helper
+* Setup failures do not require the same level of detail. If a test helper
     populates a Spanner table but Spanner was down, you probably don't need to
     include which test input you were going to store in the database.
     `t.Fatalf("Setup: Failed to set up test database: %s", err)` is usually
@@ -2606,10 +2606,10 @@ the failure.
 
 There are some techniques for reproducing test inputs and outputs clearly:
 
-*   When printing string data, [`%q` is often useful](#use-percent-q) to
+* When printing string data, [`%q` is often useful](#use-percent-q) to
     emphasize that the value is important and to more easily spot bad values.
-*   When printing (small) structs, `%+v` can be more useful than `%v`.
-*   When validation of larger values fails, [printing a diff](#print-diffs) can
+* When printing (small) structs, `%+v` can be more useful than `%v`.
+* When validation of larger values fails, [printing a diff](#print-diffs) can
     make it easier to understand the failure.
 
 <a id="print-diffs"></a>
@@ -2624,9 +2624,9 @@ To compute diffs for such values, `cmp.Diff` is preferred, particularly for new
 tests and new code, but other tools may be used. See [types of equality] for
 guidance regarding the strengths and weaknesses of each function.
 
-*   [`cmp.Diff`]
+* [`cmp.Diff`]
 
-*   [`pretty.Compare`]
+* [`pretty.Compare`]
 
 You can use the [`diff`] package to compare multi-line strings or lists of
 strings. You can use this as a building block for other kinds of diffs.
@@ -2646,14 +2646,14 @@ order to use is also intentional, as there is no consensus which is
 
 -->
 
-*   Something like `diff (-want +got)` is good when you're using the `cmp`,
+* Something like `diff (-want +got)` is good when you're using the `cmp`,
     `pretty`, and `diff` packages (if you pass `(want, got)` to the function),
     because the `-` and `+` that you add to your format string will match the
     `-` and `+` that actually appear at the beginning of the diff lines. If you
     pass `(got, want)` to your function, the correct key would be `(-got +want)`
     instead.
 
-*   The `messagediff` package uses a different output format, so the message
+* The `messagediff` package uses a different output format, so the message
     `diff (want -> got)` is appropriate when you're using it (if you pass
     `(want, got)` to the function), because the direction of the arrow will
     match the direction of the arrow in the "modified" lines.
@@ -2815,10 +2815,10 @@ See also
 Use table-driven tests when many different test cases can be tested using
 similar testing logic.
 
-*   When testing whether the actual output of a function is equal to the
+* When testing whether the actual output of a function is equal to the
     expected output. For example, the many [tests of `fmt.Sprintf`] or the
     minimal snippet below.
-*   When testing whether the outputs of a function always conform to the same
+* When testing whether the outputs of a function always conform to the same
     set of invariants. For example, [tests for `net.Dial`].
 
 [tests of `fmt.Sprintf`]: https://cs.opensource.google/go/go/+/master:src/fmt/fmt_test.go
@@ -3080,9 +3080,9 @@ Tests may be defined in the same package as the code being tested.
 
 To write a test in the same package:
 
-*   Place the tests in a `foo_test.go` file
-*   Use `package foo` for the test file
-*   Do not explicitly import the package to be tested
+* Place the tests in a `foo_test.go` file
+* Use `package foo` for the test file
+* Do not explicitly import the package to be tested
 
 ```build
 # 好的範例:
@@ -3122,7 +3122,7 @@ package as the code being tested. In these cases, use a package name with the
 `_test` suffix. This is an exception to the "no underscores" rule to
 [package names](#package-names). For example:
 
-*   If an integration test does not have an obvious library that it belongs to
+* If an integration test does not have an obvious library that it belongs to
 
     ```go
     // 好的範例:
@@ -3131,7 +3131,7 @@ package as the code being tested. In these cases, use a package name with the
     import "testing"
     ```
 
-*   If defining the tests in the same package results in circular dependencies
+* If defining the tests in the same package results in circular dependencies
 
     ```go
     // 好的範例:
@@ -3155,12 +3155,12 @@ allowed.
 The `testing` package provides a minimal but complete set of functionality for
 writing good tests:
 
-*   Top-level tests
-*   Benchmarks
-*   [Runnable examples](https://blog.golang.org/examples)
-*   Subtests
-*   Logging
-*   Failures and fatal failures
+* Top-level tests
+* Benchmarks
+* [Runnable examples](https://blog.golang.org/examples)
+* Subtests
+* Logging
+* Failures and fatal failures
 
 These are designed to work cohesively with core language features like
 [composite literal] and [if-with-initializer] syntax to enable test authors to
@@ -3179,14 +3179,14 @@ it enumerate all matters about which it does not offer an opinion. That said,
 here are a few things where the readability community has previously debated and
 has not achieved consensus about.
 
-*   **Local variable initialization with zero value**. `var i int` and `i := 0`
+* **Local variable initialization with zero value**. `var i int` and `i := 0`
     are equivalent. See also [initialization best practices].
-*   **Empty composite literal vs. `new` or `make`**. `&File{}` and `new(File)`
+* **Empty composite literal vs. `new` or `make`**. `&File{}` and `new(File)`
     are equivalent. So are `map[string]bool{}` and `make(map[string]bool)`. See
     also [composite declaration best practices].
-*   **got, want argument ordering in cmp.Diff calls**. Be locally consistent,
+* **got, want argument ordering in cmp.Diff calls**. Be locally consistent,
     and [include a legend](#print-diffs) in your failure message.
-*   **`errors.New` vs `fmt.Errorf` on non-formatted strings**.
+* **`errors.New` vs `fmt.Errorf` on non-formatted strings**.
     `errors.New("foo")` and `fmt.Errorf("foo")` may be used interchangeably.
 
 If there are special circumstances where they come up again, the readability
