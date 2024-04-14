@@ -1951,45 +1951,30 @@ func NewThinger() Thinger { return Thinger{ ... } }
 
 <a id="pass-values"></a>
 
-### Pass values
+### 傳遞值 Pass values
 
 <a id="TOC-PassValues"></a>
 
-Do not pass pointers as function arguments just to save a few bytes. If a
-function reads its argument `x` only as `*x` throughout, then the argument
-shouldn't be a pointer. Common instances of this include passing a pointer to a
-string (`*string`) or a pointer to an interface value (`*io.Reader`). In both
-cases, the value itself is a fixed size and can be passed directly.
+不要僅僅為了節省幾個字節就在函數參數中傳遞指針。如果一個函數只是作為 `*x` 讀取其參數 `x`，那麼該參數不應該是一個指針。這種情況的常見例子包括傳遞一個字符串的指針（`*string`）或一個介面值的指針（`*io.Reader`）。在這兩種情況下，值本身是固定大小，可以直接傳遞。
 
-This advice does not apply to large structs, or even small structs that may
-increase in size. In particular, protocol buffer messages should generally be
-handled by pointer rather than by value. The pointer type satisfies the
-`proto.Message` interface (accepted by `proto.Marshal`, `protocmp.Transform`,
-etc.), and protocol buffer messages can be quite large and often grow larger
-over time.
+這條建議不適用於大型結構體，或者即使是小型結構體也可能增加大小。特別是，協議緩衝消息通常應該通過指針而不是值來處理。指針類型滿足 `proto.Message` 介面（被 `proto.Marshal`、`protocmp.Transform` 等接受），且協議緩衝消息可能相當大，並且經常隨時間增長。
 
 <a id="receiver-type"></a>
 
-### Receiver type
+### 接收器類型 Receiver type
 
 <a id="TOC-ReceiverType"></a>
 
-A [method receiver] can be passed either as a value or a pointer, just as if it
-were a regular function parameter. The choice between the two is based on which
-[method set(s)] the method should be a part of.
+[方法接收器]可以作為值或指針傳遞，就像它是一個普通函數參數一樣。在兩者之間的選擇基於方法應該是哪個[方法集]的一部分。
 
-[method receiver]: https://golang.org/ref/spec#Method_declarations
-[method set(s)]: https://golang.org/ref/spec#Method_sets
+[方法接收器]: https://golang.org/ref/spec#Method_declarations
+[方法集]: https://golang.org/ref/spec#Method_sets
 
-**Correctness wins over speed or simplicity.** There are cases where you must
-use a pointer value. In other cases, pick pointers for large types or as
-future-proofing if you don't have a good sense of how the code will grow, and
-use values for simple [plain old data].
+**正確性勝過速度或簡單性。** 有些情況下你必須使用指針值。在其他情況下，對於大型類型或作為未來證明如果你不確定代碼將如何增長，選擇指針；對於簡單的[普通舊數據]，使用值。
 
-The list below spells out each case in further detail:
+下面的列表進一步詳細說明了每種情況：
 
-*   If the receiver is a slice and the method doesn't reslice or reallocate the
-    slice, use a value rather than a pointer.
+*   如果接收器是一個切片且方法不重新切片或重新分配切片，使用值而不是指針。
 
     ```go
     // 好的範例:
@@ -1998,7 +1983,7 @@ The list below spells out each case in further detail:
     func (b Buffer) Len() int { return len(b) }
     ```
 
-*   If the method needs to mutate the receiver, the receiver must be a pointer.
+*   如果方法需要改變接收器，接收器必須是一個指針。
 
     ```go
     // 好的範例:
@@ -2006,15 +1991,13 @@ The list below spells out each case in further detail:
 
     func (c *Counter) Inc() { *c++ }
 
-    // See https://pkg.go.dev/container/heap.
+    // 參見 https://pkg.go.dev/container/heap。
     type Queue []Item
 
     func (q *Queue) Push(x Item) { *q = append([]Item{x}, *q...) }
     ```
 
-*   If the receiver is a struct containing fields that
-    [cannot safely be copied](#copying), use a pointer receiver. Common examples
-    are [`sync.Mutex`] and other synchronization types.
+*   如果接收器是一個包含[不能安全複製]的字段的結構體，使用指針接收器。常見例子是 [`sync.Mutex`] 和其他同步類型。
 
     ```go
     // 好的範例:
@@ -2030,21 +2013,13 @@ The list below spells out each case in further detail:
     }
     ```
 
-    **Tip:** Check the type's [Godoc] for information about whether it is safe
-    or unsafe to copy.
+    **提示：** 檢查類型的 [Godoc] 以獲取關於它是否安全或不安全複製的信息。
 
-*   If the receiver is a "large" struct or array, a pointer receiver may be more
-    efficient. Passing a struct is equivalent to passing all of its fields or
-    elements as arguments to the method. If that seems too large to
-    [pass by value](#pass-values), a pointer is a good choice.
+*   如果接收器是一個“大型”結構體或數組，指針接收器可能更有效。傳遞一個結構體等同於將其所有字段或元素作為參數傳遞給方法。如果這看起來太大而無法[按值傳遞]，指針是一個好選擇。
 
-*   For methods that will call or run concurrently with other functions that
-    modify the receiver, use a value if those modifications should not be
-    visible to your method; otherwise use a pointer.
+*   對於將與修改接收器的其他函數同時調用或運行的方法，如果這些修改不應該對你的方法可見，使用值；否則使用指針。
 
-*   If the receiver is a struct or array, any of whose elements is a pointer to
-    something that may be mutated, prefer a pointer receiver to make the
-    intention of mutability clear to the reader.
+*   如果接收器是一個結構體或數組，其任何元素是指向可能被改變的東西的指針，優先選擇指針接收器以使可變性的意圖對讀者清晰。
 
     ```go
     // 好的範例:
@@ -2057,8 +2032,7 @@ The list below spells out each case in further detail:
     }
     ```
 
-*   If the receiver is a [built-in type], such as an integer or a string, that
-    does not need to be modified, use a value.
+*   如果接收器是一個[內建類型]，如整數或字符串，不需要被修改，使用值。
 
     ```go
     // 好的範例:
@@ -2067,57 +2041,43 @@ The list below spells out each case in further detail:
     func (u User) String() { return string(u) }
     ```
 
-*   If the receiver is a map, function, or channel, use a value rather than a
-    pointer.
+*   如果接收器是一個映射、函數或通道，使用值而不是指針。
 
     ```go
     // 好的範例:
-    // See https://pkg.go.dev/net/http#Header.
+    // 參見 https://pkg.go.dev/net/http#Header。
     type Header map[string][]string
 
-    func (h Header) Add(key, value string) { /* omitted */ }
+    func (h Header) Add(key, value string) { /* 省略 */ }
     ```
 
-*   If the receiver is a "small" array or struct that is naturally a value type
-    with no mutable fields and no pointers, a value receiver is usually the
-    right choice.
+*   如果接收器是一個“小型”數組或結構體，本質上是一個沒有可變字段和指針的值類型，值接收器通常是正確的選擇。
 
     ```go
     // 好的範例:
-    // See https://pkg.go.dev/time#Time.
-    type Time struct { /* omitted */ }
+    // 參見 https://pkg.go.dev/time#Time。
+    type Time struct { /* 省略 */ }
 
-    func (t Time) Add(d Duration) Time { /* omitted */ }
+    func (t Time) Add(d Duration) Time { /* 省略 */ }
     ```
 
-*   When in doubt, use a pointer receiver.
+*   如有疑問，使用指針接收器。
 
-As a general guideline, prefer to make the methods for a type either all pointer
-methods or all value methods.
+作為一般指導原則，傾向於使一個類型的方法要麼全部是指針方法，要麼全部是值方法。
 
-**Note:** There is a lot of misinformation about whether passing a value or a
-pointer to a function can affect performance. The compiler can choose to pass
-pointers to values on the stack as well as copying values on the stack, but
-these considerations should not outweigh the readability and correctness of the
-code in most circumstances. When the performance does matter, it is important to
-profile both approaches with a realistic benchmark before deciding that one
-approach outperforms the other.
+**注意：** 關於將值或指針傳遞給函數是否會影響性能有很多誤解。編譯器可以選擇將值的指針傳遞到棧上，也可以在棧上複製值，但在大多數情況下，這些考慮不應該超過代碼的可讀性和正確性。當性能確實重要時，重要的是在決定哪種方法性能更好之前，使用現實的基準測試對兩種方法進行分析。
 
-[plain old data]: https://en.wikipedia.org/wiki/Passive_data_structure
+[普通舊數據]: https://en.wikipedia.org/wiki/Passive_data_structure
 [`sync.Mutex`]: https://pkg.go.dev/sync#Mutex
-[built-in type]: https://pkg.go.dev/builtin
+[內建類型]: https://pkg.go.dev/builtin
 
 <a id="switch-break"></a>
 
-### `switch` and `break`
+### `switch` 與 `break`
 
 <a id="TOC-SwitchBreak"></a>
 
-Do not use `break` statements without target labels at the ends of `switch`
-clauses; they are redundant. Unlike in C and Java, `switch` clauses in Go
-automatically break, and a `fallthrough` statement is needed to achieve the
-C-style behavior. Use a comment rather than `break` if you want to clarify the
-purpose of an empty clause.
+不要在 `switch` 語句的末尾使用沒有目標標籤的 `break` 語句；它們是多餘的。與 C 和 Java 不同，Go 中的 `switch` 語句會自動中斷，需要 `fallthrough` 語句來實現 C 風格的行為。如果你想澄清一個空語句的目的，請使用註釋而不是 `break`。
 
 ```go
 // 好的範例:
@@ -2136,128 +2096,104 @@ default:
 switch x {
 case "A", "B":
     buf.WriteString(x)
-    break // this break is redundant
+    break // 這個 break 是多餘的
 case "C":
-    break // this break is redundant
+    break // 這個 break 是多餘的
 default:
     return fmt.Errorf("unknown value: %q", x)
 }
 ```
 
-> **Note:** If a `switch` clause is within a `for` loop, using `break` within
-> `switch` does not exit the enclosing `for` loop.
+> **注意：** 如果 `switch` 語句在一個 `for` 循環內，那麼在 `switch` 內使用 `break` 不會退出包圍的 `for` 循環。
 >
 > ```go
 > for {
 >   switch x {
 >   case "A":
->      break // exits the switch, not the loop
+>      break // 退出 switch，不是循環
 >   }
 > }
 > ```
 >
-> To escape the enclosing loop, use a label on the `for` statement:
+> 要跳出包圍的循環，請在 `for` 語句上使用標籤：
 >
 > ```go
 > loop:
 >   for {
 >     switch x {
 >     case "A":
->        break loop // exits the loop
+>        break loop // 退出循環
 >     }
 >   }
 > ```
 
 <a id="synchronous-functions"></a>
 
-### Synchronous functions
+### 同步函數 Synchronous functions
 
 <a id="TOC-SynchronousFunctions"></a>
 
-Synchronous functions return their results directly and finish any callbacks or
-channel operations before returning. Prefer synchronous functions over
-asynchronous functions.
+同步函數直接返回它們的結果，並在返回之前完成任何回調或通道操作。相比於異步函數，更推薦使用同步函數。
 
-Synchronous functions keep goroutines localized within a call. This helps to
-reason about their lifetimes, and avoid leaks and data races. Synchronous
-functions are also easier to test, since the caller can pass an input and check
-the output without the need for polling or synchronization.
+同步函數將 goroutine 局限在調用內。這有助於推理它們的生命週期，並避免泄漏和數據競爭。同步函數也更容易測試，因為調用者可以傳遞輸入並檢查輸出，無需輪詢或同步。
 
-If necessary, the caller can add concurrency by calling the function in a
-separate goroutine. However, it is quite difficult (sometimes impossible) to
-remove unnecessary concurrency at the caller side.
+如果必要，調用者可以通過在單獨的 goroutine 中調用函數來添加並發性。然而，在調用方側移除不必要的並發性有時是相當困難（有時甚至是不可能的）。
 
-See also:
+另見：
 
-*   "Rethinking Classical Concurrency Patterns", talk by Bryan Mills:
-    [slides][rethinking-slides], [video][rethinking-video]
+*   Bryan Mills 的演講 "Rethinking Classical Concurrency Patterns"：[幻燈片][rethinking-slides]，[視頻][rethinking-video]
 
 <a id="type-aliases"></a>
 
-### Type aliases
+### 類型別名 Type aliases
 
 <a id="TOC-TypeAliases"></a>
 
-Use a *type definition*, `type T1 T2`, to define a new type. Use a
-[*type alias*], `type T1 = T2`, to refer to an existing type without defining a
-new type. Type aliases are rare; their primary use is to aid migrating packages
-to new source code locations. Don't use type aliasing when it is not needed.
+使用*類型定義* `type T1 T2` 來定義一個新類型。使用[*類型別名*] `type T1 = T2` 來引用一個現有的類型，而不定義一個新類型。類型別名很少見；它們的主要用途是幫助將包遷移到新的源代碼位置。當不需要時，不要使用類型別名。
 
-[*type alias*]: http://golang.org/ref/spec#Type_declarations
+[*類型別名*]: http://golang.org/ref/spec#Type_declarations
 
 <a id="use-percent-q"></a>
 
-### Use %q
+### 使用 %q
 
 <a id="TOC-UsePercentQ"></a>
 
-Go's format functions (`fmt.Printf` etc.) have a `%q` verb which prints strings
-inside double-quotation marks.
+Go 的格式化函數（`fmt.Printf` 等）有一個 `%q` 動詞，它會在雙引號內打印字符串。
 
 ```go
 // 好的範例:
 fmt.Printf("value %q looks like English text", someText)
 ```
 
-Prefer using `%q` over doing the equivalent manually, using `%s`:
+優先使用 `%q` 而不是手動進行等效操作，使用 `%s`：
 
 ```go
 // 不好的範例:
 fmt.Printf("value \"%s\" looks like English text", someText)
-// Avoid manually wrapping strings with single-quotes too:
+// 也避免手動用單引號包圍字符串：
 fmt.Printf("value '%s' looks like English text", someText)
 ```
 
-Using `%q` is recommended in output intended for humans where the input value
-could possibly be empty or contain control characters. It can be very hard to
-notice a silent empty string, but `""` stands out clearly as such.
+在為人類準備的輸出中，當輸入值可能為空或包含控制字符時，推薦使用 `%q`。一個無聲的空字符串可能很難被注意到，但 `""` 清楚地突出顯示為此。
 
 <a id="use-any"></a>
 
-### Use any
+### 使用 any
 
-Go 1.18 introduces an `any` type as an [alias] to `interface{}`. Because it is
-an alias, `any` is equivalent to `interface{}` in many situations and in others
-it is easily interchangeable via an explicit conversion. Prefer to use `any` in
-new code.
+Go 1.18 引入了 `any` 類型作為 `interface{}` 的[別名]。因為它是一個別名，`any` 在許多情況下等同於 `interface{}`，在其他情況下可以通過顯式轉換輕鬆互換。在新代碼中優先使用 `any`。
 
-[alias]: https://go.googlesource.com/proposal/+/master/design/18130-type-alias.md
+[別名]: https://go.googlesource.com/proposal/+/master/design/18130-type-alias.md
 
-## Common libraries
+## 常用庫 Common libraries
 
 <a id="flags"></a>
 
-### Flags
+### 標誌 Flags
 
 <a id="TOC-Flags"></a>
 
-Go programs in the Google codebase use an internal variant of the
-[standard `flag` package]. It has a similar interface but interoperates well
-with internal Google systems. Flag names in Go binaries should prefer to use
-underscores to separate words, though the variables that hold a flag's value
-should follow the standard Go name style ([mixed caps]). Specifically, the flag
-name should be in snake case, and the variable name should be the equivalent
-name in camel case.
+Google 代碼庫中的 Go 程序使用 [標準 `flag` 包] 的內部變體。它具有類似的接口，但與內部 Google 系統良好互操作。Go 二進制文件中的標誌名稱應該優先使用下劃線來分隔單詞，儘管持有標誌值的變量應該遵循標準 Go 名稱風格（[混合大小寫]）。具體來說，標誌名稱應該是蛇形大小寫，變量名稱懲罰是駝峰大小寫的等效名稱。
 
 ```go
 // 好的範例:
@@ -2273,57 +2209,39 @@ var (
 )
 ```
 
-Flags must only be defined in `package main` or equivalent.
+標誌只能在 `package main` 或等效包中定義。
 
-General-purpose packages should be configured using Go APIs, not by punching
-through to the command-line interface; don't let importing a library export new
-flags as a side effect. That is, prefer explicit function arguments or struct
-field assignment or much less frequently and under the strictest of scrutiny
-exported global variables. In the extremely rare case that it is necessary to
-break this rule, the flag name must clearly indicate the package that it
-configures.
+通用包應該使用 Go API 進行配置，而不是穿透到命令行界面；不要讓導入一個庫作為副作用導出新的標誌。也就是說，優先考慮顯式函數參數或結構體字段賦值，或者在最嚴格的審查下不太頻繁地導出全局變量。在極少數必要打破此規則的情況下，標誌名稱必須清楚地指示它配置的包。
 
-If your flags are global variables, place them in their own `var` group,
-following the imports section.
+如果你的標誌是全局變量，請將它們放在自己的 `var` 組中，跟在導入部分之後。
 
-There is additional discussion around best practices for creating [complex CLIs]
-with subcommands.
+有關創建[複雜 CLI]與子命令的最佳實踐的額外討論。
 
-See also:
+另見：
 
-*   [Tip of the Week #45: Avoid Flags, Especially in Library Code][totw-45]
-*   [Go Tip #10: Configuration Structs and Flags](https://google.github.io/styleguide/go/index.html#gotip)
-*   [Go Tip #80: Dependency Injection Principles](https://google.github.io/styleguide/go/index.html#gotip)
+*   [每週提示 #45: 避免標誌，特別是在庫代碼中][totw-45]
+*   [Go 提示 #10: 配置結構體和標誌](https://google.github.io/styleguide/go/index.html#gotip)
+*   [Go 提示 #80: 依賴注入原則](https://google.github.io/styleguide/go/index.html#gotip)
 
-[standard `flag` package]: https://golang.org/pkg/flag/
-[mixed caps]: guide#mixed-caps
-[complex CLIs]: best-practices#complex-clis
+[標準 `flag` 包]: https://golang.org/pkg/flag/
+[混合大小寫]: guide#mixed-caps
+[複雜 CLI]: best-practices#complex-clis
 [totw-45]: https://abseil.io/tips/45
 
 <a id="logging"></a>
 
-### Logging
+### 日誌記錄
 
-Go programs in the Google codebase use a variant of the standard [`log`]
-package. It has a similar but more powerful interface and interoperates well
-with internal Google systems. An open source version of this library is
-available as [package `glog`], and open source Google projects may use that, but
-this guide refers to it as `log` throughout.
+Google 代碼庫中的 Go 程序使用標準 [`log`] 包的一個變體。它具有類似但更強大的接口，並且與內部 Google 系統良好互操作。這個庫的開源版本可作為 [package `glog`] 獲得，開源的 Google 項目可以使用它，但本指南始終將其稱為 `log`。
 
-**Note:** For abnormal program exits, this library uses `log.Fatal` to abort
-with a stacktrace, and `log.Exit` to stop without one. There is no `log.Panic`
-function as in the standard library.
+**注意：** 對於異常程序退出，這個庫使用 `log.Fatal` 來中止並帶有堆棧跟蹤，使用 `log.Exit` 來停止但不帶堆棧跟蹤。標準庫中的 `log.Panic` 函數在這裡不存在。
 
-**Tip:** `log.Info(v)` is equivalent `log.Infof("%v", v)`, and the same goes for
-other logging levels. Prefer the non-formatting version when you have no
-formatting to do.
+**提示：** `log.Info(v)` 等同於 `log.Infof("%v", v)`，其他日誌級別也是如此。當你沒有格式化要做時，優先使用非格式化版本。
 
-See also:
+另見：
 
-*   Best practices on [logging errors](best-practices#error-logging) and
-    [custom verbosily levels](best-practices#vlog)
-*   When and how to use the log package to
-    [stop the program](best-practices#checks-and-panics)
+*   關於[錯誤日誌記錄](best-practices#error-logging)和[自定義詳細級別](best-practices#vlog)的最佳實踐
+*   何時以及如何使用 log 包來[停止程序](best-practices#checks-and-panics)
 
 [`log`]: https://pkg.go.dev/log
 [`log/slog`]: https://pkg.go.dev/log/slog
@@ -2333,109 +2251,67 @@ See also:
 
 <a id="contexts"></a>
 
-### Contexts
+### 上下文 Contexts
 
 <a id="TOC-Contexts"></a>
 
-Values of the [`context.Context`] type carry security credentials, tracing
-information, deadlines, and cancellation signals across API and process
-boundaries. Unlike C++ and Java, which in the Google codebase use thread-local
-storage, Go programs pass contexts explicitly along the entire function call
-chain from incoming RPCs and HTTP requests to outgoing requests.
+[`context.Context`] 類型的值在 API 和進程邊界之間傳遞安全憑證、追蹤信息、截止時間和取消信號。與在 Google 代碼庫中使用線程局部存儲的 C++ 和 Java 不同，Go 程序明確地沿著從接收 RPC 和 HTTP 請求到發出請求的整個函數調用鏈傳遞上下文。
 
 [`context.Context`]: https://pkg.go.dev/context
 
-When passed to a function or method, `context.Context` is always the first
-parameter.
+當傳遞給函數或方法時，`context.Context` 總是第一個參數。
 
 ```go
 func F(ctx context.Context /* other arguments */) {}
 ```
 
-Exceptions are:
+例外情況有：
 
-*   In an HTTP handler, where the context comes from
-    [`req.Context()`](https://pkg.go.dev/net/http#Request.Context).
-*   In streaming RPC methods, where the context comes from the stream.
+*   在 HTTP 處理器中，上下文來自 [`req.Context()`](https://pkg.go.dev/net/http#Request.Context)。
+*   在流式 RPC 方法中，上下文來自流。
 
-    Code using gRPC streaming accesses a context from a `Context()` method in
-    the generated server type, which implements `grpc.ServerStream`. See
-    [gRPC Generated Code documentation](https://grpc.io/docs/languages/go/generated-code/).
+    使用 gRPC 流的代碼從生成的服務器類型中的 `Context()` 方法訪問上下文，該方法實現了 `grpc.ServerStream`。參見 [gRPC 生成代碼文檔](https://grpc.io/docs/languages/go/generated-code/)。
 
-*   In entrypoint functions (see below for examples of such functions), use
-    [`context.Background()`](https://pkg.go.dev/context/#Background).
+*   在入口點函數中（見下面的例子），使用 [`context.Background()`](https://pkg.go.dev/context/#Background)。
 
-    *   In binary targets: `main`
-    *   In general purpose code and libraries: `init`
-    *   In tests: `TestXXX`, `BenchmarkXXX`, `FuzzXXX`
+    *   在二進制目標中：`main`
+    *   在通用代碼和庫中：`init`
+    *   在測試中：`TestXXX`、`BenchmarkXXX`、`FuzzXXX`
 
-> **Note**: It is very rare for code in the middle of a callchain to require
-> creating a base context of its own using `context.Background()`. Always prefer
-> taking a context from your caller, unless it's the wrong context.
+> **注意**：在調用鏈中間的代碼很少需要使用 `context.Background()` 創建自己的基礎上下文。總是優先從你的調用者那裡獲取上下文，除非它是錯誤的上下文。
 >
-> You may come across server libraries (the implementation of Stubby, gRPC, or
-> HTTP in Google's server framework for Go) that construct a fresh context
-> object per request. These contexts are immediately filled with information
-> from the incoming request, so that when passed to the request handler, the
-> context's attached values have been propagated to it across the network
-> boundary from the client caller. Moreover, these contexts' lifetimes are
-> scoped to that of the request: when the request is finished, the context is
-> cancelled.
+> 你可能會遇到服務器庫（Stubby、gRPC 或 Google 的 Go 服務器框架中的 HTTP 的實現），它們會為每個請求構造一個新的上下文對象。這些上下文立即填充了來自傳入請求的信息，因此當傳遞給請求處理器時，上下文的附加值已經跨網絡邊界從客戶端調用者傳播到它。此外，這些上下文的生命週期限於請求的生命週期：當請求完成時，上下文被取消。
 >
-> Unless you are implementing a server framework, you shouldn't create contexts
-> with `context.Background()` in library code. Instead, prefer using context
-> detachment, which is mentioned below, if there is an existing context
-> available. If you think you do need `context.Background()` outside of
-> entrypoint functions, discuss it with the Google Go style mailing list before
-> committing to an implementation.
+> 除非你正在實現一個服務器框架，否則你不應該在庫代碼中使用 `context.Background()` 創建上下文。相反，如果有現有的上下文可用，優先使用下面提到的上下文分離。如果你認為在入口點函數之外需要 `context.Background()`，在承諾實施之前請與 Google Go 風格郵件列表討論。
 
-The convention that `context.Context` comes first in functions also applies to
-test helpers.
+`context.Context` 在函數中排在第一位的慣例也適用於測試輔助函數。
 
 ```go
 // 好的範例:
 func readTestFile(ctx context.Context, t *testing.T, path string) string {}
 ```
 
-Do not add a context member to a struct type. Instead, add a context parameter
-to each method on the type that needs to pass it along. The one exception is for
-methods whose signature must match an interface in the standard library or in a
-third party library outside Google's control. Such cases are very rare, and
-should be discussed with the Google Go style mailing list before implementation
-and readability review.
+不要將上下文成員添加到結構體類型中。相反，為類型上需要傳遞它的每個方法添加一個上下文參數。唯一的例外是對於其簽名必須與標準庫或 Google 控制之外的第三方庫中的接口匹配的方法。這種情況非常罕見，在實施和可讀性審查之前應與 Google Go 風格郵件列表討論。
 
-Code in the Google codebase that must spawn background operations which can run
-after the parent context has been cancelled can use an internal package for
-detachment. Follow [issue #40221](https://github.com/golang/go/issues/40221) for
-discussions on an open source alternative.
+Google 代碼庫中必須啟動可以在父上下文被取消後運行的後台操作的代碼可以使用內部包進行分離。關注 [問題 #40221](https://github.com/golang/go/issues/40221) 以獲取開源替代方案的討論。
 
-Since contexts are immutable, it is fine to pass the same context to multiple
-calls that share the same deadline, cancellation signal, credentials, parent
-trace, and so on.
+由於上下文是不可變的，將相同的上下文傳遞給共享相同截止時間、取消信號、憑證、父追蹤等的多個調用是可以的。
 
-See also:
+另見：
 
-*   [Contexts and structs]
+*   [上下文和結構體]
 
-[Contexts and structs]: https://go.dev/blog/context-and-structs
+[上下文和結構體]: https://go.dev/blog/context-and-structs
 
 <a id="custom-contexts"></a>
 
-#### Custom contexts
+#### 自定義上下文 Custom contexts
 
-Do not create custom context types or use interfaces other than
-`context.Context` in function signatures. There are no exceptions to this rule.
+不要創建自定義上下文類型或在函數簽名中使用除 `context.Context` 以外的接口。這條規則沒有例外。
 
-Imagine if every team had a custom context. Every function call from package `p`
-to package `q` would have to determine how to convert a `p.Context` to a
-`q.Context`, for all pairs of packages `p` and `q`. This is impractical and
-error-prone for humans, and it makes automated refactorings that add context
-parameters nearly impossible.
+想像如果每個團隊都有一個自定義上下文。從包 `p` 到包 `q` 的每個函數調用都必須確定如何將 `p.Context` 轉換為 `q.Context`，對於所有的包 `p` 和 `q` 組合。這對人類來說是不切實際和容易出錯的，它使得添加上下文參數的自動重構幾乎不可能。
 
-If you have application data to pass around, put it in a parameter, in the
-receiver, in globals, or in a `Context` value if it truly belongs there.
-Creating your own context type is not acceptable since it undermines the ability
-of the Go team to make Go programs work properly in production.
+如果你有應用數據要傳遞，將它放在參數中、接收器中、全局變量中，或者如果它真的屬於那裡，則放在 `Context` 值中。創建自己的上下文類型是不可接受的，因為它破壞了 Go 團隊使 Go 程序在生產中正常工作的能力。
 
 <a id="crypto-rand"></a>
 
