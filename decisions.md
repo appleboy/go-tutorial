@@ -910,8 +910,7 @@ n, _ := b.Write(p) // never returns a non-nil error
 func Lookup(key string) int
 ```
 
-Failing to check for an in-band error value can lead to bugs and can attribute
-errors to the wrong function.
+未檢查內部錯誤值可能導致錯誤，並將錯誤歸咎於錯誤的函數。
 
 ```go
 // 不好的範例:
@@ -920,12 +919,7 @@ errors to the wrong function.
 return Parse(Lookup(missingKey))
 ```
 
-Go's support for multiple return values provides a better solution (see the
-[Effective Go section on multiple returns]). Instead of requiring clients to
-check for an in-band error value, a function should return an additional value
-to indicate whether its other return values are valid. This return value may be
-an error or a boolean when no explanation is needed, and should be the final
-return value.
+Go 對多返回值的支持提供了一個更好的解決方案（參見[Effective Go 關於多重返回的部分]）。函數不應要求客戶端檢查內部錯誤值，而應返回一個額外的值來指示其其他返回值是否有效。這個返回值可能是一個錯誤或一個布林值（當不需要解釋時），並且應該是最後的返回值。
 
 ```go
 // 好的範例:
@@ -933,10 +927,9 @@ return value.
 func Lookup(key string) (value string, ok bool)
 ```
 
-This API prevents the caller from incorrectly writing `Parse(Lookup(key))` which
-causes a compile-time error, since `Lookup(key)` has 2 outputs.
+這種 API 防止調用者錯誤地寫 `Parse(Lookup(key))`，這會導致編譯時錯誤，因為 `Lookup(key)` 有 2 個輸出。
 
-Returning errors in this way encourages more robust and explicit error handling:
+以這種方式返回錯誤鼓勵更健壯和明確的錯誤處理：
 
 ```go
 // 好的範例:
@@ -947,103 +940,87 @@ if !ok {
 return Parse(value)
 ```
 
-Some standard library functions, like those in package `strings`, return in-band
-error values. This greatly simplifies string-manipulation code at the cost of
-requiring more diligence from the programmer. In general, Go code in the Google
-codebase should return additional values for errors.
+一些標準庫函數，如 `strings` 套件中的函數，返回內部錯誤值。這大大簡化了字符串操作代碼，但代價是需要程序員更加謹慎。一般來說，Google 代碼庫中的 Go 代碼應該返回額外的錯誤值。
 
-[Effective Go section on multiple returns]: http://golang.org/doc/effective_go.html#multiple-returns
+[Effective Go 關於多重返回的部分]: http://golang.org/doc/effective_go.html#multiple-returns
 
 <a id="indent-error-flow"></a>
 
-### Indent error flow
+### 縮進錯誤流程 (Indent error flow)
 
 <a id="TOC-IndentErrorFlow"></a>
 
-Handle errors before proceeding with the rest of your code. This improves the
-readability of the code by enabling the reader to find the normal path quickly.
-This same logic applies to any block which tests a condition then ends in a
-terminal condition (e.g., `return`, `panic`, `log.Fatal`).
+在繼續處理代碼的其餘部分之前，先處理錯誤。這通過使讀者能夠快速找到正常路徑來提高代碼的可讀性。這個邏輯同樣適用於任何測試條件然後以終止條件結束的塊（例如，`return`、`panic`、`log.Fatal`）。
 
-Code that runs if the terminal condition is not met should appear after the `if`
-block, and should not be indented in an `else` clause.
+如果未滿足終止條件，則運行的代碼應該出現在 `if` 塊之後，並且不應該在 `else` 子句中縮進。
 
 ```go
 // 好的範例:
 if err != nil {
-    // error handling
-    return // or continue, etc.
+    // 錯誤處理
+    return // 或者 continue 等等
 }
-// normal code
+// 正常代碼
 ```
 
 ```go
 // 不好的範例:
+// 不好的範例:
 if err != nil {
-    // error handling
+    // 錯誤處理
 } else {
-    // normal code that looks abnormal due to indentation
+    // 由於縮進，看起來不正常的正常代碼
 }
 ```
 
-> **Tip:** If you are using a variable for more than a few lines of code, it is
-> generally not worth using the `if`-with-initializer style. In these cases, it
-> is usually better to move the declaration out and use a standard `if`
-> statement:
+> **提示：** 如果您在多於幾行代碼中使用變量，通常不值得使用帶初始化器的 `if` 風格。在這些情況下，通常最好將聲明移出並使用標準的 `if` 語句：
 >
 > ```go
 > // 好的範例:
 > x, err := f()
 > if err != nil {
->   // error handling
+>   // 錯誤處理
 >   return
 > }
-> // lots of code that uses x
-> // across multiple lines
+> // 使用 x 的大量代碼
+> // 跨越多行
 > ```
 >
 > ```go
 > // 不好的範例:
 > if x, err := f(); err != nil {
->   // error handling
+>   // 錯誤處理
 >   return
 > } else {
->   // lots of code that uses x
->   // across multiple lines
+>   // 使用 x 的大量代碼
+>   // 跨越多行
 > }
 > ```
 
-See [Go Tip #1: Line of Sight] and
-[TotT: Reduce Code Complexity by Reducing Nesting](https://testing.googleblog.com/2017/06/code-health-reduce-nesting-reduce.html)
-for more details.
+有關更多細節，請參見 [Go 提示 #1: 視線範圍] 和
+[TotT: 通過減少嵌套降低代碼複雜性](https://testing.googleblog.com/2017/06/code-health-reduce-nesting-reduce.html)。
 
-[Go Tip #1: Line of Sight]: https://google.github.io/styleguide/go/index.html#gotip
+[Go 提示 #1: 視線範圍]: https://google.github.io/styleguide/go/index.html#gotip
 
 <a id="language"></a>
 
-## Language
+## 語言
 
 <a id="literal-formatting"></a>
 
-### Literal formatting
+### 字面量格式化
 
-Go has an exceptionally powerful [composite literal syntax], with which it is
-possible to express deeply-nested, complicated values in a single expression.
-Where possible, this literal syntax should be used instead of building values
-field-by-field. The `gofmt` formatting for literals is generally quite good, but
-there are some additional rules for keeping these literals readable and
-maintainable.
+Go 擁有異常強大的[複合字面量語法]，可以用單一表達式來表達深層嵌套、複雜的值。在可能的情況下，應該使用這種字面量語法，而不是逐字段構建值。`gofmt` 對字面量的格式化通常相當不錯，但是還有一些額外的規則來保持這些字面量的可讀性和可維護性。
 
-[composite literal syntax]: https://golang.org/ref/spec#Composite_literals
+[複合字面量語法]: https://golang.org/ref/spec#Composite_literals
 
 <a id="literal-field-names"></a>
 
-#### Field names
+#### 字段名稱
 
-Struct literals must specify **field names** for types defined outside the
-current package.
+對於在當前套件外定義的類型，結構字面量必須指定**字段名稱**。
 
-*   Include field names for types from other packages.
+*   包括來自其他套件的類型的字段名稱。
 
     ```go
     // 好的範例:
@@ -1055,17 +1032,14 @@ current package.
     }
     ```
 
-    The position of fields in a struct and the full set of fields (both of which
-    are necessary to get right when field names are omitted) are not usually
-    considered to be part of a struct's public API; specifying the field name is
-    needed to avoid unnecessary coupling.
+    結構中字段的位置和字段的完整集合（省略字段名稱時必須正確的兩個條件）通常不被認為是結構的公共 API 的一部分；指定字段名稱是為了避免不必要的耦合。
 
     ```go
     // 不好的範例:
     r := csv.Reader{',', '#', 4, false, false, false, false}
     ```
 
-*   For package-local types, field names are optional.
+*   對於套件內部類型，字段名稱是可選的。
 
     ```go
     // 好的範例:
@@ -1073,9 +1047,7 @@ current package.
     also := internalType{4, 2}
     ```
 
-    Field names should still be used if it makes the code clearer, and it is
-    very common to do so. For example, a struct with a large number of fields
-    should almost always be initialized with field names.
+    如果使用字段名稱可以使代碼更清晰，則仍應使用字段名稱，這樣做是非常常見的。例如，具有大量字段的結構幾乎總是應該使用字段名稱進行初始化。
 
     <!-- TODO: Maybe a better example here that doesn't have many fields. -->
 
@@ -1091,17 +1063,11 @@ current package.
 
 <a id="literal-matching-braces"></a>
 
-#### Matching braces
+#### 匹配的大括號
 
-The closing half of a brace pair should always appear on a line with the same
-amount of indentation as the opening brace. One-line literals necessarily have
-this property. When the literal spans multiple lines, maintaining this property
-keeps the brace matching for literals the same as brace matching for common Go
-syntactic constructs like functions and `if` statements.
+一對大括號的閉合部分應該總是出現在與開括號相同縮進量的行上。單行字面量必然具有此屬性。當字面量跨越多行時，保持此屬性使得字面量的大括號匹配與 Go 常見的語法結構（如函數和 `if` 語句）的大括號匹配相同。
 
-The most common mistake in this area is putting the closing brace on the same
-line as a value in a multi-line struct literal. In these cases, the line should
-end with a comma and the closing brace should appear on the next line.
+這方面最常見的錯誤是將多行結構字面量中的值與閉合括號放在同一行。在這些情況下，該行應該以逗號結束，閉合括號應該出現在下一行。
 
 ```go
 // 好的範例:
@@ -1133,14 +1099,12 @@ bad := []*Type{
 
 <a id="literal-cuddled-braces"></a>
 
-#### Cuddled braces
+#### 貼合的大括號 (Cuddled braces)
 
-Dropping whitespace between braces (aka "cuddling" them) for slice and array
-literals is only permitted when both of the following are true.
+對於切片和數組字面量，只有在以下兩個條件都滿足時，才允許去掉大括號之間的空白（也就是所謂的「緊靠」它們）。
 
-*   The [indentation matches](#literal-matching-braces)
-*   The inner values are also literals or proto builders (i.e. not a variable or
-    other expression)
+*   [縮進匹配](#literal-matching-braces)
+*   內部值也是字面量或 proto 構建器（即不是變量或其他表達式）
 
 ```go
 // 好的範例:
@@ -1191,13 +1155,9 @@ bad := []*Type{
 
 <a id="literal-repeated-type-names"></a>
 
-#### Repeated type names
+#### 重複的類型名稱
 
-Repeated type names may be omitted from slice and map literals. This can be
-helpful in reducing clutter. A reasonable occasion for repeating the type names
-explicitly is when dealing with a complex type that is not common in your
-project, when the repetitive type names are on lines that are far apart and can
-remind the reader of the context.
+從切片和映射字面量中可以省略重複的類型名稱。這有助於減少混亂。當處理在您的項目中不常見的複雜類型時，明確重複類型名稱是一個合理的場合，特別是當重複的類型名稱出現在相隔很遠的行上，可以提醒讀者上下文。
 
 ```go
 // 好的範例:
@@ -1231,21 +1191,17 @@ repetitive := map[Type1]*Type2{
 }
 ```
 
-**Tip:** If you want to remove repetitive type names in struct literals, you can
-run `gofmt -s`.
+**提示：** 如果您想在結構字面量中移除重複的類型名稱，您可以執行 `gofmt -s`。
 
 <a id="literal-zero-value-fields"></a>
 
-#### Zero-value fields
+#### 零值字段
 
-[Zero-value] fields may be omitted from struct literals when clarity is not lost
-as a result.
+當不會因此失去清晰度時，可以從結構字面量中省略[零值]字段。
 
-Well-designed APIs often employ zero-value construction for enhanced
-readability. For example, omitting the three zero-value fields from the
-following struct draws attention to the only option that is being specified.
+設計良好的 API 經常使用零值構造來增強可讀性。例如，從下面的結構中省略三個零值字段，可以將注意力集中到正在指定的唯一選項上。
 
-[Zero-value]: https://golang.org/ref/spec#The_zero_value
+[零值]: https://golang.org/ref/spec#The_zero_value
 
 ```go
 // 不好的範例:
@@ -1283,17 +1239,11 @@ ldb := leveldb.Open("/my/table", &db.Options{
 })
 ```
 
-Structs within table-driven tests often benefit from [explicit field names],
-especially when the test struct is not trivial. This allows the author to omit
-the zero-valued fields entirely when the fields in question are not related to
-the test case. For example, successful test cases should omit any error-related
-or failure-related fields. In cases where the zero value is necessary to
-understand the test case, such as testing for zero or `nil` inputs, the field
-names should be specified.
+在表驅動測試中的結構體通常會從[明確的字段名稱]中受益，特別是當測試結構體不是微不足道的時候。這允許作者在有關字段與測試案例無關時完全省略零值字段。例如，成功的測試案例應該省略任何與錯誤相關或失敗相關的字段。在零值對於理解測試案例是必要的情況下，例如測試零或 `nil` 輸入，應該指定字段名稱。
 
-[explicit field names]: #literal-field-names
+[明確的字段名稱]: #literal-field-names
 
-**Concise**
+**簡潔**
 
 ```go
 tests := []struct {
@@ -1312,7 +1262,7 @@ tests := []struct {
 }
 ```
 
-**Explicit**
+**明確**
 
 ```go
 tests := []struct {
@@ -1342,11 +1292,9 @@ tests := []struct {
 
 <a id="nil-slices"></a>
 
-### Nil slices
+### Nil 切片
 
-For most purposes, there is no functional difference between `nil` and the empty
-slice. Built-in functions like `len` and `cap` behave as expected on `nil`
-slices.
+對於大多數目的來說，`nil` 和空切片之間沒有功能上的差異。內建函數如 `len` 和 `cap` 對 `nil` 切片的行為如預期。
 
 ```go
 // 好的範例:
@@ -1357,15 +1305,13 @@ var s []int         // nil
 fmt.Println(s)      // []
 fmt.Println(len(s)) // 0
 fmt.Println(cap(s)) // 0
-for range s {...}   // no-op
+for range s {...}   // 無操作
 
 s = append(s, 42)
 fmt.Println(s)      // [42]
 ```
 
-If you declare an empty slice as a local variable (especially if it can be the
-source of a return value), prefer the nil initialization to reduce the risk of
-bugs by callers.
+如果你聲明一個空切片作為局部變量（特別是如果它可以是返回值的來源），優先選擇 nil 初始化以減少呼叫者的錯誤風險。
 
 ```go
 // 好的範例:
@@ -1377,34 +1323,30 @@ var t []string
 t := []string{}
 ```
 
-Do not create APIs that force their clients to make distinctions between nil and
-the empty slice.
+不要創建強迫客戶端區分 nil 和空切片的 API。
 
 ```go
 // 好的範例:
-// Ping pings its targets.
-// Returns hosts that successfully responded.
+// Ping 對其目標進行 ping 操作。
+// 返回成功響應的主機。
 func Ping(hosts []string) ([]string, error) { ... }
 ```
 
 ```go
 // 不好的範例:
-// Ping pings its targets and returns a list of hosts
-// that successfully responded. Can be empty if the input was empty.
-// nil signifies that a system error occurred.
+// Ping 對其目標進行 ping 操作並返回成功響應的主機列表。
+// 如果輸入為空則可以為空。
+// nil 表示發生了系統錯誤。
 func Ping(hosts []string) []string { ... }
 ```
 
-When designing interfaces, avoid making a distinction between a `nil` slice and
-a non-`nil`, zero-length slice, as this can lead to subtle programming errors.
-This is typically accomplished by using `len` to check for emptiness, rather
-than `== nil`.
+在設計介面時，避免區分 `nil` 切片和非 `nil`、長度為零的切片，因為這可能導致微妙的編程錯誤。這通常是通過使用 `len` 來檢查空值，而不是 `== nil` 來實現的。
 
-This implementation accepts both `nil` and zero-length slices as "empty":
+這個實現接受 `nil` 和長度為零的切片作為「空」：
 
 ```go
 // 好的範例:
-// describeInts describes s with the given prefix, unless s is empty.
+// describeInts 用給定的前綴描述 s，除非 s 為空。
 func describeInts(prefix string, s []int) {
     if len(s) == 0 {
         return
@@ -1413,28 +1355,27 @@ func describeInts(prefix string, s []int) {
 }
 ```
 
-Instead of relying on the distinction as a part of the API:
+而不是將區分作為 API 的一部分依賴：
 
 ```go
 // 不好的範例:
 func maybeInts() []int { /* ... */ }
 
-// describeInts describes s with the given prefix; pass nil to skip completely.
+// describeInts 用給定的前綴描述 s；傳遞 nil 以完全跳過。
 func describeInts(prefix string, s []int) {
-  // The behavior of this function unintentionally changes depending on what
-  // maybeInts() returns in 'empty' cases (nil or []int{}).
+  // 這個函數的行為不經意地根據 maybeInts() 在「空」情況下返回的內容（nil 或 []int{}）而改變。
   if s == nil {
     return
   }
   fmt.Println(prefix, s)
 }
 
-describeInts("Here are some ints:", maybeInts())
+describeInts("這裡有一些整數：", maybeInts())
 ```
 
-See [in-band errors] for further discussion.
+有關進一步討論，請參見[帶內錯誤]。
 
-[in-band errors]: #in-band-errors
+[帶內錯誤]: #in-band-errors
 
 <a id="indentation-confusion"></a>
 
