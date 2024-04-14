@@ -2319,10 +2319,7 @@ Google 代碼庫中必須啟動可以在父上下文被取消後運行的後台�
 
 <a id="TOC-CryptoRand"></a>
 
-Do not use package `math/rand` to generate keys, even throwaway ones. If
-unseeded, the generator is completely predictable. Seeded with
-`time.Nanoseconds()`, there are just a few bits of entropy. Instead, use
-`crypto/rand`'s Reader, and if you need text, print to hexadecimal or base64.
+不要使用包 `math/rand` 來生成密鑰，即使是臨時的也不行。如果未種子化，生成器是完全可預測的。使用 `time.Nanoseconds()` 作為種子，只有幾位的熵。相反，使用 `crypto/rand` 的 Reader，如果你需要文本，輸出為十六進制或 base64。
 
 ```go
 // 好的範例:
@@ -2346,36 +2343,32 @@ func Key() string {
 }
 ```
 
-**Note:** `log.Fatalf` is not the standard library log. See [#logging].
+**注意：** `log.Fatalf` 不是標準庫的 log。參見 [#logging]。
 
 <a id="useful-test-failures"></a>
 
-## Useful test failures
+## 有用的測試失敗信息
 
 <a id="TOC-UsefulTestFailures"></a>
 
-It should be possible to diagnose a test's failure without reading the test's
-source. Tests should fail with helpful messages detailing:
+在不閱讀測試源碼的情況下，應該能夠診斷出測試的失敗原因。測試應該提供有幫助的消息來詳細說明：
 
-*   What caused the failure
-*   What inputs resulted in an error
-*   The actual result
-*   What was expected
+*   導致失敗的原因
+*   什麼輸入導致了錯誤
+*   實際結果
+*   預期的結果
 
-Specific conventions for achieving this goal are outlined below.
+下面概述了實現此目標的具體慣例。
 
 <a id="assert"></a>
 
-### Assertion libraries
+### 斷言庫 Assertion libraries
 
 <a id="TOC-Assert"></a>
 
-Do not create "assertion libraries" as helpers for testing.
+不要創建“斷言庫”作為測試的輔助工具。
 
-Assertion libraries are libraries that attempt to combine the validation and
-production of failure messages within a test (though the same pitfalls can apply
-to other test helpers as well). For more on the distinction between test helpers
-and assertion libraries, see [best practices](best-practices#test-functions).
+斷言庫是試圖在測試中結合驗證和產生失敗消息的庫（儘管相同的陷阱也可能適用於其他測試輔助工具）。有關測試輔助工具和斷言庫之間區別的更多信息，請參見[最佳實踐](best-practices#test-functions)。
 
 ```go
 // 不好的範例:
@@ -2387,9 +2380,7 @@ assert.IntEq(t, "obj.Comments", obj.Comments, 2)
 assert.StringNotEq(t, "obj.Body", obj.Body, "")
 ```
 
-Assertion libraries tend to either stop the test early (if `assert` calls
-`t.Fatalf` or `panic`) or omit relevant information about what the test got
-right:
+斷言庫傾向於要麼提前停止測試（如果 `assert` 調用了 `t.Fatalf` 或 `panic`），要麼省略了關於測試正確部分的相關信息：
 
 ```go
 // 不好的範例:
@@ -2408,17 +2399,9 @@ func StringEq(t *testing.T, name, got, want string) {
 }
 ```
 
-Complex assertion functions often do not provide [useful failure messages] and
-context that exists within the test function. Too many assertion functions and
-libraries lead to a fragmented developer experience: which assertion library
-should I use, what style of output format should it emit, etc.? Fragmentation
-produces unnecessary confusion, especially for library maintainers and authors
-of large-scale changes, who are responsible for fixing potential downstream
-breakages. Instead of creating a domain-specific language for testing, use Go
-itself.
+複雜的斷言函數通常不提供[有用的失敗消息]和存在於測試函數內的上下文。過多的斷言函數和庫導致了開發者體驗的碎片化：我應該使用哪個斷言庫，它應該輸出什麼樣的輸出格式等等？碎片化產生了不必要的混亂，特別是對於庫維護者和大規模變更的作者，他們負責修復潛在的下游破壞。不要創建一個特定於領域的測試語言，而應該使用 Go 本身。
 
-Assertion libraries often factor out comparisons and equality checks. Prefer
-using standard libraries such as [`cmp`] and [`fmt`] instead:
+斷言庫經常將比較和相等檢查分離出來。優先使用標準庫，如 [`cmp`] 和 [`fmt`]：
 
 ```go
 // 好的範例:
@@ -2434,9 +2417,7 @@ if !cmp.Equal(got, want) {
 }
 ```
 
-For more domain-specific comparison helpers, prefer returning a value or an
-error that can be used in the test's failure message instead of passing
-`*testing.T` and calling its error reporting methods:
+對於更具領域特定的比較輔助工具，優先返回一個值或錯誤，這可以在測試的失敗消息中使用，而不是傳遞 `*testing.T` 並調用其錯誤報告方法：
 
 ```go
 // 好的範例:
@@ -2451,19 +2432,17 @@ func TestBlogPost_VeritableRant(t *testing.T) {
 }
 ```
 
-**Best Practice:** Were `postLength` non-trivial, it would make sense to test it
-directly, independently of any tests that use it.
+**最佳實踐：** 如果 `postLength` 不是微不足道的，直接對其進行測試是有意義的，獨立於使用它的任何測試。
 
-See also:
+另見：
 
-*   [Equality comparison and diffs](#types-of-equality)
-*   [Print diffs](#print-diffs)
-*   For more on the distinction between test helpers and assertion helpers, see
-    [best practices](best-practices#test-functions)
+*   [相等性比較和差異](#types-of-equality)
+*   [打印差異](#print-diffs)
+*   有關測試輔助工具和斷言輔助工具之間區別的更多信息，請參見[最佳實踐](best-practices#test-functions)
 
-[useful failure messages]: #useful-test-failures
+[有用的失敗消息]: #useful-test-failures
 [`fmt`]: https://golang.org/pkg/fmt/
-[marking test helpers]: #mark-test-helpers
+[標記測試輔助工具]: #mark-test-helpers
 
 <a id="identify-the-function"></a>
 
