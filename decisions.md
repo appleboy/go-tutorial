@@ -2446,63 +2446,38 @@ func TestBlogPost_VeritableRant(t *testing.T) {
 
 <a id="identify-the-function"></a>
 
-### Identify the function
+### 指明函數 Identify the function
 
-In most tests, failure messages should include the name of the function that
-failed, even though it seems obvious from the name of the test function.
-Specifically, your failure message should be `YourFunc(%v) = %v, want %v`
-instead of just `got %v, want %v`.
+在大多數測試中，失敗消息應該包括失敗的函數名稱，即使從測試函數的名稱看似顯而易見。具體來說，你的失敗消息應該是 `YourFunc(%v) = %v, want %v` 而不僅僅是 `got %v, want %v`。
 
 <a id="identify-the-input"></a>
 
-### Identify the input
+### 指明輸入 Identify the input
 
-In most tests, failure messages should include the function inputs if they are
-short. If the relevant properties of the inputs are not obvious (for example,
-because the inputs are large or opaque), you should name your test cases with a
-description of what's being tested and print the description as part of your
-error message.
+在大多數測試中，如果輸入短小，失敗消息應該包括函數輸入。如果輸入的相關屬性不明顯（例如，因為輸入很大或不透明），你應該用正在測試的內容描述來命名你的測試用例，並將描述作為錯誤消息的一部分打印出來。
 
 <a id="got-before-want"></a>
 
-### Got before want
+### 先得到再期望 Got before want
 
-Test outputs should include the actual value that the function returned before
-printing the value that was expected. A standard format for printing test
-outputs is `YourFunc(%v) = %v, want %v`. Where you would write "actual" and
-"expected", prefer using the words "got" and "want", respectively.
+測試輸出應該包括函數返回的實際值，然後再打印期望的值。打印測試輸出的標準格式是 `YourFunc(%v) = %v, want %v`。在你會寫“實際”和“期望”的地方，優先使用“got”和“want”。
 
-For diffs, directionality is less apparent, and as such it is important to
-include a key to aid in interpreting the failure. See the
-[section on printing diffs]. Whichever diff order you use in your failure
-messages, you should explicitly indicate it as a part of the failure message,
-because existing code is inconsistent about the ordering.
+對於差異，方向性不那麼明顯，因此包括一個鍵以幫助解釋失敗是很重要的。參見[打印差異的部分]。無論你在失敗消息中使用哪種差異順序，你應該明確地指出它，因為現有代碼對於排序是不一致的。
 
-[section on printing diffs]: #print-diffs
+[打印差異的部分]: #print-diffs
 
 <a id="compare-full-structures"></a>
 
-### Full structure comparisons
+### 完整結構比較 Full structure comparisons
 
-If your function returns a struct (or any data type with multiple fields such as
-slices, arrays, and maps), avoid writing test code that performs a hand-coded
-field-by-field comparison of the struct. Instead, construct the data that you're
-expecting your function to return, and compare directly using a
-[deep comparison].
 
-**Note:** This does not apply if your data contains irrelevant fields that
-obscure the intention of the test.
+如果你的函數返回一個結構體（或任何具有多個字段的數據類型，如切片、數組和映射），避免編寫進行手工逐字段比較結構體的測試代碼。相反，構造你期望你的函數返回的數據，並直接使用[深度比較]進行比較。
 
-If your struct needs to be compared for approximate (or equivalent kind of
-semantic) equality or it contains fields that cannot be compared for equality
-(e.g., if one of the fields is an `io.Reader`), tweaking a [`cmp.Diff`] or
-[`cmp.Equal`] comparison with [`cmpopts`] options such as
-[`cmpopts.IgnoreInterfaces`] may meet your needs
-([example](https://play.golang.org/p/vrCUNVfxsvF)).
+**注意：** 如果你的數據包含不相關的字段，這些字段會掩蓋測試的意圖，則此建議不適用。
 
-If your function returns multiple return values, you don't need to wrap those in
-a struct before comparing them. Just compare the return values individually and
-print them.
+如果你的結構體需要進行大致相等（或等價類型的語義）比較，或者它包含無法進行相等比較的字段（例如，如果其中一個字段是 `io.Reader`），使用 [`cmp.Diff`] 或 [`cmp.Equal`] 比較並配合 [`cmpopts`] 選項，如 [`cmpopts.IgnoreInterfaces`]，可能滿足你的需求（[示例](https://play.golang.org/p/vrCUNVfxsvF)）。
+
+如果你的函數返回多個返回值，你不需要在比較它們之前將這些值包裝在一個結構體中。只需單獨比較返回值並打印它們。
 
 ```go
 // 好的範例:
@@ -2521,7 +2496,7 @@ if tail != `Fran & Freddie's Diner"` {
 }
 ```
 
-[deep comparison]: #types-of-equality
+[深度比較]: #types-of-equality
 [`cmpopts`]: https://pkg.go.dev/github.com/google/go-cmp/cmp/cmpopts
 [`cmpopts.IgnoreInterfaces`]: https://pkg.go.dev/github.com/google/go-cmp/cmp/cmpopts#IgnoreInterfaces
 
