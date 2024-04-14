@@ -97,9 +97,7 @@ Go 風格指南及其附帶文件編碼了當前編寫可讀性和符合慣用�
 * [Go 數據結構](https://research.swtch.com/godata)
 * [Go 接口](https://research.swtch.com/interfaces)
 * [Go 諺語](https://go-proverbs.github.io/)
-
 * <a id="gotip"></a> Go 提示集 - 敬請期待。
-
 * <a id="unit-testing-practices"></a> 單元測試實踐 - 敬請期待。
 
 **相關的 Testing-on-the-Toilet 文章**
