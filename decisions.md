@@ -1379,11 +1379,9 @@ describeInts("這裡有一些整數：", maybeInts())
 
 <a id="indentation-confusion"></a>
 
-### Indentation confusion
+### 縮排混淆
 
-Avoid introducing a line break if it would align the rest of the line with an
-indented code block. If this is unavoidable, leave a space to separate the code
-in the block from the wrapped line.
+避免引入換行符，如果這樣會使剩餘的行與縮進的代碼塊對齊。如果這是不可避免的，請留一個空格來分隔塊中的代碼與換行後的行。
 
 ```go
 // 不好的範例:
@@ -1394,23 +1392,19 @@ if longCondition1 && longCondition2 &&
 }
 ```
 
-See the following sections for specific guidelines and examples:
+請參閱以下部分以獲得具體指南和示例：
 
-*   [Function formatting](#func-formatting)
-*   [Conditionals and loops](#conditional-formatting)
-*   [Literal formatting](#literal-formatting)
+*   [函數格式化](#func-formatting)
+*   [條件和循環](#conditional-formatting)
+*   [字面量格式化](#literal-formatting)
 
 <a id="func-formatting"></a>
 
-### Function formatting
+### 函數格式化
 
-The signature of a function or method declaration should remain on a single line
-to avoid [indentation confusion](#indentation-confusion).
+函數或方法聲明的簽名應保持在單行上，以避免[縮進混淆](#indentation-confusion)。
 
-Function argument lists can make some of the longest lines in a Go source file.
-However, they precede a change in indentation, and therefore it is difficult to
-break the line in a way that does not make subsequent lines look like part of
-the function body in a confusing way:
+函數參數列表可能會使 Go 源文件中的某些行變得很長。然而，它們預示著縮進的變化，因此很難以不會使後續行看起來像是以令人困惑的方式屬於函數體的一部分的方式斷行：
 
 ```go
 // 不好的範例:
@@ -1421,10 +1415,9 @@ func (r *SomeType) SomeLongFunctionName(foo1, foo2, foo3 string,
 }
 ```
 
-See [best practices](best-practices#funcargs) for a few options for shortening
-the call sites of functions that would otherwise have many arguments.
+請參閱[最佳實踐](best-practices#funcargs)以獲得一些縮短具有許多參數的函數呼叫站點的選項。
 
-Lines can often be shortened by factoring out local variables.
+通過提取局部變量，經常可以縮短行。
 
 ```go
 // 好的範例:
@@ -1432,8 +1425,7 @@ local := helper(some, parameters, here)
 good := foo.Call(list, of, parameters, local)
 ```
 
-Similarly, function and method calls should not be separated based solely on
-line length.
+同樣，函數和方法呼叫不應僅基於行長度而被分開。
 
 ```go
 // 好的範例:
@@ -1446,9 +1438,7 @@ bad := foo.Call(long, list, of, parameters,
     with, arbitrary, line, breaks)
 ```
 
-Avoid adding inline comments to specific function arguments where possible.
-Instead, use an [option struct](best-practices#option-structure) or add more
-detail to the function documentation.
+盡可能避免對特定函數參數添加內聯註釋。相反，使用[選項結構](best-practices#option-structure)或在函數文檔中添加更多細節。
 
 ```go
 // 好的範例:
@@ -1463,9 +1453,7 @@ bad := server.New(
 )
 ```
 
-If the API cannot be changed or if the local call is unusual (whether or not the
-call is too long), it is always permissible to add line breaks if it aids in
-understanding the call.
+如果 API 無法更改或者局部呼叫是不尋常的（無論呼叫是否太長），如果它有助於理解呼叫，始終允許添加斷行。
 
 ```go
 // 好的範例:
@@ -1481,14 +1469,9 @@ canvas.RenderCube(cube,
 )
 ```
 
-Note that the lines in the above example are not wrapped at a specific column
-boundary but are grouped based on co-ordinate triples.
+請注意，上面示例中的行不是在特定的列邊界處換行，而是基於坐標三元組分組。
 
-Long string literals within functions should not be broken for the sake of line
-length. For functions that include such strings, a line break can be added after
-the string format, and the arguments can be provided on the next or subsequent
-lines. The decision about where the line breaks should go is best made based on
-semantic groupings of inputs, rather than based purely on line length.
+函數內的長字符串字面量不應該僅為了行長而被斷開。對於包含此類字符串的函數，可以在字符串格式之後添加換行符，並在下一行或後續行提供參數。關於斷行位置的決定應基於輸入的語義分組，而不僅僅是基於行長。
 
 ```go
 // 好的範例:
@@ -1507,10 +1490,9 @@ log.Warningf("Database key (%q, %d, %q) incompatible in"+
 
 <a id="conditional-formatting"></a>
 
-### Conditionals and loops
+### 條件語句和循環
 
-An `if` statement should not be line broken; multi-line `if` clauses can lead to
-[indentation confusion](#indentation-confusion).
+`if` 語句不應該換行；多行 `if` 子句可能導致[縮進混淆](#indentation-confusion)。
 
 ```go
 // 不好的範例:
@@ -1522,8 +1504,7 @@ if db.CurrentStatusIs(db.InTransaction) &&
 }
 ```
 
-If the short-circuit behavior is not required, the boolean operands can be
-extracted directly:
+如果不需要短路行為，則可以直接提取布林運算元：
 
 ```go
 // 好的範例:
@@ -1534,8 +1515,7 @@ if inTransaction && keysMatch {
 }
 ```
 
-There may also be other locals that can be extracted, especially if the
-conditional is already repetitive:
+也可能有其他局部變量可以被提取，特別是如果條件已經重複：
 
 ```go
 // 好的範例:
@@ -1552,9 +1532,7 @@ if db.UserIsAdmin(user.GetUniqueUserID()) || db.UserHasPermission(user.GetUnique
 }
 ```
 
-`if` statements that contain closures or multi-line struct literals should
-ensure that the [braces match](#literal-matching-braces) to avoid
-[indentation confusion](#indentation-confusion).
+包含閉包或多行結構字面量的 `if` 語句應確保[大括號匹配](#literal-matching-braces)以避免[縮進混淆](#indentation-confusion)。
 
 ```go
 // 好的範例:
@@ -1575,9 +1553,7 @@ if _, err := client.Update(ctx, &upb.UserUpdateRequest{
 }
 ```
 
-Similarly, don't try inserting artificial linebreaks into `for` statements. You
-can always let the line simply be long if there is no elegant way to refactor
-it:
+同樣，不要嘗試在 `for` 語句中插入人為的換行。如果沒有優雅的重構方式，可以讓行保持長度：
 
 ```go
 // 好的範例:
@@ -1586,7 +1562,7 @@ for i, max := 0, collection.Size(); i < max && !collection.HasPendingWriters(); 
 }
 ```
 
-Often, though, there is:
+然而，通常有辦法：
 
 ```go
 // 好的範例:
@@ -1598,7 +1574,7 @@ for i, max := 0, collection.Size(); i < max; i++ {
 }
 ```
 
-`switch` and `case` statements should also remain on a single line.
+`switch` 和 `case` 語句也應保持在單行上。
 
 ```go
 // 好的範例:
@@ -1627,8 +1603,7 @@ default:
 }
 ```
 
-If the line is excessively long, indent all cases and separate them with a blank
-line to avoid [indentation confusion](#indentation-confusion):
+如果行過長，將所有案例縮進並用空行分隔，以避免[縮進混淆](#indentation-confusion)：
 
 ```go
 // 好的範例:
@@ -1647,8 +1622,7 @@ default:
 }
 ```
 
-In conditionals comparing a variable to a constant, place the variable value on
-the left hand side of the equality operator:
+在將變量與常量進行比較的條件語句中，將變量值放在等號運算符的左側：
 
 ```go
 // 好的範例:
@@ -1657,8 +1631,7 @@ if result == "foo" {
 }
 ```
 
-Instead of the less clear phrasing where the constant comes first
-(["Yoda style conditionals"](https://en.wikipedia.org/wiki/Yoda_conditions)):
+而不是不太清晰的語句，其中常量首先出現（["Yoda 風格條件"](https://en.wikipedia.org/wiki/Yoda_conditions)）:
 
 ```go
 // 不好的範例:
@@ -1669,21 +1642,15 @@ if "foo" == result {
 
 <a id="copying"></a>
 
-### Copying
+### 複製 Copying
 
 <a id="TOC-Copying"></a>
 
-To avoid unexpected aliasing and similar bugs, be careful when copying a struct
-from another package. For example, synchronization objects such as `sync.Mutex`
-must not be copied.
+為了避免意外的別名和類似的錯誤，在從另一個包複製結構體時要小心。例如，同步對象如 `sync.Mutex` 不能被複製。
 
-The `bytes.Buffer` type contains a `[]byte` slice and, as an optimization for
-small strings, a small byte array to which the slice may refer. If you copy a
-`Buffer`, the slice in the copy may alias the array in the original, causing
-subsequent method calls to have surprising effects.
+`bytes.Buffer` 類型包含一個 `[]byte` 切片，並且作為對小字符串的優化，它包含一個小的字節數組，切片可能會引用該數組。如果你複製了一個 `Buffer`，副本中的切片可能會與原始對象中的數組產生別名，導致後續的方法調用有意外的效果。
 
-In general, do not copy a value of type `T` if its methods are associated with
-the pointer type, `*T`.
+一般來說，如果一個類型 `T` 的方法與指針類型 `*T` 相關聯，則不要複製類型 `T` 的值。
 
 ```go
 // 不好的範例:
@@ -1691,11 +1658,9 @@ b1 := bytes.Buffer{}
 b2 := b1
 ```
 
-Invoking a method that takes a value receiver can hide the copy. When you author
-an API, you should generally take and return pointer types if your structs
-contain fields that should not be copied.
+調用一個接收值的方法可以隱藏複製行為。當你設計一個 API 時，如果你的結構體包含不應該被複製的字段，你應該通常接收並返回指針類型。
 
-These are acceptable:
+這些是可以接受的：
 
 ```go
 // 好的範例:
@@ -1711,7 +1676,7 @@ func (r *Record) Process(...) {...}
 func Consumer(r *Record) {...}
 ```
 
-But these are usually wrong:
+但這些通常是錯誤的：
 
 ```go
 // 不好的範例:
@@ -1726,45 +1691,32 @@ func (r Record) Process(...) {...} // Makes a copy of r.buf
 func Consumer(r Record) {...} // Makes a copy of r.buf
 ```
 
-This guidance also applies to copying `sync.Mutex`.
+這個指導原則也適用於複製 `sync.Mutex`。
 
 <a id="dont-panic"></a>
 
-### Don't panic
+### 不要恐慌 Don't panic
 
 <a id="TOC-Don-t-Panic"></a>
 
-Do not use `panic` for normal error handling. Instead, use `error` and multiple
-return values. See the [Effective Go section on errors].
+不要使用 `panic` 進行正常的錯誤處理。相反，使用 `error` 和多個返回值。參見 [Effective Go 中關於錯誤的部分]。
 
-Within `package main` and initialization code, consider [`log.Exit`] for errors
-that should terminate the program (e.g., invalid configuration), as in many of
-these cases a stack trace will not help the reader. Please note that
-[`log.Exit`] calls [`os.Exit`] and any deferred functions will not be run.
+在 `package main` 和初始化代碼中，考慮使用 [`log.Exit`] 處理應該終止程序的錯誤（例如，無效配置），因為在許多這樣的情況下，堆棧跟踪不會幫助讀者。請注意，[`log.Exit`] 調用 [`os.Exit`]，任何延遲的函數都不會被執行。
 
-For errors that indicate "impossible" conditions, namely bugs that should always
-be caught during code review and/or testing, a function may reasonably return an
-error or call [`log.Fatal`].
+對於表示「不可能」條件的錯誤，即應該在代碼審查和/或測試期間始終被捕獲的錯誤，函數可以合理地返回一個錯誤或調用 [`log.Fatal`]。
 
-**Note:** `log.Fatalf` is not the standard library log. See [#logging].
+**注意：** `log.Fatalf` 不是標準庫日誌。參見 [#logging]。
 
-[Effective Go section on errors]: http://golang.org/doc/effective_go.html#errors
+[Effective Go 中關於錯誤的部分]: http://golang.org/doc/effective_go.html#errors
 [`os.Exit`]: https://pkg.go.dev/os#Exit
 
 <a id="must-functions"></a>
 
-### Must functions
+### 必須函數 Must functions
 
-Setup helper functions that stop the program on failure follow the naming
-convention `MustXYZ` (or `mustXYZ`). In general, they should only be called
-early on program startup, not on things like user input where normal Go error
-handling is preferred.
+在失敗時停止程序的設置輔助函數遵循命名慣例 `MustXYZ`（或 `mustXYZ`）。一般來說，它們應該只在程序啟動初期被調用，而不是像用戶輸入這樣的情況，其中優先使用正常的 Go 錯誤處理。
 
-This often comes up for functions called to initialize package-level variables
-exclusively at
-[package initialization time](https://golang.org/ref/spec#Package_initialization)
-(e.g. [template.Must](https://golang.org/pkg/text/template/#Must) and
-[regexp.MustCompile](https://golang.org/pkg/regexp/#MustCompile)).
+這通常出現在僅在[包初始化時](https://golang.org/ref/spec#Package_initialization)調用的函數，用於初始化包級變量（例如 [template.Must](https://golang.org/pkg/text/template/#Must) 和 [regexp.MustCompile](https://golang.org/pkg/regexp/#MustCompile)）。
 
 ```go
 // 好的範例:
@@ -1781,10 +1733,7 @@ func MustParse(version string) *Version {
 var DefaultVersion = MustParse("1.2.3")
 ```
 
-The same convention may be used in test helpers that only stop the current test
-(using `t.Fatal`). Such helpers are often convenient in creating test values,
-for example in struct fields of [table driven tests](#table-driven-tests), as
-functions that return errors cannot be directly assigned to a struct field.
+相同的慣例也可以用在測試輔助函數中，這些函數只停止當前測試（使用 `t.Fatal`）。這樣的輔助函數在創建測試值時經常很方便，例如在[表驅動測試](#table-driven-tests)的結構字段中，因為返回錯誤的函數不能直接分配給結構字段。
 
 ```go
 // 好的範例:
@@ -1813,22 +1762,11 @@ func TestCreateObject(t *testing.T) {
 }
 ```
 
-In both of these cases, the value of this pattern is that the helpers can be
-called in a "value" context. These helpers should not be called in places where
-it's difficult to ensure an error would be caught or in a context where an error
-should be [checked](#handle-errors) (e.g., in many request handlers). For
-constant inputs, this allows tests to easily ensure that the `Must` arguments
-are well-formed, and for non-constant inputs it permits tests to validate that
-errors are [properly handled or propagated](best-practices#error-handling).
+在這兩種情況下，這種模式的價值在於輔助函數可以在「值」上下文中被調用。這些輔助函數不應該在難以確保錯誤會被捕獲的地方調用，或者在應該[檢查](#handle-errors)錯誤的上下文中調用（例如，在許多請求處理程序中）。對於常量輸入，這允許測試輕鬆確保 `Must` 參數格式正確，對於非常量輸入，它允許測試驗證錯誤是否[被適當處理或傳播](best-practices#error-handling)。
 
-Where `Must` functions are used in a test, they should generally be
-[marked as a test helper](#mark-test-helpers) and call `t.Fatal` on error (see
-[error handling in test helpers](best-practices#test-helper-error-handling) for
-more considerations of using that).
+在測試中使用 `Must` 函數時，它們通常應該[標記為測試輔助函數](#mark-test-helpers)，並在出錯時調用 `t.Fatal`（參見[測試輔助函數中的錯誤處理](best-practices#test-helper-error-handling)以獲得更多使用該函數的考慮）。
 
-They should not be used when
-[ordinary error handling](best-practices#error-handling) is possible (including
-with some refactoring):
+當[普通的錯誤處理](best-practices#error-handling)是可能的時候（包括一些重構），它們不應該被使用：
 
 ```go
 // 不好的範例:
