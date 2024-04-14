@@ -1,6 +1,6 @@
 # Go 風格指南
 
-https://google.github.io/styleguide/go (英文版)
+<https://google.github.io/styleguide/go> (英文版)
 
 [概覽](index) | [指南](guide) | [決策](decisions) |
 [最佳實踐](best-practices)
@@ -13,9 +13,9 @@ Go 風格指南及其附帶文件編碼了當前編寫可讀性和符合慣用�
 
 文件             | 鏈接                                                  | 主要受眾    | [規範性] | [典範性]
 ------------------- | ----------------------------------------------------- | ------------------- | ----------- | -----------
-**風格指南**   | https://google.github.io/styleguide/go/guide          | 所有人            | Yes         | Yes
-**風格決策** | https://google.github.io/styleguide/go/decisions      | 可讀性導師 | Yes         | No
-**最佳實踐**  | https://google.github.io/styleguide/go/best-practices | 任何有興趣的人   | No          | No
+**風格指南**   | <https://google.github.io/styleguide/go/guide>          | 所有人            | Yes         | Yes
+**風格決策** | <https://google.github.io/styleguide/go/decisions>      | 可讀性導師 | Yes         | No
+**最佳實踐**  | <https://google.github.io/styleguide/go/best-practices> | 任何有興趣的人   | No          | No
 
 [規範性]: #normative
 [典範性]: #canonical
@@ -24,13 +24,13 @@ Go 風格指南及其附帶文件編碼了當前編寫可讀性和符合慣用�
 
 ### 文件
 
-1.  **[風格指南](https://google.github.io/styleguide/go/guide)** 概述了 Google 的 Go 風格基礎。此文件是決定性的，並用作風格決策和最佳實踐中建議的基礎。
+1. **[風格指南](https://google.github.io/styleguide/go/guide)** 概述了 Google 的 Go 風格基礎。此文件是決定性的，並用作風格決策和最佳實踐中建議的基礎。
 
-1.  **[風格決策](https://google.github.io/styleguide/go/decisions)** 是一份更詳細的文件，總結了特定風格點的決策，並在適當的情況下討論決策背後的原因。
+1. **[風格決策](https://google.github.io/styleguide/go/decisions)** 是一份更詳細的文件，總結了特定風格點的決策，並在適當的情況下討論決策背後的原因。
 
     這些決策可能會根據新的數據、新的語言特性、新的庫或新興模式而偶爾變化，但不期望 Google 內部的個別 Go 程序員需要隨時更新此文件。
 
-1.  **[最佳實踐](https://google.github.io/styleguide/go/best-practices)** 文件記錄了一些隨著時間演變而解決常見問題、易於閱讀且對代碼維護需求健壯的模式。
+1. **[最佳實踐](https://google.github.io/styleguide/go/best-practices)** 文件記錄了一些隨著時間演變而解決常見問題、易於閱讀且對代碼維護需求健壯的模式。
 
     這些最佳實踐不是典範的，但鼓勵 Google 的 Go 程序員在可能的情況下使用它們，以保持代碼庫的統一性和一致性。
 
@@ -65,19 +65,19 @@ Go 風格指南及其附帶文件編碼了當前編寫可讀性和符合慣用�
 
     在這些文件中，“典範性”用於描述被認為是所有代碼（新舊）都應遵循的標準，且不預期會隨時間大幅改變。典範文件中的原則應由作者和審查者共同理解，因此典範文件中包含的所有內容都必須達到高標準。因此，典範文件通常較短，且比非典範文件規定的風格元素更少。
 
-    https://google.github.io/styleguide/go#canonical
+    <https://google.github.io/styleguide/go#canonical>
 
 * **規範性**：旨在建立一致性 <a id="normative"></a>
 
     在這些文件中，“規範性”用於描述某些被 Go 代碼審查者同意的風格元素，以便建議、術語和理由保持一致。這些元素可能會隨著時間而改變，這些文件將反映這種變化，以便審查者能夠保持一致性和最新狀態。Go 代碼的作者不預期熟悉規範文件，但審查者在可讀性審查中經常使用這些文件作為參考。
 
-    https://google.github.io/styleguide/go#normative
+    <https://google.github.io/styleguide/go#normative>
 
 * **慣用語**：常見且熟悉 <a id="idiomatic"></a>
 
     在這些文件中，“慣用語”用於指代在 Go 代碼中普遍存在的、已成為易於識別的熟悉模式的東西。一般來說，如果兩者在上下文中服務於相同的目的，則應優先選擇慣用模式而非非慣用模式，因為這是讀者最熟悉的。
 
-    https://google.github.io/styleguide/go#idiomatic
+    <https://google.github.io/styleguide/go#idiomatic>
 
 <a id="references"></a>
 
