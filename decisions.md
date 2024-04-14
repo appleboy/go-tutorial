@@ -1779,19 +1779,15 @@ func Version(o *servicepb.Object) (*version.Version, error) {
 
 <a id="goroutine-lifetimes"></a>
 
-### Goroutine lifetimes
+### Goroutine 生命週期
 
 <a id="TOC-GoroutineLifetimes"></a>
 
-When you spawn goroutines, make it clear when or whether they exit.
+當你啟動 goroutines 時，要清楚它們何時或是否會退出。
 
-Goroutines can leak by blocking on channel sends or receives. The garbage
-collector will not terminate a goroutine blocked on a channel even if no other
-goroutine has a reference to the channel.
+Goroutines 可以通過阻塞在通道發送或接收上而泄漏。即使沒有其他 goroutine 引用該通道，垃圾收集器也不會終止阻塞在通道上的 goroutine。
 
-Even when goroutines do not leak, leaving them in-flight when they are no longer
-needed can cause other subtle and hard-to-diagnose problems. Sending on a
-channel that has been closed causes a panic.
+即使 goroutines 沒有泄漏，當它們不再需要時仍然讓它們在執行中，也可能導致其他微妙且難以診斷的問題。在已經關閉的通道上發送會導致恐慌。
 
 ```go
 // 不好的範例:
@@ -1801,18 +1797,11 @@ close(ch)
 ch <- 13 // panic
 ```
 
-Modifying still-in-use inputs "after the result isn't needed" can lead to data
-races. Leaving goroutines in-flight for arbitrarily long can lead to
-unpredictable memory usage.
+在「結果不再需要後」修改仍在使用中的輸入可能導致數據競爭。任意長時間地保留 goroutines 在執行中可能導致不可預測的內存使用。
 
-Concurrent code should be written such that the goroutine lifetimes are obvious.
-Typically this will mean keeping synchronization-related code constrained within
-the scope of a function and factoring out the logic into
-[synchronous functions]. If the concurrency is still not obvious, it is
-important to document when and why the goroutines exit.
+並發代碼應該寫得使 goroutine 的生命週期明顯。通常這將意味著將與同步相關的代碼限制在函數的範圍內，並將邏輯分解為[同步函數]。如果並發性仍然不明顯，記錄 goroutines 何時以及為什麼退出是很重要的。
 
-Code that follows best practices around context usage often helps make this
-clear. It is conventionally managed with a `context.Context`:
+遵循最佳實踐的上下文使用相關代碼通常有助於澄清這一點。它通常是用 `context.Context` 管理的：
 
 ```go
 // 好的範例:
@@ -1826,13 +1815,9 @@ func (w *Worker) Run(ctx context.Context) error {
 }
 ```
 
-There are other variants of the above that use raw signal channels like `chan
-struct{}`, synchronized variables, [condition variables][rethinking-slides], and
-more. The important part is that the goroutine's end is evident for subsequent
-maintainers.
+還有其他使用原始信號通道如 `chan struct{}`、同步變量、[條件變量][rethinking-slides] 等的變體。重要的是後續維護者能夠明顯地看到 goroutine 的結束。
 
-In contrast, the following code is careless about when its spawned goroutines
-finish:
+相比之下，以下代碼對其啟動的 goroutines 何時結束不夠謹慎：
 
 ```go
 // 不好的範例:
@@ -1847,75 +1832,51 @@ func (w *Worker) Run() {
 }
 ```
 
-This code may look OK, but there are several underlying problems:
+這段代碼看起來可能沒問題，但存在幾個潛在問題：
 
-*   The code probably has undefined behavior in production, and the program may
-    not terminate cleanly, even if the operating system releases the resources.
+*   代碼在生產中可能有未定義的行為，即使操作系統釋放了資源，程序也可能無法乾淨地終止。
+*   由於代碼的不確定生命週期，測試代碼意義不大。
+*   如上所述，代碼可能泄漏資源。
 
-*   The code is difficult to test meaningfully due to the code's indeterminate
-    lifecycle.
+另見：
 
-*   The code may leak resources as described above.
+*   [永遠不要啟動一個 goroutine 而不知道它將如何停止][cheney-stop]
+*   重新思考傳統並發模式：[幻燈片][rethinking-slides]，[視頻][rethinking-video]
+*   [Go 程序何時結束]
 
-See also:
-
-*   [Never start a goroutine without knowing how it will stop][cheney-stop]
-*   Rethinking Classical Concurrency Patterns: [slides][rethinking-slides],
-    [video][rethinking-video]
-*   [When Go programs end]
-
-[synchronous functions]: #synchronous-functions
+[同步函數]: #synchronous-functions
 [cheney-stop]: https://dave.cheney.net/2016/12/22/never-start-a-goroutine-without-knowing-how-it-will-stop
 [rethinking-slides]: https://drive.google.com/file/d/1nPdvhB0PutEJzdCq5ms6UI58dp50fcAN/view
 [rethinking-video]: https://www.youtube.com/watch?v=5zXAHh5tJqQ
-[When Go programs end]: https://changelog.com/gotime/165
+[Go 程序何時結束]: https://changelog.com/gotime/165
 
 <a id="interfaces"></a>
 
-### Interfaces
+### 介面 Interfaces
 
 <a id="TOC-Interfaces"></a>
 
-Go interfaces generally belong in the package that *consumes* values of the
-interface type, not a package that *implements* the interface type. The
-implementing package should return concrete (usually pointer or struct) types.
-That way, new methods can be added to implementations without requiring
-extensive refactoring. See [GoTip #49: Accept Interfaces, Return Concrete Types]
-for more details.
+Go 介面通常屬於*使用*介面類型值的包，而不是*實現*介面類型的包。實現包應該返回具體的（通常是指針或結構體）類型。這樣，新方法可以添加到實現中，而不需要進行大規模重構。有關更多細節，請參見 [GoTip #49: 接受介面，返回具體類型]。
 
-Do not export a [test double][double types] implementation of an interface from
-an API that consumes it. Instead, design the API so that it can be tested using
-the [public API] of the [real implementation]. See
-[GoTip #42: Authoring a Stub for Testing] for more details. Even when it is not
-feasible to use the real implementation, it may not be necessary to introduce an
-interface fully covering all methods in the real type; the consumer can create
-an interface containing only the methods it needs, as demonstrated in
-[GoTip #78: Minimal Viable Interfaces].
+不要從使用它的 API 中導出介面的[測試雙重][double types]實現。相反，設計 API 以便可以使用[真實實現]的[公共 API]進行測試。有關更多細節，請參見 [GoTip #42: 編寫用於測試的 Stub]。即使無法使用真實實現，也可能不需要引入完全涵蓋真實類型中所有方法的介面；消費者可以創建一個只包含其需要的方法的介面，如 [GoTip #78: 最小可行介面] 中所示。
 
-To test packages that use Stubby RPC clients, use a real client connection. If a
-real server cannot be run in the test, Google's internal practice is to obtain a
-real client connection to a local [test double] using the internal rpctest
-package (coming soon!).
+要測試使用 Stubby RPC 客戶端的包，使用真實的客戶端連接。如果在測試中無法運行真實服務器，Google 內部的做法是使用內部的 rpctest 包（即將推出！）獲取到本地[測試雙重]的真實客戶端連接。
 
-Do not define interfaces before they are used (see
-[TotT: Code Health: Eliminate YAGNI Smells][tott-438] ). Without a realistic
-example of usage, it is too difficult to see whether an interface is even
-necessary, let alone what methods it should contain.
+在它們被使用之前不要定義介面（參見 [TotT: 代碼健康：消除 YAGNI 味道][tott-438]）。沒有一個現實的使用例子，很難看出介面是否甚至是必要的，更不用說它應該包含哪些方法了。
 
-Do not use interface-typed parameters if the users of the package do not need to
-pass different types for them.
+如果包的用戶不需要傳遞不同類型的參數，則不要使用介面類型的參數。
 
-Do not export interfaces that the users of the package do not need.
+不要導出包的用戶不需要的介面。
 
-**TODO:** Write a more in-depth doc on interfaces and link to it here.
+**待辦事項：** 編寫一份關於介面的更深入的文檔，並在這裡鏈接它。
 
-[GoTip #42: Authoring a Stub for Testing]: https://google.github.io/styleguide/go/index.html#gotip
-[GoTip #49: Accept Interfaces, Return Concrete Types]: https://google.github.io/styleguide/go/index.html#gotip
-[GoTip #78: Minimal Viable Interfaces]: https://google.github.io/styleguide/go/index.html#gotip
-[real implementation]: best-practices#use-real-transports
-[public API]: https://abseil.io/resources/swe-book/html/ch12.html#test_via_public_apis
+[GoTip #42: 編寫用於測試的 Stub]: https://google.github.io/styleguide/go/index.html#gotip
+[GoTip #49: 接受介面，返回具體類型]: https://google.github.io/styleguide/go/index.html#gotip
+[GoTip #78: 最小可行介面]: https://google.github.io/styleguide/go/index.html#gotip
+[真實實現]: best-practices#use-real-transports
+[公共 API]: https://abseil.io/resources/swe-book/html/ch12.html#test_via_public_apis
 [double types]: https://abseil.io/resources/swe-book/html/ch13.html#techniques_for_using_test_doubles
-[test double]: https://abseil.io/resources/swe-book/html/ch13.html#basic_concepts
+[測試雙重]: https://abseil.io/resources/swe-book/html/ch13.html#basic_concepts
 [tott-438]: https://testing.googleblog.com/2017/08/code-health-eliminate-yagni-smells.html
 
 ```go
@@ -1961,50 +1922,32 @@ func NewThinger() Thinger { return Thinger{ ... } }
 
 <a id="generics"></a>
 
-### Generics
+### 泛型 Generics
 
-Generics (formally called "[Type Parameters]") are allowed where they fulfill
-your business requirements. In many applications, a conventional approach using
-existing language features (slices, maps, interfaces, and so on) works just as
-well without the added complexity, so be wary of premature use. See the
-discussion on [least mechanism](guide#least-mechanism).
+泛型（正式稱為"[類型參數]")在滿足業務需求的地方是允許的。在許多應用中，使用現有語言特性（切片、映射、介面等）的傳統方法同樣可以工作，而不會增加額外的複雜性，所以要謹慎使用以免過早。參見關於[最小機制](guide#least-mechanism)的討論。
 
-When introducing an exported API that uses generics, make sure it is suitably
-documented. It's highly encouraged to include motivating runnable [examples].
+當引入使用泛型的導出 API 時，請確保它有適當的文檔。強烈建議包括動機性的可運行[示例]。
 
-Do not use generics just because you are implementing an algorithm or data
-structure that does not care about the type of its member elements. If there is
-only one type being instantiated in practice, start by making your code work on
-that type without using generics at all. Adding polymorphism later will be
-straightforward compared to removing abstraction that is found to be
-unnecessary.
+不要僅僅因為你正在實現一個不關心其成員元素類型的算法或數據結構就使用泛型。如果實際上只有一種類型被實例化，首先開始讓你的代碼在那種類型上工作，而不使用泛型。與移除被發現是不必要的抽象相比，後來添加多態性將是直截了當的。
 
-Do not use generics to invent domain-specific languages (DSLs). In particular,
-refrain from introducing error-handling frameworks that might put a significant
-burden on readers. Instead prefer established [error handling](#errors)
-practices. For testing, be especially wary of introducing
-[assertion libraries](#assert) or frameworks that result in less useful
-[test failures](#useful-test-failures).
+不要使用泛型來發明特定領域的語言（DSL）。特別是，避免引入可能對讀者造成重大負擔的錯誤處理框架。相反，優先使用既定的[錯誤處理](#errors)實踐。對於測試，要特別小心引入導致不太有用的[測試失敗](#useful-test-failures)的[斷言庫](#assert)或框架。
 
-In general:
+一般來說：
 
-*   [Write code, don't design types]. From a GopherCon talk by Robert Griesemer
-    and Ian Lance Taylor.
-*   If you have several types that share a useful unifying interface, consider
-    modeling the solution using that interface. Generics may not be needed.
-*   Otherwise, instead of relying on the `any` type and excessive
-    [type switching](https://tour.golang.org/methods/16), consider generics.
+*   [寫代碼，不要設計類型]。來自 Robert Griesemer 和 Ian Lance Taylor 的 GopherCon 演講。
+*   如果你有幾種類型共享一個有用的統一介面，考慮使用該介面來建模解決方案。可能不需要泛型。
+*   否則，不要依賴 `any` 類型和過度的[類型切換](https://tour.golang.org/methods/16)，考慮使用泛型。
 
-See also:
+另見：
 
-*   [Using Generics in Go], talk by Ian Lance Taylor
+*   [在 Go 中使用泛型]，Ian Lance Taylor 的演講
 
-*   [Generics tutorial] on Go's webpage
+*   Go 網頁上的[泛型教程]
 
-[Generics tutorial]: https://go.dev/doc/tutorial/generics
-[Type Parameters]: https://go.dev/design/43651-type-parameters
-[Using Generics in Go]: https://www.youtube.com/watch?v=nr8EpUO9jhw
-[Write code, don't design types]: https://www.youtube.com/watch?v=Pa_e9EeCdy8&t=1250s
+[泛型教程]: https://go.dev/doc/tutorial/generics
+[類型參數]: https://go.dev/design/43651-type-parameters
+[在 Go 中使用泛型]: https://www.youtube.com/watch?v=nr8EpUO9jhw
+[寫代碼，不要設計類型]: https://www.youtube.com/watch?v=Pa_e9EeCdy8&t=1250s
 
 <a id="pass-values"></a>
 
