@@ -584,100 +584,77 @@ func (n *Node) Parent2() (node *Node, err error)
 
 <a id="package-comments"></a>
 
-### Package comments
+### 套件註解
 
 <a id="TOC-PackageComments"></a>
 
-Package comments must appear immediately above the package clause with no blank
-line between the comment and the package name. Example:
+套件註解必須出現在套件宣告的正上方，註解和套件名稱之間不能有空行。範例：
 
 ```go
 // 好的範例:
-// Package math provides basic constants and mathematical functions.
+// Package math 提供基本常數和數學函數。
 //
-// This package does not guarantee bit-identical results across architectures.
+// 本套件不保證在不同架構間有位元完全相同的結果。
 package math
 ```
 
-There must be a single package comment per package. If a package is composed of
-multiple files, exactly one of the files should have a package comment.
+每個套件必須有一個套件註解。如果一個套件由多個文件組成，則正好有一個文件應該有一個套件註解。
 
-Comments for `main` packages have a slightly different form, where the name of
-the `go_binary` rule in the BUILD file takes the place of the package name.
+`main` 套件的註解有一種略微不同的形式，其中 BUILD 文件中的 `go_binary` 規則的名稱取代了套件名稱。
 
 ```go
 // 好的範例:
-// The seed_generator command is a utility that generates a Finch seed file
-// from a set of JSON study configs.
+// seed_generator 命令是一個實用工具，它從一組 JSON 研究配置生成 Finch 種子文件。
 package main
 ```
 
-Other styles of comment are fine as long as the name of the binary is exactly as
-written in the BUILD file. When the binary name is the first word, capitalizing
-it is required even though it does not strictly match the spelling of the
-command-line invocation.
+只要二進制名稱與 BUILD 文件中寫的完全一致，其他風格的註解也是可以的。當二進制名稱是第一個單詞時，即使它並不嚴格匹配命令行調用的拼寫，也需要將其大寫。
 
 ```go
 // 好的範例:
-// Binary seed_generator ...
-// Command seed_generator ...
-// Program seed_generator ...
-// The seed_generator command ...
-// The seed_generator program ...
+// 二進制 seed_generator ...
+// 命令 seed_generator ...
+// 程序 seed_generator ...
+// seed_generator 命令 ...
+// seed_generator 程序 ...
 // Seed_generator ...
 ```
 
 Tips:
 
-*   Example command-line invocations and API usage can be useful documentation.
-    For Godoc formatting, indent the comment lines containing code.
+*   示例命令行調用和 API 使用可以是有用的文檔。對於 Godoc 格式，縮進包含代碼的註解行。
 
-*   If there is no obvious primary file or if the package comment is
-    extraordinarily long, it is acceptable to put the doc comment in a file
-    named `doc.go` with only the comment and the package clause.
+*   如果沒有明顯的主文件，或者如果套件註解非常長，則可以接受將文檔註解放在一個名為 `doc.go` 的文件中，該文件僅包含註解和套件子句。
 
-*   Multiline comments can be used instead of multiple single-line comments.
-    This is primarily useful if the documentation contains sections which may be
-    useful to copy and paste from the source file, as with sample command-lines
-    (for binaries) and template examples.
+*   多行註解可以代替多個單行註解。如果文檔包含可能需要從源文件中複製和粘貼的部分，這主要是有用的，如示例命令行（對於二進制文件）和模板示例。
 
     ```go
     // 好的範例:
     /*
-    The seed_generator command is a utility that generates a Finch seed file
-    from a set of JSON study configs.
+    seed_generator 命令是一個實用工具，它從一組 JSON 研究配置生成 Finch 種子文件。
 
         seed_generator *.json | base64 > finch-seed.base64
     */
     package template
     ```
 
-*   Comments intended for maintainers and that apply to the whole file are
-    typically placed after import declarations. These are not surfaced in Godoc
-    and are not subject to the rules above on package comments.
+*   旨在供維護者使用且適用於整個文件的註解通常放在導入聲明之後。這些在 Godoc 中不會顯示，也不受上述套件註解規則的約束。
 
 <a id="imports"></a>
 
-## Imports
+## 引入
 
 <a id="TOC-Imports"></a>
 
 <a id="import-renaming"></a>
 
-### Import renaming
+### 引入重命名
 
-Imports should only be renamed to avoid a name collision with other imports. (A
-corollary of this is that [good package names](#package-names) should not
-require renaming.) In the event of a name collision, prefer to rename the most
-local or project-specific import. Local names (aliases) for packages must follow
-[the guidance around package naming](#package-names), including the prohibition
-on the use of underscores and capital letters.
+引入只應該在與其他引入發生名稱衝突時才重命名。（由此衍生的一個結論是，[良好的套件名稱](#package-names)不應該需要重命名。）在名稱衝突發生時，優先重命名最本地或項目特定的引入。對於套件的本地名稱（別名）必須遵循[套件命名的指導原則](#package-names)，包括禁止使用下劃線和大寫字母。
 
-Generated protocol buffer packages must be renamed to remove underscores from
-their names, and their aliases must have a `pb` suffix. See
-[proto and stub best practices] for more information.
+生成的協議緩衝區套件必須重命名以去除其名稱中的下劃線，並且它們的別名必須有一個 `pb` 後綴。有關更多信息，請參見[proto 和 stub 最佳實踐]。
 
-[proto and stub best practices]: best-practices#import-protos
+[proto 和 stub 最佳實踐]: best-practices#import-protos
 
 ```go
 // 好的範例:
@@ -686,14 +663,9 @@ import (
 )
 ```
 
-Imports that have package names with no useful identifying information (e.g.
-`package v1`) should be renamed to include the previous path component. The
-rename must be consistent with other local files importing the same package and
-may include the version number.
+引入具有沒有有用識別信息的套件名稱（例如 `package v1`）時，應該重新命名以包含前一個路徑組件。重新命名必須與其他本地文件引入相同套件時保持一致，並且可以包含版本號。
 
-**Note:** It is preferred to rename the package to conform with
-[good package names](#package-names), but that is often not feasible for
-packages in vendored directories.
+**注意：** 建議將套件重新命名以符合[良好的套件名稱](#package-names)，但對於 vendored 目錄中的套件來說，這通常不可行。
 
 ```go
 // 好的範例:
@@ -703,22 +675,17 @@ import (
 )
 ```
 
-If you need to import a package whose name collides with a common local variable
-name that you want to use (e.g. `url`, `ssh`) and you wish to rename the
-package, the preferred way to do so is with the `pkg` suffix (e.g. `urlpkg`).
-Note that it is possible to shadow a package with a local variable; this rename
-is only necessary if the package still needs to be used when such a variable is
-in scope.
+如果您需要引入一個與您想要使用的常見本地變量名稱衝突的套件（例如 `url`、`ssh`），並且您希望重新命名該套件，那麼建議的做法是使用 `pkg` 後綴（例如 `urlpkg`）。請注意，有可能用本地變量遮蔽一個套件；只有在這樣的變量在作用域內時仍需要使用該套件，才需要進行此重命名。
 
 <a id="import-grouping"></a>
 
-### Import grouping
+### 引入分組
 
-Imports should be organized in two groups:
+引入應該組織成兩組：
 
-*   Standard library packages
+*   標準庫套件
 
-*   Other (project and vendored) packages
+*   其他（專案和 vendored）套件
 
 ```go
 // 好的範例:
@@ -738,14 +705,12 @@ import (
 )
 ```
 
-It is acceptable to split the project packages into multiple groups if you want
-a separate group, as long as the groups have some meaning. Common reasons to do
-this:
+如果您想要一個單獨的組，則可以將專案套件分成多個組，只要這些組有一些意義即可。這樣做的常見原因包括：
 
-*   renamed imports
-*   packages imported for their side-effects
+*   重新命名的引入
+*   為了它們的副作用而引入的套件
 
-Example:
+範例:
 
 ```go
 // 好的範例:
@@ -768,69 +733,49 @@ import (
 )
 ```
 
-**Note:** Maintaining optional groups - splitting beyond what is necessary for
-the mandatory separation between standard library and Google imports - is not
-supported by the [goimports] tool. Additional import subgroups require attention
-on the part of both authors and reviewers to maintain in a conforming state.
+**注意：** 維護可選組 - 分割超出標準庫和 Google 引入之間的強制性分離所必需的 - 不受 [goimports] 工具的支持。額外的引入子組需要作者和審查者的注意力來保持符合狀態。
 
 [goimports]: golang.org/x/tools/cmd/goimports
 
-Google programs that are also AppEngine apps should have a separate group for
-AppEngine imports.
+同時也是 AppEngine 應用的 Google 程序應該有一個單獨的組用於 AppEngine 引入。
 
-Gofmt takes care of sorting each group by import path. However, it does not
-automatically separate imports into groups. The popular [goimports] tool
-combines Gofmt and import management, separating imports into groups based on
-the decision above. It is permissible to let [goimports] manage import
-arrangement entirely, but as a file is revised its import list must remain
-internally consistent.
+Gofmt 負責按引入路徑對每組進行排序。然而，它不會自動將引入分成組。流行的 [goimports] 工具結合了 Gofmt 和引入管理，根據上述決定將引入分成組。允許讓 [goimports] 完全管理引入排列，但是隨著文件的修訂，其引入列表必須保持內部一致性。
 
 <a id="import-blank"></a>
 
-### Import "blank" (`import _`)
+### 引入「空白」（`import _`）
 
 <a id="TOC-ImportBlank"></a>
 
-Packages that are imported only for their side effects (using the syntax `import
-_ "package"`) may only be imported in a main package, or in tests that require
-them.
+只為了它們的副作用而被引入的套件（使用語法 `import _ "package"`）只能在主套件中引入，或在需要它們的測試中引入。
 
-Some examples of such packages include:
+這類套件的一些例子包括：
 
 *   [time/tzdata](https://pkg.go.dev/time/tzdata)
 
-*   [image/jpeg](https://pkg.go.dev/image/jpeg) in image processing code
+*   [image/jpeg](https://pkg.go.dev/image/jpeg) 在圖像處理代碼中
 
-Avoid blank imports in library packages, even if the library indirectly depends
-on them. Constraining side-effect imports to the main package helps control
-dependencies, and makes it possible to write tests that rely on a different
-import without conflict or wasted build costs.
+避免在庫套件中進行空白引入，即使庫間接依賴於它們。將副作用引入限制在主套件中有助於控制依賴關係，並使得撰寫依賴不同引入的測試成為可能，而不會產生衝突或浪費建構成本。
 
-The following are the only exceptions to this rule:
+以下是此規則的唯一例外：
 
-*   You may use a blank import to bypass the check for disallowed imports in the
-    [nogo static checker].
+*   您可以使用空白引入來繞過 [nogo 靜態檢查器] 中對禁止引入的檢查。
 
-*   You may use a blank import of the [embed](https://pkg.go.dev/embed) package
-    in a source file which uses the `//go:embed` compiler directive.
+*   您可以在使用 `//go:embed` 編譯器指令的源文件中，空白引入 [embed](https://pkg.go.dev/embed) 套件。
 
-**Tip:** If you create a library package that indirectly depends on a
-side-effect import in production, document the intended usage.
+**提示：** 如果您創建了一個在生產中間接依賴副作用引入的庫套件，請記錄預期的使用方式。
 
-[nogo static checker]: https://github.com/bazelbuild/rules_go/blob/master/go/nogo.rst
+[nogo 靜態檢查器]: https://github.com/bazelbuild/rules_go/blob/master/go/nogo.rst
 
 <a id="import-dot"></a>
 
-### Import "dot" (`import .`)
+### 引入「點」（`import .`）
 
 <a id="TOC-ImportDot"></a>
 
-The `import .` form is a language feature that allows bringing identifiers
-exported from another package to the current package without qualification. See
-the [language spec](https://go.dev/ref/spec#Import_declarations) for more.
+`import .` 形式是一種語言特性，它允許將另一個套件導出的標識符帶到當前套件中，無需資格限制。更多信息請參見 [語言規範](https://go.dev/ref/spec#Import_declarations)。
 
-Do **not** use this feature in the Google codebase; it makes it harder to tell
-where the functionality is coming from.
+**不要** 在 Google 代碼庫中使用此功能；它使得更難判斷功能來自何處。
 
 ```go
 // 不好的範例:
@@ -858,27 +803,22 @@ var myThing = foo.Bar()
 
 <a id="errors"></a>
 
-## Errors
+## 錯誤
 
 <a id="returning-errors"></a>
 
-### Returning errors
+### 返回錯誤
 
 <a id="TOC-ReturningErrors"></a>
 
-Use `error` to signal that a function can fail. By convention, `error` is the
-last result parameter.
+使用 `error` 來表示一個函數可能會失敗。按照慣例，`error` 是最後一個結果參數。
 
 ```go
 // 好的範例:
 func Good() error { /* ... */ }
 ```
 
-Returning a `nil` error is the idiomatic way to signal a successful operation
-that could otherwise fail. If a function returns an error, callers must treat
-all non-error return values as unspecified unless explicitly documented
-otherwise. Commonly, the non-error return values are their zero values, but this
-cannot be assumed.
+返回一個 `nil` 錯誤是表示一個本可以失敗的操作成功的慣用方法。如果一個函數返回一個錯誤，除非另有明確文檔記載，否則調用者必須將所有非錯誤返回值視為未指定。通常，非錯誤返回值是它們的零值，但這不能假定。
 
 ```go
 // 好的範例:
@@ -891,32 +831,24 @@ func GoodLookup() (*Result, error) {
 }
 ```
 
-Exported functions that return errors should return them using the `error` type.
-Concrete error types are susceptible to subtle bugs: a concrete `nil` pointer
-can get wrapped into an interface and thus become a non-nil value (see the
-[Go FAQ entry on the topic][nil error]).
+導出的函數返回錯誤應該使用 `error` 類型返回它們。具體的錯誤類型容易出現微妙的錯誤：一個具體的 `nil` 指針可以被包裝進一個介面，從而變成一個非 `nil` 值（參見 [Go FAQ 中關於此主題的條目][nil error]）。
 
 ```go
 // 不好的範例:
 func Bad() *os.PathError { /*...*/ }
 ```
 
-**Tip**: A function that takes a `context.Context` argument should usually
-return an `error` so that the caller can determine if the context was cancelled
-while the function was running.
+**提示**：一個接受 `context.Context` 參數的函數通常應該返回一個 `error`，以便調用者可以確定在函數運行時上下文是否被取消。
 
 [nil error]: https://golang.org/doc/faq#nil_error
 
 <a id="error-strings"></a>
 
-### Error strings
+### 錯誤字串
 
 <a id="TOC-ErrorStrings"></a>
 
-Error strings should not be capitalized (unless beginning with an exported name,
-a proper noun or an acronym) and should not end with punctuation. This is
-because error strings usually appear within other context before being printed
-to the user.
+錯誤字串不應該首字大寫（除非以導出名稱、專有名詞或首字母縮略詞開頭），並且不應該以標點符號結尾。這是因為錯誤字串通常會在打印給用戶之前出現在其他上下文中。
 
 ```go
 // 不好的範例:
@@ -928,9 +860,7 @@ err := fmt.Errorf("Something bad happened.")
 err := fmt.Errorf("something bad happened")
 ```
 
-On the other hand, the style for the full displayed message (logging, test
-failure, API response, or other UI) depends, but should typically be
-capitalized.
+另一方面，完整顯示消息（日誌、測試失敗、API 回應或其他 UI）的風格取決於具體情況，但通常應該首字大寫。
 
 ```go
 // 好的範例:
@@ -941,24 +871,19 @@ t.Errorf("Op(%q) failed unexpectedly; err=%v", args, err)
 
 <a id="handle-errors"></a>
 
-### Handle errors
+### 處理錯誤
 
 <a id="TOC-HandleErrors"></a>
 
-Code that encounters an error should make a deliberate choice about how to
-handle it. It is not usually appropriate to discard errors using `_` variables.
-If a function returns an error, do one of the following:
+遇到錯誤的代碼應該有意識地選擇如何處理它。通常不適合使用 `_` 變量來丟棄錯誤。如果函數返回一個錯誤，請執行以下操作之一：
 
-*   Handle and address the error immediately.
-*   Return the error to the caller.
-*   In exceptional situations, call [`log.Fatal`] or (if absolutely necessary)
-    `panic`.
+*   立即處理並解決錯誤。
+*   將錯誤返回給調用者。
+*   在特殊情況下，調用 [`log.Fatal`] 或（如果絕對必要）`panic`。
 
-**Note:** `log.Fatalf` is not the standard library log. See [#logging].
+**注意：** `log.Fatalf` 不是標準庫日誌。參見 [#logging]。
 
-In the rare circumstance where it is appropriate to ignore or discard an error
-(for example a call to [`(*bytes.Buffer).Write`] that is documented to never
-fail), an accompanying comment should explain why this is safe.
+在極少數適合忽略或丟棄錯誤的情況下（例如，對 [`(*bytes.Buffer).Write`] 的調用，該調用被記錄為永遠不會失敗），應該有一個相應的註解解釋為什麼這樣做是安全的。
 
 ```go
 // 好的範例:
@@ -967,21 +892,17 @@ var b *bytes.Buffer
 n, _ := b.Write(p) // never returns a non-nil error
 ```
 
-For more discussion and examples of error handling, see
-[Effective Go](http://golang.org/doc/effective_go.html#errors) and
-[best practices](best-practices.md#error-handling).
+有關錯誤處理的更多討論和示例，請參見 [Effective Go](http://golang.org/doc/effective_go.html#errors) 和 [最佳實踐](best-practices.md#error-handling)。
 
 [`(*bytes.Buffer).Write`]: https://pkg.go.dev/bytes#Buffer.Write
 
 <a id="in-band-errors"></a>
 
-### In-band errors
+### 帶內錯誤
 
 <a id="TOC-In-Band-Errors"></a>
 
-In C and similar languages, it is common for functions to return values like -1,
-null, or the empty string to signal errors or missing results. This is known as
-in-band error handling.
+在 C 語言和類似語言中，函數返回像 -1、null 或空字串這樣的值來表示錯誤或缺失結果是很常見的。這稱為帶內錯誤處理。
 
 ```go
 // 不好的範例:
