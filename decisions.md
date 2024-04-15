@@ -2581,120 +2581,64 @@ if diff := cmp.Diff(want, got, protocmp.Transform()); diff != "" {
 
 <a id="level-of-detail"></a>
 
-### Level of detail
+### 細節層次 Level of detail
 
-The conventional failure message, which is suitable for most Go tests, is
-`YourFunc(%v) = %v, want %v`. However, there are cases that may call for more or
-less detail:
+傳統的失敗訊息，適用於大多數Go測試，是
+`YourFunc(%v) = %v, want %v`。然而，在某些情況下，可能需要更多或更少的細節：
 
-* Tests performing complex interactions should describe the interactions too.
-    For example, if the same `YourFunc` is called several times, identify which
-    call failed the test. If it's important to know any extra state of the
-    system, include that in the failure output (or at least in the logs).
-* If the data is a complex struct with significant boilerplate, it is
-    acceptable to describe only the important parts in the message, but do not
-    overly obscure the data.
-* Setup failures do not require the same level of detail. If a test helper
-    populates a Spanner table but Spanner was down, you probably don't need to
-    include which test input you were going to store in the database.
-    `t.Fatalf("Setup: Failed to set up test database: %s", err)` is usually
-    helpful enough to resolve the issue.
+* 執行複雜互動的測試應該描述這些互動。例如，如果同一個`YourFunc`被多次呼叫，應該識別哪次呼叫導致測試失敗。如果系統的額外狀態很重要，應該在失敗輸出中包含這些資訊（或至少在日誌中）。
+* 如果數據是一個包含大量樣板的複雜結構，只描述訊息中重要的部分是可以接受的，但不要過度隱藏數據。
+* 設置失敗不需要同樣的細節層次。如果一個測試助手填充了一個Spanner表，但Spanner當機了，你可能不需要包含你打算儲存在數據庫中的哪個測試輸入。通常`t.Fatalf("Setup: Failed to set up test database: %s", err)`就足夠有幫助來解決問題。
 
-**Tip:** Make your failure mode trigger during development. Review what the
-failure message looks like and whether a maintainer can effectively deal with
-the failure.
+**提示：** 在開發過程中觸發你的失敗模式。審視失敗訊息的樣子，以及維護者是否能有效處理失敗。
 
-There are some techniques for reproducing test inputs and outputs clearly:
+以下是一些清晰重現測試輸入和輸出的技巧：
 
-* When printing string data, [`%q` is often useful](#use-percent-q) to
-    emphasize that the value is important and to more easily spot bad values.
-* When printing (small) structs, `%+v` can be more useful than `%v`.
-* When validation of larger values fails, [printing a diff](#print-diffs) can
-    make it easier to understand the failure.
+* 在打印字符串數據時，[`%q`經常很有用](#use-percent-q)來強調值的重要性，並更容易發現錯誤的值。
+* 在打印（小）結構時，`%+v`可能比`%v`更有用。
+* 當大值的驗證失敗時，[打印差異](#print-diffs)可以使理解失敗變得更容易。
 
 <a id="print-diffs"></a>
 
-### Print diffs
+### 打印差異 Print diffs
 
-If your function returns large output then it can be hard for someone reading
-the failure message to find the differences when your test fails. Instead of
-printing both the returned value and the wanted value, make a diff.
+如果你的函數返回大量輸出，當你的測試失敗時，閱讀失敗訊息的人可能很難找到差異。不要打印返回值和期望值，而是製作一個差異比較。
 
-To compute diffs for such values, `cmp.Diff` is preferred, particularly for new
-tests and new code, but other tools may be used. See [types of equality] for
-guidance regarding the strengths and weaknesses of each function.
+為了計算這些值的差異，首選使用`cmp.Diff`，特別是對於新的測試和新的代碼，但也可以使用其他工具。有關每個函數的優缺點，請參見[等值類型]的指南。
 
 * [`cmp.Diff`]
 
 * [`pretty.Compare`]
 
-You can use the [`diff`] package to compare multi-line strings or lists of
-strings. You can use this as a building block for other kinds of diffs.
+你可以使用[`diff`]包來比較多行字符串或字符串列表。你可以將其作為其他類型差異的構建塊。
 
-[types of equality]: #types-of-equality
+[等值類型]: #types-of-equality
 [`diff`]: https://pkg.go.dev/github.com/kylelemons/godebug/diff
 [`pretty.Compare`]: https://pkg.go.dev/github.com/kylelemons/godebug/pretty#Compare
 
-Add some text to your failure message explaining the direction of the diff.
+在你的失敗訊息中添加一些文本，解釋差異的方向。
 
 <!--
-The reversed order of want and got in these examples is intentional, as this is
-the prevailing order across the Google codebase. The lack of a stance on which
-order to use is also intentional, as there is no consensus which is
-"most readable."
-
-
+這些例子中期望和實際值的順序顛倒是有意的，因為這是Google代碼庫中普遍的順序。關於使用哪個順序也沒有明確立場，因為沒有共識哪個是“最易讀的。”
 -->
 
-* Something like `diff (-want +got)` is good when you're using the `cmp`,
-    `pretty`, and `diff` packages (if you pass `(want, got)` to the function),
-    because the `-` and `+` that you add to your format string will match the
-    `-` and `+` that actually appear at the beginning of the diff lines. If you
-    pass `(got, want)` to your function, the correct key would be `(-got +want)`
-    instead.
+* 當你使用`cmp`、`pretty`和`diff`包時（如果你將`(want, got)`傳遞給函數），像`diff (-want +got)`這樣的東西是好的，因為你添加到格式字符串的`-`和`+`將與實際出現在差異行開頭的`-`和`+`匹配。如果你將`(got, want)`傳遞給你的函數，正確的鍵將是`(-got +want)`。
 
-* The `messagediff` package uses a different output format, so the message
-    `diff (want -> got)` is appropriate when you're using it (if you pass
-    `(want, got)` to the function), because the direction of the arrow will
-    match the direction of the arrow in the "modified" lines.
+* `messagediff`包使用不同的輸出格式，所以當你使用它時（如果你將`(want, got)`傳遞給函數），`diff (want -> got)`訊息是合適的，因為箭頭的方向將與“修改”行中的箭頭方向匹配。
 
-The diff will span multiple lines, so you should print a newline before you
-print the diff.
+差異將跨越多行，所以你應該在打印差異之前打印一個換行符。
 
 <a id="test-error-semantics"></a>
 
-### Test error semantics
+### 測試錯誤語義 Test error semantics
 
-When a unit test performs string comparisons or uses a vanilla `cmp` to check
-that particular kinds of errors are returned for particular inputs, you may find
-that your tests are brittle if any of those error messages are reworded in the
-future. Since this has the potential to turn your unit test into a change
-detector (see [TotT: Change-Detector Tests Considered Harmful][tott-350] ),
-don't use string comparison to check what type of error your function returns.
-However, it is permissible to use string comparisons to check that error
-messages coming from the package under test satisfy certain properties, for
-example, that it includes the parameter name.
+當單元測試進行字符串比較或使用普通的`cmp`來檢查特定輸入是否返回特定類型的錯誤時，如果將來這些錯誤訊息被改寫，你可能會發現你的測試很脆弱。由於這可能將你的單元測試變成變更檢測器（參見[ToTT: 考慮有害的變更檢測器測試][tott-350]），不要使用字符串比較來檢查你的函數返回了哪種類型的錯誤。然而，允許使用字符串比較來檢查來自被測試包的錯誤訊息是否滿足某些特性，例如，它是否包含了參數名稱。
 
-Error values in Go typically have a component intended for human eyes and a
-component intended for semantic control flow. Tests should seek to only test
-semantic information that can be reliably observed, rather than display
-information that is intended for human debugging, as this is often subject to
-future changes. For guidance on constructing errors with semantic meaning see
-[best-practices regarding errors](best-practices#error-handling). If an error
-with insufficient semantic information is coming from a dependency outside your
-control, consider filing a bug against the owner to help improve the API, rather
-than relying on parsing the error message.
+Go中的錯誤值通常有一部分是為人眼而設計的，一部分是為了語義控制流程。測試應該只檢查可以可靠觀察到的語義信息，而不是為人類調試而設計的顯示信息，因為這經常會受到未來變化的影響。有關構建具有語義意義的錯誤的指南，請參見[關於錯誤的最佳實踐](best-practices#error-handling)。如果來自你無法控制的依賴項的錯誤缺乏語義信息，考慮對所有者提出錯誤報告以幫助改進API，而不是依賴於解析錯誤訊息。
 
-Within unit tests, it is common to only care whether an error occurred or not.
-If so, then it is sufficient to only test whether the error was non-nil when you
-expected an error. If you would like to test that the error semantically matches
-some other error, then consider using [`errors.Is`] or `cmp` with
-[`cmpopts.EquateErrors`].
+在單元測試中，通常只關心是否發生了錯誤。如果是這樣，那麼當你期望出現錯誤時，只測試錯誤是否非空就足夠了。如果你想測試錯誤在語義上是否與某些其他錯誤匹配，那麼考慮使用[`errors.Is`]或`cmp`與[`cmpopts.EquateErrors`]。
 
-> **Note:** If a test uses [`cmpopts.EquateErrors`] but all of its `wantErr`
-> values are either `nil` or `cmpopts.AnyError`, then using `cmp` is
-> [unnecessary mechanism](guide#least-mechanism). Simplify the code by making
-> the want field a `bool`. You can then use a simple comparison with `!=`.
+> **注意：** 如果一個測試使用了[`cmpopts.EquateErrors`]，但它的所有`wantErr`值要么是`nil`要么是`cmpopts.AnyError`，那麼使用`cmp`是[不必要的機制](guide#least-mechanism)。通過將want字段簡化為`bool`來簡化代碼。然後你可以使用一個簡單的比較與`!=`。
 >
 > ```go
 > // 好的範例:
@@ -2705,8 +2649,8 @@ some other error, then consider using [`errors.Is`] or `cmp` with
 > }
 > ```
 
-See also
-[GoTip #13: Designing Errors for Checking](https://google.github.io/styleguide/go/index.html#gotip).
+另見
+[GoTip #13: 設計錯誤以便檢查](https://google.github.io/styleguide/go/index.html#gotip)。
 
 [tott-350]: https://testing.googleblog.com/2015/01/testing-on-toilet-change-detector-tests.html
 [`cmpopts.EquateErrors`]: https://pkg.go.dev/github.com/google/go-cmp/cmp/cmpopts#EquateErrors
