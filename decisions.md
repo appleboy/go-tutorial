@@ -2662,51 +2662,34 @@ Go中的錯誤值通常有一部分是為人眼而設計的，一部分是為了
 
 <a id="subtests"></a>
 
-### Subtests
+### 子測試 Subtests
 
-The standard Go testing library offers a facility to [define subtests]. This
-allows flexibility in setup and cleanup, controlling parallelism, and test
-filtering. Subtests can be useful (particularly for table-driven tests), but
-using them is not mandatory. See also the
-[Go blog post about subtests](https://blog.golang.org/subtests).
+標準Go測試庫提供了一種[定義子測試]的功能。這允許在設置和清理、控制並行性以及測試過濾方面提供靈活性。子測試可能很有用（特別是對於表驅動測試），但使用它們並非強制性的。另見
+[Go博客關於子測試的文章](https://blog.golang.org/subtests)。
 
-Subtests should not depend on the execution of other cases for success or
-initial state, because subtests are expected to be able to be run individually
-with using `go test -run` flags or with Bazel [test filter] expressions.
+子測試不應該依賴其他案例的執行來確保成功或初始狀態，因為預期子測試能夠單獨運行，使用`go test -run`標誌或Bazel [測試過濾]表達式。
 
-[define subtests]: https://pkg.go.dev/testing#hdr-Subtests_and_Sub_benchmarks
-[test filter]: https://bazel.build/docs/user-manual#test-filter
+[定義子測試]: https://pkg.go.dev/testing#hdr-Subtests_and_Sub_benchmarks
+[測試過濾]: https://bazel.build/docs/user-manual#test-filter
 
 <a id="subtest-names"></a>
 
-#### Subtest names
+#### 子測試名稱 Subtest names
 
-Name your subtest such that it is readable in test output and useful on the
-command line for users of test filtering. When you use `t.Run` to create a
-subtest, the first argument is used as a descriptive name for the test. To
-ensure that test results are legible to humans reading the logs, choose subtest
-names that will remain useful and readable after escaping. Think of subtest
-names more like a function identifier than a prose description. The test runner
-replaces spaces with underscores, and escapes non-printing characters. If your
-test data benefits from a longer description, consider putting the description
-in a separate field (perhaps to be printed using `t.Log` or alongside failure
-messages).
+命名你的子測試，使其在測試輸出中可讀並對測試過濾的用戶在命令行上有用。當你使用`t.Run`創建子測試時，第一個參數被用作測試的描述性名稱。為了確保測試結果對閱讀日誌的人類來說是易讀的，選擇在轉義後仍然有用且可讀的子測試名稱。將子測試名稱視為函數標識符，而不是散文描述。測試運行器會將空格替換為下劃線，並轉義非打印字符。如果你的測試數據受益於更長的描述，請考慮將描述放在一個單獨的字段中（也許是使用`t.Log`打印或與失敗訊息一起）。
 
-Subtests may be run individually using flags to the [Go test runner] or Bazel
-[test filter], so choose descriptive names that are also easy to type.
+子測試可以使用[Go測試運行器]或Bazel [測試過濾]的標誌單獨運行，因此選擇描述性名稱，同時也易於輸入。
 
-> **Warning:** Slash characters are particularly unfriendly in subtest names,
-> since they have [special meaning for test filters].
+> **警告：** 在子測試名稱中使用斜線字符特別不友好，因為它們在測試過濾中有[特殊含義]。
 >
 > > ```sh
 > > # 不好的範例:
-> > # Assuming TestTime and t.Run("America/New_York", ...)
-> > bazel test :mytest --test_filter="Time/New_York"    # Runs nothing!
-> > bazel test :mytest --test_filter="Time//New_York"   # Correct, but awkward.
+> > # 假設TestTime和t.Run("America/New_York", ...)
+> > bazel test :mytest --test_filter="Time/New_York"    # 什麼都不運行！
+> > bazel test :mytest --test_filter="Time//New_York"   # 正確，但尷尬。
 > > ```
 
-To [identify the inputs] of the function, include them in the test's failure
-messages, where they won't be escaped by the test runner.
+為了[識別函數的輸入]，將它們包含在測試的失敗訊息中，在那裡它們不會被測試運行器轉義。
 
 ```go
 // 好的範例:
@@ -2735,7 +2718,7 @@ func TestTranslate(t *testing.T) {
 }
 ```
 
-Here are a few examples of things to avoid:
+以下是一些需要避免的例子：
 
 ```go
 // 不好的範例:
@@ -2745,12 +2728,12 @@ t.Run("check that there is no mention of scratched records or hovercrafts", ...)
 t.Run("AM/PM confusion", ...)
 ```
 
-See also
-[Go Tip #117: Subtest Names](https://google.github.io/styleguide/go/index.html#gotip).
+另見
+[Go 提示 #117：子測試名稱](https://google.github.io/styleguide/go/index.html#gotip)。
 
-[Go test runner]: https://golang.org/cmd/go/#hdr-Testing_flags
-[identify the inputs]: #identify-the-input
-[special meaning for test filters]: https://blog.golang.org/subtests#:~:text=Perhaps%20a%20bit,match%20any%20tests
+[Go 測試運行器]: https://golang.org/cmd/go/#hdr-Testing_flags
+[識別輸入]: #identify-the-input
+[測試過濾的特殊含義]: https://blog.golang.org/subtests#:~:text=Perhaps%20a%20bit,match%20any%20tests
 
 <a id="table-driven-tests"></a>
 
