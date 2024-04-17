@@ -2737,23 +2737,17 @@ t.Run("AM/PM confusion", ...)
 
 <a id="table-driven-tests"></a>
 
-### Table-driven tests
+### 表驅動測試 Table-driven tests
 
-Use table-driven tests when many different test cases can be tested using
-similar testing logic.
+當許多不同的測試案例可以使用類似的測試邏輯進行測試時，請使用表驅動測試。
 
-* When testing whether the actual output of a function is equal to the
-    expected output. For example, the many [tests of `fmt.Sprintf`] or the
-    minimal snippet below.
-* When testing whether the outputs of a function always conform to the same
-    set of invariants. For example, [tests for `net.Dial`].
+* 當測試函數的實際輸出是否等於預期輸出時。例如，許多[`fmt.Sprintf`的測試]或下面的最小片段。
+* 當測試函數的輸出始終符合同一組不變量時。例如，[`net.Dial`的測試]。
 
-[tests of `fmt.Sprintf`]: https://cs.opensource.google/go/go/+/master:src/fmt/fmt_test.go
-[tests for `net.Dial`]: https://cs.opensource.google/go/go/+/master:src/net/dial_test.go;l=318;drc=5b606a9d2b7649532fe25794fa6b99bd24e7697c
+[`fmt.Sprintf`的測試]: https://cs.opensource.google/go/go/+/master:src/fmt/fmt_test.go
+[`net.Dial`的測試]: https://cs.opensource.google/go/go/+/master:src/net/dial_test.go;l=318;drc=5b606a9d2b7649532fe25794fa6b99bd24e7697c
 
-Here is the minimal structure of a table-driven test. If needed, you may use
-different names or add extra facilities such as subtests or setup and cleanup
-functions. Always keep [useful test failures](#useful-test-failures) in mind.
+以下是表驅動測試的最小結構。如果需要，您可以使用不同的名稱或添加額外的設施，如子測試或設置和清理函數。始終記住[有用的測試失敗](#useful-test-failures)。
 
 ```go
 // 好的範例:
@@ -2787,34 +2781,19 @@ func TestCompare(t *testing.T) {
 }
 ```
 
-**Note**: The failure messages in this example above fulfill the guidance to
-[identify the function](#identify-the-function) and
-[identify the input](#identify-the-input). There's no need to
-[identify the row numerically](#table-tests-identifying-the-row).
+**注意**：上面例子中的失敗訊息滿足了[識別函數](#identify-the-function)和[識別輸入](#identify-the-input)的指導。沒有必要[數字識別行](#table-tests-identifying-the-row)
 
-When some test cases need to be checked using different logic from other test
-cases, it is more appropriate to write multiple test functions, as explained in
-[GoTip #50: Disjoint Table Tests]. The logic of your test code can get difficult
-to understand when each entry in a table has its own different conditional logic
-to check each output for its inputs. If test cases have different logic but
-identical setup, a sequence of [subtests](#subtests) within a single test
-function might make sense.
+當某些測試案例需要使用與其他測試案例不同的邏輯進行檢查時，寫多個測試函數更為合適，如[GoTip #50: 不相關的表測試]中所解釋的。當表中的每個條目都有自己不同的條件邏輯來檢查其輸入的每個輸出時，你的測試代碼的邏輯可能會變得難以理解。如果測試案例有不同的邏輯但相同的設置，單個測試函數中的一系列[子測試](#subtests)可能是有意義的。
 
-You can combine table-driven tests with multiple test functions. For example,
-when testing that a function's output exactly matches the expected output and
-that the function returns a non-nil error for an invalid input, then writing two
-separate table-driven test functions is the best approach: one for normal
-non-error outputs, and one for error outputs.
+您可以將表驅動測試與多個測試函數結合使用。例如，當測試函數的輸出完全匹配預期輸出，並且函數對無效輸入返回非空錯誤時，則編寫兩個單獨的表驅動測試函數是最好的方法：一個用於正常的非錯誤輸出，一個用於錯誤輸出。
 
-[GoTip #50: Disjoint Table Tests]: https://google.github.io/styleguide/go/index.html#gotip
+[GoTip #50: 不相關的表測試]: https://google.github.io/styleguide/go/index.html#gotip
 
 <a id="table-tests-data-driven"></a>
 
-#### Data-driven test cases
+#### 數據驅動的測試案例 Data-driven test cases
 
-Table test rows can sometimes become complicated, with the row values dictating
-conditional behavior inside the test case. The extra clarity from the
-duplication between the test cases is necessary for readability.
+表測試的行有時可能變得複雜，行值在測試案例內指定條件行為。從測試案例之間的重複中獲得的額外清晰度對於可讀性是必要的。
 
 ```go
 // 好的範例:
@@ -2864,9 +2843,7 @@ func TestDecodeWithFake(t *testing.T) {
 }
 ```
 
-In the counterexample below, note how hard it is to distinguish between which
-type of `Codex` is used per test case in the case setup. (The highlighted parts
-run afoul of the advice from [TotT: Data Driven Traps!][tott-97] .)
+在下面的反例中，請注意在案例設置中很難區分每個測試案例使用的`Codex`類型。（突出顯示的部分違反了[ToTT: 數據驅動陷阱！][tott-97]的建議。）
 
 ```go
 // 不好的範例:
@@ -2915,11 +2892,9 @@ func TestDecode(t *testing.T) {
 
 <a id="table-tests-identifying-the-row"></a>
 
-#### Identifying the row
+#### 識別行 Identifying the row
 
-Do not use the index of the test in the test table as a substitute for naming
-your tests or printing the inputs. Nobody wants to go through your test table
-and count the entries in order to figure out which test case is failing.
+不要使用測試表中測試的索引作為命名測試或打印輸入的替代品。沒有人想要通過你的測試表並計算條目數量來弄清楚哪個測試案例失敗了。
 
 ```go
 // 不好的範例:
@@ -2936,30 +2911,22 @@ for i, d := range tests {
 }
 ```
 
-Add a test description to your test struct and print it along failure messages.
-When using subtests, your subtest name should be effective in identifying the
-row.
+不要使用測試表中測試的索引作為命名測試或打印輸入的替代品。沒有人想要通過你的測試表並計算條目數量來弄清楚哪個測試案例失敗了。
 
-**Important:** Even though `t.Run` scopes the output and execution, you must
-always [identify the input]. The table test row names must follow the
-[subtest naming] guidance.
+在你的測試結構中添加一個測試描述，並在失敗訊息中打印它。使用子測試時，你的子測試名稱應該有效地識別行。
 
-[identify the input]: #identify-the-input
-[subtest naming]: #subtest-names
+**重要：** 即使`t.Run`限定了輸出和執行，你必須始終[識別輸入]。表測試行名稱必須遵循[子測試命名]指南。
+
+[識別輸入]: #identify-the-input
+[子測試命名]: #subtest-names
 
 <a id="mark-test-helpers"></a>
 
-### Test helpers
+### 測試助手 Test helpers
 
-A test helper is a function that performs a setup or cleanup task. All failures
-that occur in test helpers are expected to be failures of the environment (not
-from the code under test) — for example when a test database cannot be started
-because there are no more free ports on this machine.
+測試助手是執行設置或清理任務的函數。在測試助手中發生的所有失敗都預期是環境的失敗（不是被測試代碼的失敗）——例如，當無法啟動測試數據庫，因為這台機器上沒有更多的空閒端口時。
 
-If you pass a `*testing.T`, call [`t.Helper`] to attribute failures in the test
-helper to the line where the helper is called. This parameter should come after
-a [context](#contexts) parameter, if present, and before any remaining
-parameters.
+如果你傳遞了一個`*testing.T`，調用[`t.Helper`]以將測試助手中的失敗歸因於調用助手的行。如果存在，這個參數應該在[上下文](#contexts)參數之後，以及在任何剩餘參數之前。
 
 ```go
 // 好的範例:
@@ -2980,16 +2947,11 @@ func readFile(t *testing.T, filename string) string {
 }
 ```
 
-Do not use this pattern when it obscures the connection between a test failure
-and the conditions that led to it. Specifically, the guidance about
-[assert libraries](#assert) still applies, and [`t.Helper`] should not be used
-to implement such libraries.
+當這種模式模糊了測試失敗與導致它的條件之間的聯繫時，不要使用它。具體來說，關於[斷言庫](#assert)的指導仍然適用，[`t.Helper`]不應該用來實現這樣的庫。
 
-**Tip:** For more on the distinction between test helpers and assertion helpers,
-see [best practices](best-practices#test-functions).
+**提示：** 有關測試助手和斷言助手之間區別的更多信息，請參見[最佳實踐](best-practices#test-functions)。
 
-Although the above refers to `*testing.T`, much of the advice stays the same for
-benchmark and fuzz helpers.
+雖然上面提到了`*testing.T`，但對於基準測試和模糊測試助手，大部分建議仍然相同。
 
 [`t.Helper`]: https://pkg.go.dev/testing#T.Helper
 
