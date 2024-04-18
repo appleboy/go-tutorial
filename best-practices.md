@@ -392,13 +392,11 @@ func TestProcessor(t *testing.T) {
 
 <a id="shadowing"></a>
 
-### Shadowing
+### 變數遮蔽 Shadowing
 
-**Note:** This explanation uses two informal terms, *stomping* and *shadowing*.
-They are not official concepts in the Go language spec.
+**注意：** 本解釋使用了兩個非正式術語，*踩踏* 和 *遮蔽*。它們不是 Go 語言規範中的官方概念。
 
-Like many programming languages, Go has mutable variables: assigning to a
-variable changes its value.
+像許多編程語言一樣，Go 擁有可變變量：對變量進行賦值會改變其值。
 
 ```go
 // 較佳：
@@ -410,9 +408,7 @@ func abs(i int) int {
 }
 ```
 
-When using [short variable declarations] with the `:=` operator, in some cases a
-new variable is not created. We can call this *stomping*. It's OK to do this
-when the original value is no longer needed.
+當使用 [短變量聲明] 與 `:=` 運算符時，在某些情況下不會創建新變量。我們可以稱這為*踩踏*。當原始值不再需要時，這樣做是可以的。
 
 ```go
 // 較佳：
@@ -433,10 +429,7 @@ func (s *Server) innerHandler(ctx context.Context, req *pb.MyRequest) *pb.MyResp
 }
 ```
 
-Be careful using short variable declarations in a new scope, though: that
-introduces a new variable. We can call this *shadowing* the original variable.
-Code after the end of the block refers to the original. Here is a buggy attempt
-to shorten the deadline conditionally:
+不過，在新的作用域中使用短變量聲明要小心：這會引入一個新變量。我們可以稱這為*遮蔽*原始變量。塊結束後的代碼指的是原始變量。這是一個錯誤的嘗試，有條件地縮短截止日期：
 
 ```go
 // 不佳：
@@ -456,7 +449,7 @@ func (s *Server) innerHandler(ctx context.Context, req *pb.MyRequest) *pb.MyResp
 }
 ```
 
-A correct version of the code might be:
+一個正確版本的代碼可能是：
 
 ```go
 // 較佳：
@@ -472,18 +465,9 @@ func (s *Server) innerHandler(ctx context.Context, req *pb.MyRequest) *pb.MyResp
 }
 ```
 
-In the case we called stomping, because there's no new variable, the type being
-assigned must match that of the original variable. With shadowing, an entirely
-new entity is introduced so it can have a different type. Intentional shadowing
-can be a useful practice, but you can always use a new name if it improves
-[clarity](guide#clarity).
+在我們稱為踩踏的情況下，因為沒有新變量，所賦予的類型必須與原始變量的類型匹配。有了遮蔽，就引入了一個全新的實體，所以它可以有不同的類型。故意的遮蔽可以是一種有用的做法，但如果使用新名稱可以提高[清晰度](guide#clarity)，那麼您總是可以使用新名稱。
 
-It is not a good idea to use variables with the same name as standard packages
-other than very small scopes, because that renders free functions and values
-from that package inaccessible. Conversely, when picking a name for your
-package, avoid names that are likely to require
-[import renaming](decisions#import-renaming) or cause shadowing of otherwise
-good variable names at the client side.
+在非常小的作用域之外使用與標準包同名的變量並不是一個好主意，因為這會使該包中的自由函數和值無法訪問。相反地，當為您的包選擇名稱時，避免使用可能需要[導入重命名](decisions#import-renaming)或在客戶端導致遮蔽其他好的變量名稱的名稱。
 
 ```go
 // 不佳：
@@ -493,23 +477,17 @@ func LongFunction() {
 }
 ```
 
-[short variable declarations]: https://go.dev/ref/spec#Short_variable_declarations
+[短變量聲明]: https://go.dev/ref/spec#Short_variable_declarations
 
 <a id="util-packages"></a>
 
-### Util packages
+### Util 套件
 
-Go packages have a name specified on the `package` declaration, separate from
-the import path. The package name matters more for readability than the path.
+Go 的套件有一個在 `package` 聲明上指定的名稱，與導入路徑分開。對於可讀性來說，套件名稱比路徑更重要。
 
-Go package names should be
-[related to what the package provides](decisions#package-names). Naming a
-package just `util`, `helper`, `common` or similar is usually a poor choice (it
-can be used as *part* of the name though). Uninformative names make the code
-harder to read, and if used too broadly they are liable to cause needless
-[import conflicts](decisions#import-renaming).
+Go 套件名稱應該[與套件提供的內容相關](decisions#package-names)。僅將一個套件命名為 `util`、`helper`、`common` 或類似的通常是一個糟糕的選擇（雖然可以用作名稱的*一部分*）。不具信息性的名稱使代碼更難閱讀，如果使用得太廣泛，它們可能會導致不必要的[導入衝突](decisions#import-renaming)。
 
-Instead, consider what the callsite will look like.
+相反，考慮調用點將會看起來像什麼。
 
 ```go
 // 較佳：
@@ -520,9 +498,7 @@ _, err := f.Seek(0, io.SeekStart)
 b := elliptic.Marshal(curve, x, y)
 ```
 
-You can tell roughly what each of these do even without knowing the imports list
-(`cloud.google.com/go/spanner/spannertest`, `io`, and `crypto/elliptic`). With
-less focused names, these might read:
+您甚至可以在不知道導入列表（`cloud.google.com/go/spanner/spannertest`、`io` 和 `crypto/elliptic`）的情況下大致知道這些各自做什麼。如果使用不夠專注的名稱，這些可能會讀作：
 
 ```go
 // 不佳：
@@ -535,80 +511,44 @@ b := helper.Marshal(curve, x, y)
 
 <a id="package-size"></a>
 
-## Package size
+## 套件大小
 
-If you're asking yourself how big your Go packages should be and whether to
-place related types in the same package or split them into different ones, a
-good place to start is the [Go blog post about package names][blog-pkg-names].
-Despite the post title, it's not solely about naming. It contains some helpful
-hints and cites several useful articles and talks.
+如果您在問自己 Go 套件應該有多大，以及是否應該將相關類型放在同一個套件中或將它們分成不同的套件，一個好的起點是 [Go 博客文章關於套件名稱][blog-pkg-names]。儘管文章的標題只是關於命名，但它不僅僅是關於命名。它包含了一些有用的提示，並引用了幾篇有用的文章和演講。
 
-Here are some other considerations and notes.
+這裡還有一些其他的考慮和筆記。
 
-Users see [godoc] for the package in one page, and any methods exported by types
-supplied by the package are grouped by their type. Godoc also group constructors
-along with the types they return. If *client code* is likely to need two values
-of different type to interact with each other, it may be convenient for the user
-to have them in the same package.
+用戶可以在一個頁面上看到套件的 [godoc]，並且套件提供的類型所導出的任何方法都按類型分組。Godoc 也將構造函數與它們返回的類型分組。如果*客戶端代碼*可能需要兩個不同類型的值互相交互，對用戶來說，將它們放在同一個套件中可能會比較方便。
 
-Code within a package can access unexported identifiers in the package. If you
-have a few related types whose *implementation* is tightly coupled, placing them
-in the same package lets you achieve this coupling without polluting the public
-API with these details. A good test for this coupling is to imagine a
-hypothetical user of two packages, where the packages cover closely related
-topics: if the user must import both packages in order to use either in any
-meaningful way, combining them together is usually the right thing to do. The
-standard library generally demonstrates this kind of scoping and layering well.
+套件內的代碼可以訪問套件中未導出的標識符。如果您有一些相關的類型，它們的*實現*緊密耦合，將它們放在同一個套件中可以實現這種耦合，而不用在公共 API 中暴露這些細節。對這種耦合的一個好測試是想像兩個套件的假設用戶，這些套件涵蓋了緊密相關的主題：如果用戶必須導入兩個套件才能以任何有意義的方式使用其中任何一個，那麼將它們合併在一起通常是正確的做法。標準庫通常很好地展示了這種範圍和分層。
 
-All of that being said, putting your entire project in a single package would
-likely make that package too large. When something is conceptually distinct,
-giving it its own small package can make it easier to use. The short name of the
-package as known to clients together with the exported type name work together
-to make a meaningful identifier: e.g. `bytes.Buffer`, `ring.New`. The
-[blog post][blog-pkg-names] has more examples.
+儘管如此，將整個項目放在一個套件中可能會使該套件過大。當某些東西在概念上是獨立的，給它自己的小套件可以使它更容易使用。套件的短名稱與客戶端所知的導出類型名稱一起工作，形成一個有意義的標識符：例如 `bytes.Buffer`、`ring.New`。[博客文章][blog-pkg-names]有更多例子。
 
-Go style is flexible about file size, because maintainers can move code within a
-package from one file to another without affecting callers. But as a general
-guideline: it is usually not a good idea to have a single file with many
-thousands of lines in it, or having many tiny files. There is no "one type, one
-file" convention as in some other languages. As a rule of thumb, files should be
-focused enough that a maintainer can tell which file contains something, and the
-files should be small enough that it will be easy to find once there. The
-standard library often splits large packages to several source files, grouping
-related code by file. The source for [package `bytes`] is a good example.
-Packages with long package documentation may choose to dedicate one file called
-`doc.go` that has the [package documentation](decisions#package-comments), a
-package declaration, and nothing else, but this is not required.
+Go 風格對文件大小很靈活，因為維護者可以在套件內將代碼從一個文件移動到另一個文件，而不影響調用者。但作為一般指導原則：通常不是一個好主意在一個文件中有數千行代碼，或者有許多微小的文件。與其他一些語言不同，沒有“一種類型，一個文件”的慣例。作為一個經驗法則，文件應該足夠專注，以至於維護者可以告訴文件中包含了什麼，並且文件應該足夠小，以便一旦到達那裡就容易找到。標準庫經常將大型套件分割為幾個源文件，按文件分組相關代碼。[套件 `bytes`] 的源代碼是一個很好的例子。具有長套件文檔的套件可能會選擇專門用一個名為 `doc.go` 的文件，其中包含[套件文檔](decisions#package-comments)、一個套件聲明，以及其他什麼都沒有，但這不是必需的。
 
-Within the Google codebase and in projects using Bazel, directory layout for Go
-code is different than it is in open source Go projects: you can have multiple
-`go_library` targets in a single directory. A good reason to give each package
-its own directory is if you expect to open source your project in the future.
+在 Google 代碼庫和使用 Bazel 的項目中，Go 代碼的目錄布局與開源 Go 項目中的不同：您可以在單個目錄中有多個 `go_library` 目標。給每個套件自己的目錄的一個好理由是，如果您期望將來開源您的項目。
 
-See also:
+另見：
 
-*   [Test double packages](#naming-doubles)
+*   [測試雙元件套件](#naming-doubles)
 
 [blog-pkg-names]: https://go.dev/blog/package-names
-[package `bytes`]: https://go.dev/src/bytes/
+[套件 `bytes`]: https://go.dev/src/bytes/
 [godoc]: https://pkg.go.dev/
 
 <a id="imports"></a>
 
-## Imports
+## 引入 Imports
 
 <a id="import-protos"></a>
 
 ### Protos and stubs
 
-Proto library imports are treated differently than standard Go imports due to
-their cross-language nature. The convention for renamed proto imports are based
-on the rule that generated the package:
+由於其跨語言特性，Proto 庫的引入與標準 Go 引入的處理方式不同。重新命名 proto 引入的慣例基於生成該套件的規則：
 
-*   The `pb` suffix is generally used for `go_proto_library` rules.
-*   The `grpc` suffix is generally used for `go_grpc_library` rules.
+*   一般情況下，`go_proto_library` 規則使用 `pb` 後綴。
+*   一般情況下，`go_grpc_library` 規則使用 `grpc` 後綴。
 
-Generally, a short one- or two-letter prefix is used:
+通常使用短的一個或兩個字母的前綴：
 
 ```go
 // 較佳：
@@ -618,15 +558,9 @@ import (
 )
 ```
 
-If there is only a single proto used by a package or the package is tied closely
-to that proto, the prefix can be omitted:
+如果一個套件只使用了一個 proto 或該套件與該 proto 緊密相關，則可以省略前綴：
 
-import ( pb "path/to/package/foo_service_go_proto" grpc
-"path/to/package/foo_service_go_grpc" )
-
-If the symbols in the proto are generic or are not very self-descriptive, or if
-shortening the package name with an acronym is unclear, a short word can suffice
-as the prefix:
+如果 proto 中的符號是通用的或不是非常自描述的，或者如果使用縮寫縮短套件名稱不清晰，一個短詞可以作為前綴：
 
 ```go
 // 較佳：
@@ -635,38 +569,28 @@ import (
 )
 ```
 
-In this case `mapspb.Address` might be clearer than `mpb.Address` if the code in
-question is not already clearly related to maps.
+在這種情況下，如果相關代碼並不已經明確與地圖相關，`mapspb.Address` 可能比 `mpb.Address` 更清晰。
 
 <a id="import-order"></a>
 
-### Import ordering
+### 引入順序 Import ordering
 
-Imports are typically grouped into the following two (or more) blocks, in order:
+引入通常按以下兩個（或更多）塊的順序分組：
 
-1.  Standard library imports (e.g., `"fmt"`)
-1.  imports (e.g., "/path/to/somelib")
-1.  (optional) Protobuf imports (e.g., `fpb "path/to/foo_go_proto"`)
-1.  (optional) Side-effect imports (e.g., `_ "path/to/package"`)
+1.  標準庫引入（例如，`"fmt"`）
+1.  專案引入（例如，`"/path/to/somelib"`）
+1.  （可選）Protobuf 引入（例如，`fpb "path/to/foo_go_proto"`）
+1.  （可選）副作用引入（例如，`_ "path/to/package"`）
 
-If a file does not have a group for one of the optional categories above, the
-relevant imports are included in the project import group.
+如果一個文件沒有上述可選類別中的一個分組，相關的引入將包含在專案引入組中。
 
-Any import grouping that is clear and easy to understand is generally fine. For
-example, a team may choose to group gRPC imports separately from protobuf
-imports.
+任何清晰且易於理解的引入分組通常都是可以的。例如，一個團隊可能選擇將 gRPC 引入與 protobuf 引入分開。
 
-> **Note:** For code maintaining only the two mandatory groups (one group for
-> the standard library and one for all other imports), the `goimports` tool
-> produces output consistent with this guidance.
+> **注意：** 對於只維護兩個強制分組的代碼（一組用於標準庫，另一組用於所有其他引入），`goimports` 工具產生的輸出與此指導相符。
 >
-> However, `goimports` has no knowledge of groups beyond the mandatory ones; the
-> optional groups are prone to invalidation by the tool. When optional groups
-> are used, attention on the part of both authors and reviewers is required to
-> ensure that groupings remain compliant.
+> 然而，`goimports` 對於強制分組之外的分組沒有認識；使用可選分組時，這些分組容易被該工具使無效。當使用可選分組時，作者和審查者都需要注意，以確保分組保持合規。
 >
-> Either approach is fine, but do not leave the imports section in an
-> inconsistent, partially grouped state.
+> 兩種方法都可以，但不要讓引入部分處於不一致、部分分組的狀態。
 
 <a id="error-handling"></a>
 
