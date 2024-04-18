@@ -1,158 +1,143 @@
 <!--* toc_depth: 3 *-->
 
-# Go Style Best Practices
+# Go 語言風格最佳實踐
 
-https://google.github.io/styleguide/go/best-practices
+https://google.github.io/styleguide/go/best-practices (英文版)
 
-[Overview](index) | [Guide](guide) | [Decisions](decisions) |
-[Best practices](best-practices)
+[概覽](index) | [指南](guide) | [決策](decisions) |
+[最佳實踐](best-practices)
 
-**Note:** This is part of a series of documents that outline [Go Style](index)
-at Google. This document is **neither [normative](index#normative) nor
-[canonical](index#canonical)**, and is an auxiliary document to the
-[core style guide](guide). See [the overview](index#about) for more information.
+**注意：** 這是一系列文件的一部分，概述了 Google 的 [Go 風格](index)。本文件**既不是 [規範性的](index#normative) 也不是 [權威性的](index#canonical)**，它是 [核心風格指南](guide) 的輔助文件。更多信息請參見 [概述](index#about)。
 
 <a id="about"></a>
 
-## About
+## 關於
 
-This file documents **guidance about how to best apply the Go Style Guide**.
-This guidance is intended for common situations that arise frequently, but may
-not apply in every circumstance. Where possible, multiple alternative approaches
-are discussed along with the considerations that go into the decision about when
-and when not to apply them.
+本文件記錄了**如何最佳應用 Go 風格指南的指導**。這些建議旨在針對經常出現的常見情況，但可能不適用於每一種情況。在可能的情況下，討論了多種替代方法以及決定何時以及何時不應用它們的考量。
 
-See [the overview](index#about) for the full set of Style Guide documents.
+查看 [概述](index#about) 以獲得完整的風格指南文件集。
 
 <a id="naming"></a>
 
-## Naming
+## 命名
 
 <a id="function-names"></a>
 
-### Function and method names
+### 函數和方法名稱
 
 <a id="function-name-repetition"></a>
 
-#### Avoid repetition
+#### 避免重複
 
-When choosing the name for a function or method, consider the context in which
-the name will be read. Consider the following recommendations to avoid excess
-[repetition](decisions#repetition) at the call site:
+在為函數或方法選擇名稱時，請考慮名稱將在何種上下文中被讀取。考慮以下建議，以避免在調用地點過度[重複](decisions#repetition)：
 
-*   The following can generally be omitted from function and method names:
+*   以下通常可以從函數和方法名稱中省略：
 
-    *   The types of the inputs and outputs (when there is no collision)
-    *   The type of a method's receiver
-    *   Whether an input or output is a pointer
+    *   輸入和輸出的類型（當沒有衝突時）
+    *   方法接收者的類型
+    *   輸入或輸出是否為指針
 
-*   For functions, do not
-    [repeat the name of the package](decisions#repetitive-with-package).
+*   對於函數，不要[重複包的名稱](decisions#repetitive-with-package)。
 
     ```go
-    // Bad:
+    // 不佳：
     package yamlconfig
 
     func ParseYAMLConfig(input string) (*Config, error)
     ```
 
     ```go
-    // Good:
+    // 較佳：
     package yamlconfig
 
     func Parse(input string) (*Config, error)
     ```
 
-*   For methods, do not repeat the name of the method receiver.
+*   對於方法，不要重複方法接收者的名稱。
 
     ```go
-    // Bad:
+    // 不佳：
     func (c *Config) WriteConfigTo(w io.Writer) (int64, error)
     ```
 
     ```go
-    // Good:
+    // 較佳：
     func (c *Config) WriteTo(w io.Writer) (int64, error)
     ```
 
-*   Do not repeat the names of variables passed as parameters.
+*   不要重複作為參數傳遞的變量名稱。
 
     ```go
-    // Bad:
+    // 不佳：
     func OverrideFirstWithSecond(dest, source *Config) error
     ```
 
     ```go
-    // Good:
+    // 較佳：
     func Override(dest, source *Config) error
     ```
 
-*   Do not repeat the names and types of the return values.
+*   不要重複返回值的名稱和類型。
 
     ```go
-    // Bad:
+    // 不佳：
     func TransformYAMLToJSON(input *Config) *jsonconfig.Config
     ```
 
     ```go
-    // Good:
+    // 較佳：
     func Transform(input *Config) *jsonconfig.Config
     ```
 
-When it is necessary to disambiguate functions of a similar name, it is
-acceptable to include extra information.
+當需要區分同名的函數時，可以包含額外的信息。
 
 ```go
-// Good:
+// 較佳：
 func (c *Config) WriteTextTo(w io.Writer) (int64, error)
 func (c *Config) WriteBinaryTo(w io.Writer) (int64, error)
 ```
 
 <a id="function-name-conventions"></a>
 
-#### Naming conventions
+#### 命名慣例 Naming conventions
 
-There are some other common conventions when choosing names for functions and
-methods:
+在為函數和方法選擇名稱時，有一些其他常見的慣例：
 
-*   Functions that return something are given noun-like names.
+*   返回某物的函數給予類似名詞的名稱。
 
     ```go
-    // Good:
+    // 較佳：
     func (c *Config) JobName(key string) (value string, ok bool)
     ```
 
-    A corollary of this is that function and method names should
-    [avoid the prefix `Get`](decisions#getters).
+    這的推論是函數和方法名稱應該[避免使用前綴 `Get`](decisions#getters)。
 
     ```go
-    // Bad:
+    // 不佳：
     func (c *Config) GetJobName(key string) (value string, ok bool)
     ```
 
-*   Functions that do something are given verb-like names.
+*   做某事的函數給予類似動詞的名稱。
 
     ```go
-    // Good:
+    // 較佳：
     func (c *Config) WriteDetail(w io.Writer) (int64, error)
     ```
 
-*   Identical functions that differ only by the types involved include the name
-    of the type at the end of the name.
+*   僅由涉及的類型不同的相同函數，在名稱的末尾包含類型名稱。
 
     ```go
-    // Good:
+    // 較佳：
     func ParseInt(input string) (int, error)
     func ParseInt64(input string) (int64, error)
     func AppendInt(buf []byte, value int) []byte
     func AppendInt64(buf []byte, value int64) []byte
     ```
 
-    If there is a clear "primary" version, the type can be omitted from the name
-    for that version:
+    如果有一個明確的“主要”版本，可以從該版本的名稱中省略類型：
 
     ```go
-    // Good:
+    // 較佳：
     func (c *Config) Marshal() ([]byte, error)
     func (c *Config) MarshalText() (string, error)
     ```
