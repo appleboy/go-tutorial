@@ -2963,15 +2963,15 @@ func readFile(t *testing.T, filename string) string {
 
 <a id="test-same-package"></a>
 
-#### Tests in the same package
+#### 同一套件中的測試 Tests in the same package
 
-Tests may be defined in the same package as the code being tested.
+測試可以定義在與被測試代碼相同的套件中。
 
-To write a test in the same package:
+要在同一套件中寫測試：
 
-* Place the tests in a `foo_test.go` file
-* Use `package foo` for the test file
-* Do not explicitly import the package to be tested
+* 將測試放在`foo_test.go`文件中
+* 對測試文件使用`package foo`
+* 不要明確導入要測試的套件
 
 ```build
 # 好的範例:
@@ -2994,97 +2994,79 @@ go_test(
 )
 ```
 
-A test in the same package can access unexported identifiers in the package.
-This may enable better test coverage and more concise tests. Be aware that any
-[examples] declared in the test will not have the package names that a user will
-need in their code.
+同一套件中的測試可以訪問套件中未導出的標識符。這可能使得測試覆蓋率更好並且測試更簡潔。請注意，測試中聲明的任何[範例]都不會有用戶在其代碼中需要的套件名稱。
 
 [`library`]: https://github.com/bazelbuild/rules_go/blob/master/docs/go/core/rules.md#go_library
-[examples]: #examples
+[範例]: #examples
 
 <a id="test-different-package"></a>
 
-#### Tests in a different package
+#### 不同套件中的測試 Tests in a different package
 
-It is not always appropriate or even possible to define a test in the same
-package as the code being tested. In these cases, use a package name with the
-`_test` suffix. This is an exception to the "no underscores" rule to
-[package names](#package-names). For example:
+並不總是適合或甚至可能在與被測試代碼相同的套件中定義測試。在這些情況下，使用帶有`_test`後綴的套件名稱。這是對[套件名稱](#package-names)中“無下劃線”規則的一個例外。例如：
 
-* If an integration test does not have an obvious library that it belongs to
+* 如果集成測試沒有一個明顯屬於它的套件
 
     ```go
-    // 好的範例:
+    // 好的範例：
     package gmailintegration_test
 
     import "testing"
     ```
 
-* If defining the tests in the same package results in circular dependencies
+* 如果在同一套件中定義測試會導致循環依賴
 
     ```go
-    // 好的範例:
+    // 好的範例：
     package fireworks_test
 
     import (
       "fireworks"
-      "fireworkstestutil" // fireworkstestutil also imports fireworks
+      "fireworkstestutil" // fireworkstestutil 也導入了 fireworks
     )
     ```
 
 <a id="use-package-testing"></a>
 
-### Use package `testing`
+### 使用 `testing` 套件
 
-The Go standard library provides the [`testing` package]. This is the only
-testing framework permitted for Go code in the Google codebase. In particular,
-[assertion libraries](#assert) and third-party testing frameworks are not
-allowed.
+Go標準庫提供了[`testing`套件]。這是Google代碼庫中Go代碼唯一允許使用的測試框架。特別是，不允許使用[斷言庫](#assert)和第三方測試框架。
 
-The `testing` package provides a minimal but complete set of functionality for
-writing good tests:
+`testing`套件為編寫良好的測試提供了一套最小但完整的功能：
 
-* Top-level tests
-* Benchmarks
-* [Runnable examples](https://blog.golang.org/examples)
-* Subtests
-* Logging
-* Failures and fatal failures
+* 頂層測試
+* 基準測試
+* [可運行範例](https://blog.golang.org/examples)
+* 子測試
+* 日誌記錄
+* 失敗和致命失敗
 
-These are designed to work cohesively with core language features like
-[composite literal] and [if-with-initializer] syntax to enable test authors to
-write [clear, readable, and maintainable tests].
+這些旨在與核心語言特性如[複合字面量]和[帶初始化器的if語句]語法協同工作，使測試作者能夠編寫[清晰、可讀和可維護的測試]。
 
-[`testing` package]: https://pkg.go.dev/testing
-[composite literal]: https://go.dev/ref/spec#Composite_literals
-[if-with-initializer]: https://go.dev/ref/spec#If_statements
+[`testing`套件]: https://pkg.go.dev/testing
+[複合字面量]: https://go.dev/ref/spec#Composite_literals
+[帶初始化器的if語句]: https://go.dev/ref/spec#If_statements
 
 <a id="non-decisions"></a>
 
-## Non-decisions
+## 無法決策 Non-decisions
 
 A style guide cannot enumerate positive prescriptions for all matters, nor can
 it enumerate all matters about which it does not offer an opinion. That said,
 here are a few things where the readability community has previously debated and
 has not achieved consensus about.
 
-* **Local variable initialization with zero value**. `var i int` and `i := 0`
-    are equivalent. See also [initialization best practices].
-* **Empty composite literal vs. `new` or `make`**. `&File{}` and `new(File)`
-    are equivalent. So are `map[string]bool{}` and `make(map[string]bool)`. See
-    also [composite declaration best practices].
-* **got, want argument ordering in cmp.Diff calls**. Be locally consistent,
-    and [include a legend](#print-diffs) in your failure message.
-* **`errors.New` vs `fmt.Errorf` on non-formatted strings**.
-    `errors.New("foo")` and `fmt.Errorf("foo")` may be used interchangeably.
+* **使用零值初始化局部變量**。`var i int`和`i := 0`是等價的。另見[初始化最佳實踐]。
+* **空的複合字面量與`new`或`make`的對比**。`&File{}`和`new(File)`是等價的。`map[string]bool{}`和`make(map[string]bool)`也是如此。另見[複合聲明最佳實踐]。
+* **在cmp.Diff調用中got, want參數排序**。保持局部一致性，
+    並在您的失敗訊息中[包含一個圖例](#print-diffs)。
+* **`errors.New`與`fmt.Errorf`在非格式化字符串上的使用**。
+    `errors.New("foo")`和`fmt.Errorf("foo")`可以互換使用。
 
-If there are special circumstances where they come up again, the readability
-mentor might make an optional comment, but in general the author is free to pick
-the style they prefer in the given situation.
+如果在特殊情況下它們再次出現，可讀性導師可能會做出一個可選的評論，但通常作者可以自由選擇他們在給定情況下偏好的風格。
 
-Naturally, if anything not covered by the style guide does need more discussion,
-authors are welcome to ask -- either in the specific review, or on internal
-message boards.
+當然，如果風格指南未涵蓋的任何內容確實需要更多討論，
+作者歡迎提問 —— 不論是在特定的審查中，還是在內部訊息板上。
 
-[composite declaration best practices]: https://google.github.io/styleguide/go/best-practices#vardeclcomposite
-[initialization best practices]: https://google.github.io/styleguide/go/best-practices#vardeclinitialization
+[複合聲明最佳實踐]: https://google.github.io/styleguide/go/best-practices#vardeclcomposite
+[初始化最佳實踐]: https://google.github.io/styleguide/go/best-practices#vardeclinitialization
