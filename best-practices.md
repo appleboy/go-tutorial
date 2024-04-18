@@ -198,7 +198,7 @@ testing. A safe choice is to append the word `test` to the original package name
 ("creditcard" + "test"):
 
 ```go
-// Good:
+// 較佳：
 package creditcardtest
 ```
 
@@ -216,7 +216,7 @@ test doubles for one type (like `Service`), you can take a concise approach to
 naming the doubles:
 
 ```go
-// Good:
+// 較佳：
 import (
     "path/to/creditcard"
     "path/to/money"
@@ -236,7 +236,7 @@ Finally, if the package is built with Bazel, make sure the new `go_library` rule
 for the package is marked as `testonly`:
 
 ```build
-# Good:
+# 較佳：
 go_library(
     name = "creditcardtest",
     srcs = ["creditcardtest.go"],
@@ -265,7 +265,7 @@ Here we rename `Stub` to `AlwaysCharges` and introduce a new stub called
 `AlwaysDeclines`:
 
 ```go
-// Good:
+// 較佳：
 // AlwaysCharges stubs creditcard.Service and simulates success.
 type AlwaysCharges struct{}
 
@@ -311,7 +311,7 @@ func (s *StoredValue) Credit(c *Card, amount money.Money) error { /* omitted */ 
 In this case, more explicit test double naming is sensible:
 
 ```go
-// Good:
+// 較佳：
 type StubService struct{}
 
 func (StubService) Charge(*creditcard.Card, money.Money) error { return nil }
@@ -359,7 +359,7 @@ In the tests, a test double called a "spy" for `CreditCard` is juxtaposed
 against production types, so prefixing the name may improve clarity.
 
 ```go
-// Good:
+// 較佳：
 package payment
 
 import "path/to/creditcardtest"
@@ -387,7 +387,7 @@ func TestProcessor(t *testing.T) {
 This is clearer than when the name is not prefixed.
 
 ```go
-// Bad:
+// 不佳：
 package payment
 
 import "path/to/creditcardtest"
@@ -423,7 +423,7 @@ Like many programming languages, Go has mutable variables: assigning to a
 variable changes its value.
 
 ```go
-// Good:
+// 較佳：
 func abs(i int) int {
     if i < 0 {
         i *= -1
@@ -437,7 +437,7 @@ new variable is not created. We can call this *stomping*. It's OK to do this
 when the original value is no longer needed.
 
 ```go
-// Good:
+// 較佳：
 // innerHandler is a helper for some request handler, which itself issues
 // requests to other backends.
 func (s *Server) innerHandler(ctx context.Context, req *pb.MyRequest) *pb.MyResponse {
@@ -461,7 +461,7 @@ Code after the end of the block refers to the original. Here is a buggy attempt
 to shorten the deadline conditionally:
 
 ```go
-// Bad:
+// 不佳：
 func (s *Server) innerHandler(ctx context.Context, req *pb.MyRequest) *pb.MyResponse {
     // Attempt to conditionally cap the deadline.
     if *shortenDeadlines {
@@ -481,7 +481,7 @@ func (s *Server) innerHandler(ctx context.Context, req *pb.MyRequest) *pb.MyResp
 A correct version of the code might be:
 
 ```go
-// Good:
+// 較佳：
 func (s *Server) innerHandler(ctx context.Context, req *pb.MyRequest) *pb.MyResponse {
     if *shortenDeadlines {
         var cancel func()
@@ -508,7 +508,7 @@ package, avoid names that are likely to require
 good variable names at the client side.
 
 ```go
-// Bad:
+// 不佳：
 func LongFunction() {
     url := "https://example.com/"
     // Oops, now we can't use net/url in code below.
@@ -534,7 +534,7 @@ harder to read, and if used too broadly they are liable to cause needless
 Instead, consider what the callsite will look like.
 
 ```go
-// Good:
+// 較佳：
 db := spannertest.NewDatabaseFromFile(...)
 
 _, err := f.Seek(0, io.SeekStart)
@@ -547,7 +547,7 @@ You can tell roughly what each of these do even without knowing the imports list
 less focused names, these might read:
 
 ```go
-// Bad:
+// 不佳：
 db := test.NewDatabaseFromFile(...)
 
 _, err := f.Seek(0, common.SeekStart)
@@ -633,7 +633,7 @@ on the rule that generated the package:
 Generally, a short one- or two-letter prefix is used:
 
 ```go
-// Good:
+// 較佳：
 import (
     fspb "path/to/package/foo_service_go_proto"
     fsgrpc "path/to/package/foo_service_go_grpc"
@@ -651,7 +651,7 @@ shortening the package name with an acronym is unclear, a short word can suffice
 as the prefix:
 
 ```go
-// Good:
+// 較佳：
 import (
     mapspb "path/to/package/maps_go_proto"
 )
@@ -776,7 +776,7 @@ The caller can simply compare the returned error value of the function with one
 of the known error values:
 
 ```go
-// Good:
+// 較佳：
 func handlePet(...) {
     switch err := process(an); err {
     case ErrDuplicate:
@@ -794,7 +794,7 @@ The above uses sentinel values, where the error must be equal (in the sense of
 `process` returns wrapped errors (discussed below), you can use [`errors.Is`].
 
 ```go
-// Good:
+// 較佳：
 func handlePet(...) {
     switch err := process(an); {
     case errors.Is(err, ErrDuplicate):
@@ -810,7 +810,7 @@ Do not attempt to distinguish errors based on their string form. (See
 for more.)
 
 ```go
-// Bad:
+// 不佳：
 func handlePet(...) {
     err := process(an)
     if regexp.MatchString(`duplicate`, err.Error()) {...}
@@ -856,7 +856,7 @@ is a useful style, because callers getting back an error don't need to annotate
 it with information that they had already provided the failing function.
 
 ```go
-// Good:
+// 較佳：
 if err := os.Open("settings.txt"); err != nil {
     return err
 }
@@ -871,7 +871,7 @@ course it can be added. Just consider which level of the callchain is best
 positioned to understand this meaning.
 
 ```go
-// Good:
+// 較佳：
 if err := os.Open("settings.txt"); err != nil {
     // We convey the significance of this error to us. Note that the current
     // function might perform more than one file operation that can fail, so
@@ -888,7 +888,7 @@ if err := os.Open("settings.txt"); err != nil {
 Contrast with the redundant information here:
 
 ```go
-// Bad:
+// 不佳：
 if err := os.Open("settings.txt"); err != nil {
     return fmt.Errorf("could not open settings.txt: %w", err)
 }
@@ -923,7 +923,7 @@ payload of an error. For example, annotating the error is appropriate in an
 internal function:
 
 ```go
-// Good:
+// 較佳：
 func (s *Server) internalFunction(ctx context.Context) error {
     // ...
     if err != nil {
@@ -938,7 +938,7 @@ of code here to handle domain-specific errors and represent them canonically.
 For example:
 
 ```go
-// Bad:
+// 不佳：
 func (*FortuneTeller) SuggestFortune(context.Context, *pb.SuggestionRequest) (*pb.SuggestionResponse, error) {
     // ...
     if err != nil {
@@ -948,7 +948,7 @@ func (*FortuneTeller) SuggestFortune(context.Context, *pb.SuggestionRequest) (*p
 ```
 
 ```go
-// Good:
+// 較佳：
 import (
     "google.golang.org/grpc/codes"
     "google.golang.org/grpc/status"
@@ -1006,7 +1006,7 @@ Placement of the `%w` verb does, however, affect whether the error chain is
 printed newest to oldest, oldest to newest, or neither:
 
 ```go
-// Good:
+// 較佳：
 err1 := fmt.Errorf("err1")
 err2 := fmt.Errorf("err2: %w", err1)
 err3 := fmt.Errorf("err3: %w", err2)
@@ -1015,7 +1015,7 @@ fmt.Println(err3) // err3: err2: err1
 ```
 
 ```go
-// Bad:
+// 不佳：
 err1 := fmt.Errorf("err1")
 err2 := fmt.Errorf("%w: err2", err1)
 err3 := fmt.Errorf("%w: err3", err2)
@@ -1024,7 +1024,7 @@ fmt.Println(err3) // err1: err2: err3
 ```
 
 ```go
-// Bad:
+// 不佳：
 err1 := fmt.Errorf("err1")
 err2 := fmt.Errorf("err2-1 %w err2-2", err1)
 err3 := fmt.Errorf("err3-1 %w err3-2", err2)
@@ -1095,7 +1095,7 @@ APIs. The more convenient one carries the risk of this accidental expense. When
 in doubt, use the slightly more verbose style.
 
 ```go
-// Good:
+// 較佳：
 for _, sql := range queries {
   log.V(1).Infof("Handling %v", sql)
   if log.V(2) {
@@ -1106,7 +1106,7 @@ for _, sql := range queries {
 ```
 
 ```go
-// Bad:
+// 不佳：
 // sql.Explain called even when this log is not printed.
 log.V(2).Infof("Handling %v", sql.Explain())
 ```
@@ -1187,7 +1187,7 @@ Panic is also used when the compiler cannot identify unreachable code, for
 example when using a function like `log.Fatal` that will not return:
 
 ```go
-// Good:
+// 較佳：
 func answer(i int) string {
     switch i {
     case 42:
@@ -1239,7 +1239,7 @@ In the following snippet, the highlighted commentary adds little useful
 information to the reader:
 
 ```go
-// Bad:
+// 不佳：
 // Sprintf formats according to a format specifier and returns the resulting
 // string.
 //
@@ -1252,7 +1252,7 @@ the commentary instead states something non-obvious or materially helpful to the
 reader:
 
 ```go
-// Good:
+// 較佳：
 // Sprintf formats according to a format specifier and returns the resulting
 // string.
 //
@@ -1289,7 +1289,7 @@ it is `ctx.Err()`.
 This fact does not need to be restated:
 
 ```go
-// Bad:
+// 不佳：
 // Run executes the worker's run loop.
 //
 // The method will process work until the context is cancelled and accordingly
@@ -1300,7 +1300,7 @@ func (Worker) Run(ctx context.Context) error
 Because that is implied, the following is better:
 
 ```go
-// Good:
+// 較佳：
 // Run executes the worker's run loop.
 func (Worker) Run(ctx context.Context) error
 ```
@@ -1312,7 +1312,7 @@ documented if any of the following are true.
     cancelled:
 
     ```go
-    // Good:
+    // 較佳：
     // Run executes the worker's run loop.
     //
     // If the context is cancelled, Run returns a nil error.
@@ -1322,7 +1322,7 @@ documented if any of the following are true.
 *   The function has other mechanisms that may interrupt it or affect lifetime:
 
     ```go
-    // Good:
+    // 較佳：
     // Run executes the worker's run loop.
     //
     // Run processes work until the context is cancelled or Stop is called.
@@ -1339,7 +1339,7 @@ documented if any of the following are true.
     attached values:
 
     ```go
-    // Good:
+    // 較佳：
     // NewReceiver starts receiving messages sent to the specified queue.
     // The context should not have a deadline.
     func NewReceiver(ctx context.Context) *Receiver
@@ -1387,7 +1387,7 @@ Documentation is strongly encouraged if any of the following are true.
 *   It is unclear whether the operation is read-only or mutating:
 
     ```go
-    // Good:
+    // 較佳：
     package lrucache
 
     // Lookup returns the data associated with the key from the cache.
@@ -1402,7 +1402,7 @@ Documentation is strongly encouraged if any of the following are true.
 *   Synchronization is provided by the API:
 
     ```go
-    // Good:
+    // 較佳：
     package fortune_go_proto
 
     // NewFortuneTellerClient returns an *rpc.Client for the FortuneTeller service.
@@ -1419,7 +1419,7 @@ Documentation is strongly encouraged if any of the following are true.
     consumer has particular concurrency requirements:
 
     ```go
-    // Good:
+    // 較佳：
     package health
 
     // A Watcher reports the health of some entity (usually a backend service).
@@ -1449,7 +1449,7 @@ won't use the API correctly, leading to resource leaks and other possible bugs.
 Call out cleanups that are up to the caller:
 
 ```go
-// Good:
+// 較佳：
 // NewTicker returns a new Ticker containing a channel that will send the
 // current time on the channel after each tick.
 //
@@ -1462,7 +1462,7 @@ func (*Ticker) Stop()
 If it is potentially unclear how to clean up the resources, explain how:
 
 ```go
-// Good:
+// 較佳：
 // Get issues a GET to the specified URL.
 //
 // When err is nil, resp always contains a non-nil resp.Body.
@@ -1492,7 +1492,7 @@ return to callers so that callers can anticipate what types of conditions they
 can handle in their code.
 
 ```go
-// Good:
+// 較佳：
 package os
 
 // Read reads up to len(b) bytes from the File and stores them in b. It returns
@@ -1506,7 +1506,7 @@ When a function returns a specific error type, correctly note whether the error
 is a pointer receiver or not:
 
 ```go
-// Good:
+// 較佳：
 package os
 
 type PathError struct {
@@ -1535,7 +1535,7 @@ Document overall error conventions in the
 applicable to most errors found in the package:
 
 ```go
-// Good:
+// 較佳：
 // Package os provides a platform-independent interface to operating system
 // functionality.
 //
@@ -1576,7 +1576,7 @@ during the code review process. This helps to validate that the
 *   A blank line is required to separate paragraphs:
 
     ```go
-    // Good:
+    // 較佳：
     // LoadConfig reads a configuration out of the named file.
     //
     // See some/shortlink for config file format details.
@@ -1586,7 +1586,7 @@ during the code review process. This helps to validate that the
     corresponding documentation in godoc:
 
     ```go
-    // Good:
+    // 較佳：
     func ExampleConfig_WriteTo() {
       cfg := &Config{
         Name: "example",
@@ -1604,7 +1604,7 @@ during the code review process. This helps to validate that the
 *   Indenting lines by an additional two spaces formats them verbatim:
 
     ```go
-    // Good:
+    // 較佳：
     // Update runs the function in an atomic transaction.
     //
     // This is typically used with an anonymous TransactionFunc:
@@ -1621,7 +1621,7 @@ during the code review process. This helps to validate that the
     to godoc, such as lists and tables:
 
     ```go
-    // Good:
+    // 較佳：
     // LoadConfig reads a configuration out of the named file.
     //
     // LoadConfig treats the following keys in special ways:
@@ -1634,7 +1634,7 @@ during the code review process. This helps to validate that the
     formatted as a header:
 
     ```go
-    // Good:
+    // 較佳：
     // The following line is formatted as a heading.
     //
     // Using headings
@@ -1655,14 +1655,14 @@ the best examples of this is an `err == nil` check (since `err != nil` is much
 more common). The following two conditional checks are hard to distinguish:
 
 ```go
-// Good:
+// 較佳：
 if err := doSomething(); err != nil {
     // ...
 }
 ```
 
 ```go
-// Bad:
+// 不佳：
 if err := doSomething(); err == nil {
     // ...
 }
@@ -1671,7 +1671,7 @@ if err := doSomething(); err == nil {
 You can instead "boost" the signal of the conditional by adding a comment:
 
 ```go
-// Good:
+// 較佳：
 if err := doSomething(); err == nil { // if NO error
     // ...
 }
@@ -1691,12 +1691,12 @@ For consistency, prefer `:=` over `var` when initializing a new variable with a
 non-zero value.
 
 ```go
-// Good:
+// 較佳：
 i := 42
 ```
 
 ```go
-// Bad:
+// 不佳：
 var i = 42
 ```
 
@@ -1707,7 +1707,7 @@ var i = 42
 The following declarations use the [zero value]:
 
 ```go
-// Good:
+// 較佳：
 var (
     coords Point
     magic  [4]byte
@@ -1722,7 +1722,7 @@ value that **is ready for later use**. Using composite literals with explicit
 initialization can be clunky:
 
 ```go
-// Bad:
+// 不佳：
 var (
     coords = Point{X: 0, Y: 0}
     magic  = [4]byte{0, 0, 0, 0}
@@ -1734,7 +1734,7 @@ A common application of zero value declaration is when using a variable as the
 output when unmarshalling:
 
 ```go
-// Good:
+// 較佳：
 var coords Point
 if err := json.Unmarshal(data, &coords); err != nil {
 ```
@@ -1745,7 +1745,7 @@ initialization. It does mean that the containing type must now be passed via a
 pointer and not a value. Methods on the type must take pointer receivers.
 
 ```go
-// Good:
+// 較佳：
 type Counter struct {
     // This field does not have to be "*sync.Mutex". However,
     // users must now pass *Counter objects between themselves, not Counter.
@@ -1764,7 +1764,7 @@ to take an address anyway, prefer declaring the variable as a pointer type at
 the outset. Similarly, protobufs should be declared as pointer types.
 
 ```go
-// Good:
+// 較佳：
 func NewCounter(name string) *Counter {
     c := new(Counter) // "&Counter{}" is also fine.
     registerCounter(name, c)
@@ -1778,7 +1778,7 @@ This is because `*pb.Something` satisfies [`proto.Message`] while `pb.Something`
 does not.
 
 ```go
-// Bad:
+// 不佳：
 func NewCounter(name string) *Counter {
     var c Counter
     registerCounter(name, &c)
@@ -1803,7 +1803,7 @@ var myMsg = pb.Bar{}
 The following are [composite literal] declarations:
 
 ```go
-// Good:
+// 較佳：
 var (
     coords   = Point{X: x, Y: y}
     magic    = [4]byte{'I', 'W', 'A', 'D'}
@@ -1823,7 +1823,7 @@ literals and `new`. Both are fine, but the `new` keyword can serve to remind the
 reader that if a non-zero value were needed, a composite literal wouldn't work:
 
 ```go
-// Good:
+// 較佳：
 var (
   buf = new(bytes.Buffer) // non-empty Buffers are initialized with constructors.
   msg = new(pb.Message) // non-empty proto messages are initialized with builders or by setting fields one by one.
@@ -1840,7 +1840,7 @@ The following are declarations that take advantage of size hints in order to
 preallocate capacity:
 
 ```go
-// Good:
+// 較佳：
 var (
     // Preferred buffer size for target filesystem: st_blksize.
     buf = make([]byte, 131072)
@@ -1875,7 +1875,7 @@ fleet or even harm performance. When in doubt, see
 Specify [channel direction] where possible.
 
 ```go
-// Good:
+// 較佳：
 // sum computes the sum of all of the values. It reads from the channel until
 // the channel is closed.
 func sum(values <-chan int) int {
@@ -1886,7 +1886,7 @@ func sum(values <-chan int) int {
 This prevents casual programming errors that are possible without specification:
 
 ```go
-// Bad:
+// 不佳：
 func sum(values chan int) (out int) {
     for v := range values {
         out += v
@@ -1960,7 +1960,7 @@ Using an option structure has a number of benefits:
 Here is an example of a function that could be improved:
 
 ```go
-// Bad:
+// 不佳：
 func EnableReplication(ctx context.Context, config *replicator.Config, primaryRegions, readonlyRegions []string, replicateExisting, overwritePolicies bool, replicationInterval time.Duration, copyWorkers int, healthWatcher health.Watcher) {
     // ...
 }
@@ -1969,7 +1969,7 @@ func EnableReplication(ctx context.Context, config *replicator.Config, primaryRe
 The function above could be rewritten with an option structure as follows:
 
 ```go
-// Good:
+// 較佳：
 type ReplicationOptions struct {
     Config              *replicator.Config
     PrimaryRegions      []string
@@ -1989,7 +1989,7 @@ func EnableReplication(ctx context.Context, opts ReplicationOptions) {
 The function can then be called in a different package:
 
 ```go
-// Good:
+// 較佳：
 func foo(ctx context.Context) {
     // Complex call:
     storage.EnableReplication(ctx, storage.ReplicationOptions{
@@ -2049,7 +2049,7 @@ outweigh the overhead.
 Here is an example of a function that could be improved:
 
 ```go
-// Bad:
+// 不佳：
 func EnableReplication(ctx context.Context, config *placer.Config, primaryCells, readonlyCells []string, replicateExisting, overwritePolicies bool, replicationInterval time.Duration, copyWorkers int, healthWatcher health.Watcher) {
   ...
 }
@@ -2058,7 +2058,7 @@ func EnableReplication(ctx context.Context, config *placer.Config, primaryCells,
 The example above could be rewritten with variadic options as follows:
 
 ```go
-// Good:
+// 較佳：
 type replicationOptions struct {
     readonlyCells       []string
     replicateExisting   bool
@@ -2121,7 +2121,7 @@ func EnableReplication(ctx context.Context, config *placer.Config, primaryCells 
 The function can then be called in a different package:
 
 ```go
-// Good:
+// 較佳：
 func foo(ctx context.Context) {
     // Complex call:
     storage.EnableReplication(ctx, config, []string{"po", "is", "ea"},
@@ -2287,7 +2287,7 @@ code provides a `cmp.Transformer` for your data type, that can often be the
 simplest design. For other validations, consider returning an `error` value.
 
 ```go
-// Good:
+// 較佳：
 // polygonCmp returns a cmp.Option that equates s2 geometry objects up to
 // some small floating-point error.
 func polygonCmp() cmp.Option {
@@ -2491,7 +2491,7 @@ attempt to use it to bypass the [guidance on assertions](decisions#assert).
 The final product should be in a form similar to this for end users:
 
 ```go
-// Good:
+// 較佳：
 package deepblue_test
 
 import (
@@ -2583,7 +2583,7 @@ precondition failed. When this happens, prefer calling one of the `Fatal`
 functions in the helper:
 
 ```go
-// Good:
+// 較佳：
 func mustAddGameAssets(t *testing.T, dir string) {
     t.Helper()
     if err := os.WriteFile(path.Join(dir, "pak0.pak"), pak0, 0644); err != nil {
@@ -2599,7 +2599,7 @@ This keeps the calling side cleaner than if the helper were to return the error
 to the test itself:
 
 ```go
-// Bad:
+// 不佳：
 func addGameAssets(t *testing.T, dir string) error {
     t.Helper()
     if err := os.WriteFile(path.Join(d, "pak0.pak"), pak0, 0644); err != nil {
@@ -2719,7 +2719,7 @@ goroutines, and therefore it is all right for them to use `t.Fatal`. If in
 doubt, call `t.Error` and return instead.
 
 ```go
-// Good:
+// 較佳：
 func TestRevEngine(t *testing.T) {
     engine, err := Start()
     if err != nil {
@@ -2774,7 +2774,7 @@ the same type, and also when you wish to omit fields which have the zero value.
 For example:
 
 ```go
-// Good:
+// 較佳：
 func TestStrJoin(t *testing.T) {
     tests := []struct {
         slice     []string
@@ -2825,7 +2825,7 @@ func mustLoadDataset(t *testing.T) []byte {
 Call `mustLoadDataset` explicitly in test functions that need it:
 
 ```go
-// Good:
+// 較佳：
 func TestParseData(t *testing.T) {
     data := mustLoadDataset(t)
     parsed, err := ParseData(data)
@@ -2861,7 +2861,7 @@ The test function `TestRegression682831` does not use the data set and therefore
 does not call `mustLoadDataset`, which could be slow and failure-prone:
 
 ```go
-// Bad:
+// 不佳：
 var dataset []byte
 
 func TestParseData(t *testing.T) {
@@ -2912,7 +2912,7 @@ sufficient for your needs.
 [test helper]: #t-common-setup-scope
 
 ```go
-// Good:
+// 較佳：
 var db *sql.DB
 
 func TestInsert(t *testing.T) { /* omitted */ }
@@ -2974,7 +2974,7 @@ following are true about the common setup:
 *   It does not require teardown.
 
 ```go
-// Good:
+// 較佳：
 var dataset struct {
     once sync.Once
     data []byte
@@ -3000,7 +3000,7 @@ When `mustLoadDataset` is used in multiple test functions, its cost is
 amortized:
 
 ```go
-// Good:
+// 較佳：
 func TestParseData(t *testing.T) {
     data := mustLoadDataset(t)
 
@@ -3050,7 +3050,7 @@ Prefer using "+" when concatenating few strings. This method is syntactically
 the simplest and requires no import.
 
 ```go
-// Good:
+// 較佳：
 key := "projectid: " + p
 ```
 
@@ -3062,12 +3062,12 @@ Prefer using `fmt.Sprintf` when building a complex string with formatting. Using
 many "+" operators may obscure the end result.
 
 ```go
-// Good:
+// 較佳：
 str := fmt.Sprintf("%s [%s:%d]-> %s", src, qos, mtu, dst)
 ```
 
 ```go
-// Bad:
+// 不佳：
 bad := src.String() + " [" + qos.String() + ":" + strconv.Itoa(mtu) + "]-> " + dst.String()
 ```
 
@@ -3090,7 +3090,7 @@ Prefer using `strings.Builder` when building a string bit-by-bit.
 take quadratic time when called sequentially to form a larger string.
 
 ```go
-// Good:
+// 較佳：
 b := new(strings.Builder)
 for i, d := range digitsOfPi {
     fmt.Fprintf(b, "the %d digit of pi is: %d\n", i, d)
@@ -3109,14 +3109,14 @@ Prefer to use backticks (\`) when constructing constant, multi-line string
 literals.
 
 ```go
-// Good:
+// 較佳：
 usage := `Usage:
 
 custom_tool [args]`
 ```
 
 ```go
-// Bad:
+// 不佳：
 usage := "" +
   "Usage:\n" +
   "\n" +
@@ -3148,7 +3148,7 @@ critical for infrastructure providers who offer libraries, integrations, and
 services to other teams.
 
 ```go
-// Good:
+// 較佳：
 // Package sidecar manages subprocesses that provide features for applications.
 package sidecar
 
@@ -3163,7 +3163,7 @@ Your users will instantiate the data they need (a `*sidecar.Registry`) and then
 pass it as an explicit dependency:
 
 ```go
-// Good:
+// 較佳：
 package main
 
 func main() {
@@ -3193,7 +3193,7 @@ APIs that do not support explicit dependency passing become fragile as the
 number of clients increases:
 
 ```go
-// Bad:
+// 不佳：
 package sidecar
 
 var registry = make(map[string]*Plugin)
@@ -3205,7 +3205,7 @@ Consider what happens in the case of tests exercising code that transitively
 relies on a sidecar for cloud logging.
 
 ```go
-// Bad:
+// 不佳：
 package app
 
 import (
@@ -3314,7 +3314,7 @@ Several of the most common problematic API forms are enumerated below:
 *   Top-level variables irrespective of whether they are exported.
 
     ```go
-    // Bad:
+    // 不佳：
     package logger
 
     // Sinks manages the default output sources for this package's logging API.  This
@@ -3334,7 +3334,7 @@ Several of the most common problematic API forms are enumerated below:
     and similar behaviors.
 
     ```go
-    // Bad:
+    // 不佳：
     package health
 
     var unhealthyFuncs []func
@@ -3349,7 +3349,7 @@ Several of the most common problematic API forms are enumerated below:
     with service reliability.
 
     ```go
-    // Bad:
+    // 不佳：
     package useradmin
 
     var client pb.UserAdminServiceClientInterface
@@ -3458,7 +3458,7 @@ cases:
     accommodate this:
 
     ```go
-    // Good:
+    // 較佳：
     package cloudlogger
 
     func New() *Logger { ... }
