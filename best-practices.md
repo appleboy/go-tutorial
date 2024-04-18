@@ -594,48 +594,30 @@ import (
 
 <a id="error-handling"></a>
 
-## Error handling
+## 錯誤處理 Error handling
 
-In Go, [errors are values]; they are created by code and consumed by code.
-Errors can be:
+在 Go 中，[錯誤是值]；它們由代碼創建並由代碼消費。錯誤可以是：
 
-*   Converted into diagnostic information for display to humans
-*   Used by the maintainer
-*   Interpreted by an end user
+*   轉換為顯示給人看的診斷信息
+*   由維護者使用
+*   被終端用戶解釋
 
-Error messages also show up across a variety of different surfaces including log
-messages, error dumps, and rendered UIs.
+錯誤消息還會出現在包括日誌消息、錯誤轉儲和渲染的 UI 等不同的表面上。
 
-Code that processes (produces or consumes) errors should do so deliberately. It
-can be tempting to ignore or blindly propagate an error return value. However,
-it is always worth considering whether the current function in the call frame is
-positioned to handle the error most effectively. This is a large topic and it is
-hard to give categorical advice. Use your judgment, but keep the following
-considerations in mind:
+處理（產生或消費）錯誤的代碼應該要有意識地進行。忽略或盲目傳播錯誤返回值可能很誘人。然而，總是值得考慮當前調用棧中的函數是否處於最有效處理錯誤的位置。這是一個大話題，很難給出類別性的建議。使用您的判斷，但請記住以下考慮：
 
-*   When creating an error value, decide whether to give it any
-    [structure](#error-structure).
-*   When handling an error, consider [adding information](#error-extra-info)
-    that you have but that the caller and/or callee might not.
-*   See also guidance on [error logging](#error-logging).
+*   創建錯誤值時，決定是否給它任何[結構](#error-structure)。
+*   處理錯誤時，考慮[添加信息](#error-extra-info)，您擁有但調用者和/或被調用者可能沒有的信息。
+*   另見有關[錯誤日誌記錄](#error-logging)的指南。
 
-While it is usually not appropriate to ignore an error, a reasonable exception
-to this is when orchestrating related operations, where often only the first
-error is useful. Package [`errgroup`] provides a convenient abstraction for a
-group of operations that can all fail or be canceled as a group.
+雖然通常不適合忽略錯誤，但在協調相關操作時，通常只有第一個錯誤是有用的，這是一個合理的例外。[`errgroup`] 套件為可以作為一組失敗或取消的一組操作提供了方便的抽象。
 
-[errors are values]: https://go.dev/blog/errors-are-values
+[錯誤是值]: https://go.dev/blog/errors-are-values
 [`errgroup`]: https://pkg.go.dev/golang.org/x/sync/errgroup
 
-See also:
+另見：
 
-*   [Effective Go on errors](https://go.dev/doc/effective_go#errors)
-*   [A post by the Go Blog on errors](https://go.dev/blog/go1.13-errors)
-*   [Package `errors`](https://pkg.go.dev/errors)
-*   [Package `upspin.io/errors`](https://commandcenter.blogspot.com/2017/12/error-handling-in-upspin.html)
-*   [GoTip #89: When to Use Canonical Status Codes as Errors](https://google.github.io/styleguide/go/index.html#gotip)
-*   [GoTip #48: Error Sentinel Values](https://google.github.io/styleguide/go/index.html#gotip)
-*   [GoTip #13: Designing Errors for Checking](https://google.github.io/styleguide/go/index.html#gotip)
+*   [Effective Go 關於錯Request failed due to server shutdown
 
 <a id="error-structure"></a>
 
