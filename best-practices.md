@@ -144,20 +144,16 @@ func (c *Config) WriteBinaryTo(w io.Writer) (int64, error)
 
 <a id="naming-doubles"></a>
 
-### Test double packages and types
+### 測試雙套件和類型 Test double packages and types
 
-There are several disciplines you can apply to [naming] packages and types that
-provide test helpers and especially [test doubles]. A test double could be a
-stub, fake, mock, or spy.
+在為提供測試輔助工具，特別是[測試雙元件]的包和類型命名時，您可以應用幾種紀律。測試雙元件可以是存根（stub）、假物件（fake）、模擬物件（mock）或間諜（spy）。
 
-These examples mostly use stubs. Update your names accordingly if your code uses
-fakes or another kind of test double.
+這些例子大多使用存根。如果您的代碼使用假物件或其他類型的測試雙元件，請相應更新您的名稱。
 
-[naming]: guide#naming
-[test doubles]: https://abseil.io/resources/swe-book/html/ch13.html#basic_concepts
+[命名]: guide#naming
+[測試雙元件]: https://abseil.io/resources/swe-book/html/ch13.html#basic_concepts
 
-Suppose you have a well-focused package providing production code similar to
-this:
+假設您有一個專注的包，提供類似於以下的生產代碼：
 
 ```go
 package creditcard
@@ -188,32 +184,24 @@ func (s *Service) Charge(c *Card, amount money.Money) error { /* omitted */ }
 
 <a id="naming-doubles-helper-package"></a>
 
-#### Creating test helper packages
+#### 創建測試輔助套件 Creating test helper packages
 
-Suppose you want to create a package that contains test doubles for another.
-We'll use `package creditcard` (from above) for this example:
+假設您想創建一個包含另一個包的測試雙元件的包。我們將使用上面的 `package creditcard` 作為這個例子：
 
-One approach is to introduce a new Go package based on the production one for
-testing. A safe choice is to append the word `test` to the original package name
-("creditcard" + "test"):
+一種方法是基於生產包為測試引入一個新的 Go 包。一個安全的選擇是將單詞 `test` 附加到原始包名（"creditcard" + "test"）：
 
 ```go
 // 較佳：
 package creditcardtest
 ```
 
-Unless stated explicitly otherwise, all examples in the sections below are in
-`package creditcardtest`.
+除非另有明確說明，下面各節的所有示例都在 `package creditcardtest` 中。
 
 <a id="naming-doubles-simple"></a>
 
-#### Simple case
+#### 簡單情況 Simple case
 
-You want to add a set of test doubles for `Service`. Because `Card` is
-effectively a dumb data type, similar to a Protocol Buffer message, it needs no
-special treatment in tests, so no double is required. If you anticipate only
-test doubles for one type (like `Service`), you can take a concise approach to
-naming the doubles:
+您想為 `Service` 添加一組測試雙元件。因為 `Card` 實際上是一種簡單的數據類型，類似於協議緩衝消息，所以在測試中不需要特殊處理，因此不需要雙元件。如果您預計只有一種類型（如 `Service`）的測試雙元件，您可以採取簡潔的命名方法：
 
 ```go
 // 較佳：
@@ -228,12 +216,9 @@ type Stub struct{}
 func (Stub) Charge(*creditcard.Card, money.Money) error { return nil }
 ```
 
-This is strictly preferable to a naming choice like `StubService` or the very
-poor `StubCreditCardService`, because the base package name and its domain types
-imply what `creditcardtest.Stub` is.
+這絕對比像 `StubService` 或非常差的 `StubCreditCardService` 這樣的命名選擇更好，因為基礎包名和其領域類型暗示了 `creditcardtest.Stub` 是什麼。
 
-Finally, if the package is built with Bazel, make sure the new `go_library` rule
-for the package is marked as `testonly`:
+最後，如果包是用 Bazel 構建的，請確保新的 `go_library` 規則標記為 `testonly`：
 
 ```build
 # 較佳：
@@ -248,21 +233,15 @@ go_library(
 )
 ```
 
-The approach above is conventional and will be reasonably well understood by
-other engineers.
+上述方法是常規的，其他工程師將會相當理解。
 
-See also:
+另見：
 
-*   [Go Tip #42: Authoring a Stub for Testing](https://google.github.io/styleguide/go/index.html#gotip)
+*   [Go 提示 #42：編寫用於測試的存根](https://google.github.io/styleguide/go/index.html#gotip)
 
-<a id="naming-doubles-multiple-behaviors"></a>
+#### 多種測試雙元件行為 Multiple test double behaviors
 
-#### Multiple test double behaviors
-
-When one kind of stub is not enough (for example, you also need one that always
-fails), we recommend naming the stubs according to the behavior they emulate.
-Here we rename `Stub` to `AlwaysCharges` and introduce a new stub called
-`AlwaysDeclines`:
+當一種存根不夠時（例如，您還需要一個總是失敗的），我們建議根據它們模擬的行為命名存根。在這裡，我們將 `Stub` 重命名為 `AlwaysCharges`，並引入一個名為 `AlwaysDeclines` 的新存根：
 
 ```go
 // 較佳：
@@ -281,10 +260,12 @@ func (AlwaysDeclines) Charge(*creditcard.Card, money.Money) error {
 
 <a id="naming-doubles-multiple-types"></a>
 
-#### Multiple doubles for multiple types
+#### 多種類型的多個雙元件 Multiple doubles for multiple types
 
 But now suppose that `package creditcard` contains multiple types worth creating
 doubles for, as seen below with `Service` and `StoredValue`:
+
+但現在假設 `package creditcard` 包含多個值得創建雙元件的類型，如下所示的 `Service` 和 `StoredValue`：
 
 ```go
 package creditcard
@@ -308,7 +289,7 @@ type StoredValue struct {
 func (s *StoredValue) Credit(c *Card, amount money.Money) error { /* omitted */ }
 ```
 
-In this case, more explicit test double naming is sensible:
+在這種情況下，更明確的測試雙元件命名是合理的：
 
 ```go
 // 較佳：
@@ -323,11 +304,9 @@ func (StubStoredValue) Credit(*creditcard.Card, money.Money) error { return nil 
 
 <a id="naming-doubles-local-variables"></a>
 
-#### Local variables in tests
+#### 測試中的局部變量 Local variables in tests
 
-When variables in your tests refer to doubles, choose a name that most clearly
-differentiates the double from other production types based on context. Consider
-some production code you want to test:
+當您的測試中的變量指向雙元件時，選擇一個名稱，根據上下文最清楚地區分雙元件和其他生產類型。考慮一些您想要測試的生產代碼：
 
 ```go
 package payment
@@ -355,8 +334,7 @@ func (p *Processor) Process(c *creditcard.Card, amount money.Money) error {
 }
 ```
 
-In the tests, a test double called a "spy" for `CreditCard` is juxtaposed
-against production types, so prefixing the name may improve clarity.
+在測試中，一個稱為 "spy" 的 `CreditCard` 測試雙元件與生產類型並置，因此在名稱前加上前綴可能會提高清晰度：
 
 ```go
 // 較佳：
@@ -384,7 +362,7 @@ func TestProcessor(t *testing.T) {
 }
 ```
 
-This is clearer than when the name is not prefixed.
+這比名稱沒有前綴時更清晰。
 
 ```go
 // 不佳：
