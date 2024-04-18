@@ -123,7 +123,7 @@ const (
 不要使用非混合大小寫的常量名稱或帶有 `K` 前綴的常量。
 
 ```go
-// 不好的範例:
+// 不佳：
 const MAX_PACKET_SIZE = 512
 const kMaxBufferSize = 1024
 const KMaxUsersPergroup = 500
@@ -300,7 +300,7 @@ Go 源代碼應該避免不必要的重複。一個常見的來源是重複的�
 如果值以多種形式出現，可以通過額外的單詞如 `raw` 和 `parsed` 或底層表示來進行說明：
 
 ```go
-// 好的範例:
+// 較佳：
 limitStr := r.FormValue("limit")
 limit, err := strconv.Atoi(limitStr)
 ```
@@ -312,7 +312,7 @@ limit, err := strconv.Atoi(limitStr)
 包含來自其周圍上下文信息的名稱經常創造額外的噪音而沒有好處。套件名稱、方法名稱、類型名稱、函數名稱、導入路徑，甚至檔案名稱都可以提供自動資格所有內部名稱的上下文。
 
 ```go
-// 不好的範例:
+// 不佳：
 // 在套件 "ads/targeting/revenue/reporting"
 type AdsTargetingRevenueReport struct{}
 
@@ -320,7 +320,7 @@ func (p *Project) ProjectName() string
 ```
 
 ```go
-// 好的範例:
+// 較佳：
 // 在套件 "ads/targeting/revenue/reporting"
 type Report struct{}
 
@@ -328,19 +328,19 @@ func (p *Project) Name() string
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 // 在套件 "sqldb"
 type DBConnection struct{}
 ```
 
 ```go
-// 好的範例:
+// 較佳：
 // 在套件 "sqldb"
 type Connection struct{}
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 // 在套件 "ads/targeting"
 func Process(in *pb.FooProto) *Report {
     adsTargetingID := in.GetAdsTargetingID()
@@ -348,7 +348,7 @@ func Process(in *pb.FooProto) *Report {
 ```
 
 ```go
-// 好的範例:
+// 較佳：
 // 在套件 "ads/targeting"
 func Process(in *pb.FooProto) *Report {
     id := in.GetAdsTargetingID()
@@ -358,7 +358,7 @@ func Process(in *pb.FooProto) *Report {
 重複通常應該在使用符號的用戶的上下文中評估，而不是孤立地。例如，以下代碼有很多名稱在某些情況下可能是好的，但在上下文中是多餘的：
 
 ```go
-// 不好的範例:
+// 不佳：
 func (db *DB) UserCount() (userCount int, err error) {
     var userCountInt64 int64
     if dbLoadError := db.LoadFromDatabase("count(distinct users)", &userCountInt64); dbLoadError != nil {
@@ -372,7 +372,7 @@ func (db *DB) UserCount() (userCount int, err error) {
 相反，從上下文或使用中清楚的名稱信息通常可以省略：
 
 ```go
-// 好的範例:
+// 較佳：
 func (db *DB) UserCount() (int, error) {
     var count int64
     if err := db.Load("count(distinct users)", &count); err != nil {
@@ -412,7 +412,7 @@ func (db *DB) UserCount() (int, error) {
 [The Go Blog 上的文章關於文檔]: https://blog.golang.org/godoc-documenting-go-code
 
 ```text
-# 好的範例:
+# 較佳：
 // 這是一段註解。
 // 個別行的長度在 Godoc 中並不重要；
 // 但選擇換行的方式使其在窄屏幕上易於閱讀。
@@ -427,7 +427,7 @@ func (db *DB) UserCount() (int, error) {
 避免會在小屏幕上反复換行的註解，這會導致糟糕的閱讀體驗。
 
 ```text
-# 不好的範例:
+# 不佳：
 // 這是一段註解。個別行的長度在 Godoc 中並不重要；
 // 但選擇換行的方式會在窄屏幕或代碼審查中造成參差不齊的行，
 // 這可能很煩人，尤其是在一個會反复換行的註解塊中。
@@ -445,7 +445,7 @@ func (db *DB) UserCount() (int, error) {
 所有頂層導出名稱必須有文件註解，未導出的類型或函數聲明如果行為或含義不明顯也應該有。這些註解應該是以被描述對象的名稱開頭的[完整句子]。名稱前可以加上冠詞（"a", "an", "the"）使其讀起來更自然。
 
 ```go
-// 好的範例:
+// 較佳：
 // A Request represents a request to run a command.
 type Request struct { ...
 
@@ -460,7 +460,7 @@ func Encode(w io.Writer, req *Request) { ...
 文件註解適用於以下符號，或者如果它出現在結構體中則適用於字段群。
 
 ```go
-// 好的範例:
+// 較佳：
 // Options configure the group management service.
 type Options struct {
     // General setup:
@@ -491,7 +491,7 @@ type Options struct {
 [文件註解] 應該總是完整句子，因此應該總是使用大寫和標點符號。簡單的行尾註解（特別是對於結構體字段）可以是假設字段名是主題的簡單短語。
 
 ```go
-// 好的範例:
+// 較佳：
 // A Server handles serving quotes from the collected works of Shakespeare.
 type Server struct {
     // BaseDir points to the base directory under which Shakespeare's works are stored.
@@ -532,7 +532,7 @@ type Server struct {
 在命名參數時，考慮函數簽名在 Godoc 中的顯示方式。函數本身的名稱和結果參數的類型通常已經足夠清楚。
 
 ```go
-// 好的範例:
+// 較佳：
 func (n *Node) Parent1() *Node
 func (n *Node) Parent2() (*Node, error)
 ```
@@ -540,14 +540,14 @@ func (n *Node) Parent2() (*Node, error)
 如果函數返回兩個或多個相同類型的參數，添加名稱可能會有用。
 
 ```go
-// 好的範例:
+// 較佳：
 func (n *Node) Children() (left, right *Node, err error)
 ```
 
 如果調用者必須對特定結果參數採取行動，命名它們可以幫助建議什麼是行動：
 
 ```go
-// 好的範例:
+// 較佳：
 // WithTimeout returns a context that will be canceled no later than d duration
 // from now.
 //
@@ -561,7 +561,7 @@ func WithTimeout(parent Context, d time.Duration) (ctx Context, cancel func())
 不要在名稱產生[不必要的重複](#repetitive-with-type)時使用命名結果參數。
 
 ```go
-// 不好的範例:
+// 不佳：
 func (n *Node) Parent1() (node *Node)
 func (n *Node) Parent2() (node *Node, err error)
 ```
@@ -591,7 +591,7 @@ func (n *Node) Parent2() (node *Node, err error)
 套件註解必須出現在套件宣告的正上方，註解和套件名稱之間不能有空行。範例：
 
 ```go
-// 好的範例:
+// 較佳：
 // Package math 提供基本常數和數學函數。
 //
 // 本套件不保證在不同架構間有位元完全相同的結果。
@@ -603,7 +603,7 @@ package math
 `main` 套件的註解有一種略微不同的形式，其中 BUILD 文件中的 `go_binary` 規則的名稱取代了套件名稱。
 
 ```go
-// 好的範例:
+// 較佳：
 // seed_generator 命令是一個實用工具，它從一組 JSON 研究配置生成 Finch 種子文件。
 package main
 ```
@@ -611,7 +611,7 @@ package main
 只要二進制名稱與 BUILD 文件中寫的完全一致，其他風格的註解也是可以的。當二進制名稱是第一個單詞時，即使它並不嚴格匹配命令行調用的拼寫，也需要將其大寫。
 
 ```go
-// 好的範例:
+// 較佳：
 // 二進制 seed_generator ...
 // 命令 seed_generator ...
 // 程序 seed_generator ...
@@ -629,7 +629,7 @@ Tips:
 * 多行註解可以代替多個單行註解。如果文檔包含可能需要從源文件中複製和粘貼的部分，這主要是有用的，如示例命令行（對於二進制文件）和模板示例。
 
     ```go
-    // 好的範例:
+    // 較佳：
     /*
     seed_generator 命令是一個實用工具，它從一組 JSON 研究配置生成 Finch 種子文件。
 
@@ -657,7 +657,7 @@ Tips:
 [proto 和 stub 最佳實踐]: best-practices#import-protos
 
 ```go
-// 好的範例:
+// 較佳：
 import (
     fspb "path/to/package/foo_service_go_proto"
 )
@@ -668,7 +668,7 @@ import (
 **注意：** 建議將套件重新命名以符合[良好的套件名稱](#package-names)，但對於 vendored 目錄中的套件來說，這通常不可行。
 
 ```go
-// 好的範例:
+// 較佳：
 import (
     core "github.com/kubernetes/api/core/v1"
     meta "github.com/kubernetes/apimachinery/pkg/apis/meta/v1beta1"
@@ -688,7 +688,7 @@ import (
 * 其他（專案和 vendored）套件
 
 ```go
-// 好的範例:
+// 較佳：
 package main
 
 import (
@@ -713,7 +713,7 @@ import (
 範例:
 
 ```go
-// 好的範例:
+// 較佳：
 package main
 
 import (
@@ -778,7 +778,7 @@ Gofmt 負責按引入路徑對每組進行排序。然而，它不會自動將�
 **不要** 在 Google 代碼庫中使用此功能；它使得更難判斷功能來自何處。
 
 ```go
-// 不好的範例:
+// 不佳：
 package foo_test
 
 import (
@@ -790,7 +790,7 @@ var myThing = Bar() // Bar defined in package foo; no qualification needed.
 ```
 
 ```go
-// 好的範例:
+// 較佳：
 package foo_test
 
 import (
@@ -814,14 +814,14 @@ var myThing = foo.Bar()
 使用 `error` 來表示一個函數可能會失敗。按照慣例，`error` 是最後一個結果參數。
 
 ```go
-// 好的範例:
+// 較佳：
 func Good() error { /* ... */ }
 ```
 
 返回一個 `nil` 錯誤是表示一個本可以失敗的操作成功的慣用方法。如果一個函數返回一個錯誤，除非另有明確文檔記載，否則調用者必須將所有非錯誤返回值視為未指定。通常，非錯誤返回值是它們的零值，但這不能假定。
 
 ```go
-// 好的範例:
+// 較佳：
 func GoodLookup() (*Result, error) {
     // ...
     if err != nil {
@@ -834,7 +834,7 @@ func GoodLookup() (*Result, error) {
 導出的函數返回錯誤應該使用 `error` 類型返回它們。具體的錯誤類型容易出現微妙的錯誤：一個具體的 `nil` 指針可以被包裝進一個介面，從而變成一個非 `nil` 值（參見 [Go FAQ 中關於此主題的條目][nil error]）。
 
 ```go
-// 不好的範例:
+// 不佳：
 func Bad() *os.PathError { /*...*/ }
 ```
 
@@ -851,19 +851,19 @@ func Bad() *os.PathError { /*...*/ }
 錯誤字串不應該首字大寫（除非以導出名稱、專有名詞或首字母縮略詞開頭），並且不應該以標點符號結尾。這是因為錯誤字串通常會在打印給用戶之前出現在其他上下文中。
 
 ```go
-// 不好的範例:
+// 不佳：
 err := fmt.Errorf("Something bad happened.")
 ```
 
 ```go
-// 好的範例:
+// 較佳：
 err := fmt.Errorf("something bad happened")
 ```
 
 另一方面，完整顯示消息（日誌、測試失敗、API 回應或其他 UI）的風格取決於具體情況，但通常應該首字大寫。
 
 ```go
-// 好的範例:
+// 較佳：
 log.Infof("Operation aborted: %v", err)
 log.Errorf("Operation aborted: %v", err)
 t.Errorf("Op(%q) failed unexpectedly; err=%v", args, err)
@@ -886,7 +886,7 @@ t.Errorf("Op(%q) failed unexpectedly; err=%v", args, err)
 在極少數適合忽略或丟棄錯誤的情況下（例如，對 [`(*bytes.Buffer).Write`] 的調用，該調用被記錄為永遠不會失敗），應該有一個相應的註解解釋為什麼這樣做是安全的。
 
 ```go
-// 好的範例:
+// 較佳：
 var b *bytes.Buffer
 
 n, _ := b.Write(p) // never returns a non-nil error
@@ -905,7 +905,7 @@ n, _ := b.Write(p) // never returns a non-nil error
 在 C 語言和類似語言中，函數返回像 -1、null 或空字串這樣的值來表示錯誤或缺失結果是很常見的。這稱為帶內錯誤處理。
 
 ```go
-// 不好的範例:
+// 不佳：
 // Lookup returns the value for key or -1 if there is no mapping for key.
 func Lookup(key string) int
 ```
@@ -913,7 +913,7 @@ func Lookup(key string) int
 未檢查內部錯誤值可能導致錯誤，並將錯誤歸咎於錯誤的函數。
 
 ```go
-// 不好的範例:
+// 不佳：
 // The following line returns an error that Parse failed for the input value,
 // whereas the failure was that there is no mapping for missingKey.
 return Parse(Lookup(missingKey))
@@ -922,7 +922,7 @@ return Parse(Lookup(missingKey))
 Go 對多返回值的支持提供了一個更好的解決方案（參見[Effective Go 關於多重返回的部分]）。函數不應要求客戶端檢查內部錯誤值，而應返回一個額外的值來指示其其他返回值是否有效。這個返回值可能是一個錯誤或一個布林值（當不需要解釋時），並且應該是最後的返回值。
 
 ```go
-// 好的範例:
+// 較佳：
 // Lookup returns the value for key or ok=false if there is no mapping for key.
 func Lookup(key string) (value string, ok bool)
 ```
@@ -932,7 +932,7 @@ func Lookup(key string) (value string, ok bool)
 以這種方式返回錯誤鼓勵更健壯和明確的錯誤處理：
 
 ```go
-// 好的範例:
+// 較佳：
 value, ok := Lookup(key)
 if !ok {
     return fmt.Errorf("no value for %q", key)
@@ -955,7 +955,7 @@ return Parse(value)
 如果未滿足終止條件，則運行的代碼應該出現在 `if` 塊之後，並且不應該在 `else` 子句中縮進。
 
 ```go
-// 好的範例:
+// 較佳：
 if err != nil {
     // 錯誤處理
     return // 或者 continue 等等
@@ -964,8 +964,8 @@ if err != nil {
 ```
 
 ```go
-// 不好的範例:
-// 不好的範例:
+// 不佳：
+// 不佳：
 if err != nil {
     // 錯誤處理
 } else {
@@ -976,7 +976,7 @@ if err != nil {
 > **提示：** 如果您在多於幾行代碼中使用變量，通常不值得使用帶初始化器的 `if` 風格。在這些情況下，通常最好將聲明移出並使用標準的 `if` 語句：
 >
 > ```go
-> // 好的範例:
+> // 較佳：
 > x, err := f()
 > if err != nil {
 >   // 錯誤處理
@@ -987,7 +987,7 @@ if err != nil {
 > ```
 >
 > ```go
-> // 不好的範例:
+> // 不佳：
 > if x, err := f(); err != nil {
 >   // 錯誤處理
 >   return
@@ -1023,7 +1023,7 @@ Go 擁有異常強大的[複合字面量語法]，可以用單一表達式來表
 * 包括來自其他套件的類型的字段名稱。
 
     ```go
-    // 好的範例:
+    // 較佳：
     // https://pkg.go.dev/encoding/csv#Reader
     r := csv.Reader{
       Comma: ',',
@@ -1035,14 +1035,14 @@ Go 擁有異常強大的[複合字面量語法]，可以用單一表達式來表
     結構中字段的位置和字段的完整集合（省略字段名稱時必須正確的兩個條件）通常不被認為是結構的公共 API 的一部分；指定字段名稱是為了避免不必要的耦合。
 
     ```go
-    // 不好的範例:
+    // 不佳：
     r := csv.Reader{',', '#', 4, false, false, false, false}
     ```
 
 * 對於套件內部類型，字段名稱是可選的。
 
     ```go
-    // 好的範例:
+    // 較佳：
     okay := Type{42}
     also := internalType{4, 2}
     ```
@@ -1052,7 +1052,7 @@ Go 擁有異常強大的[複合字面量語法]，可以用單一表達式來表
     <!-- TODO: Maybe a better example here that doesn't have many fields. -->
 
     ```go
-    // 好的範例:
+    // 較佳：
     okay := StructWithLotsOfFields{
       field1: 1,
       field2: "two",
@@ -1070,12 +1070,12 @@ Go 擁有異常強大的[複合字面量語法]，可以用單一表達式來表
 這方面最常見的錯誤是將多行結構字面量中的值與閉合括號放在同一行。在這些情況下，該行應該以逗號結束，閉合括號應該出現在下一行。
 
 ```go
-// 好的範例:
+// 較佳：
 good := []*Type{{Key: "value"}}
 ```
 
 ```go
-// 好的範例:
+// 較佳：
 good := []*Type{
     {Key: "multi"},
     {Key: "line"},
@@ -1083,14 +1083,14 @@ good := []*Type{
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 bad := []*Type{
     {Key: "multi"},
     {Key: "line"}}
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 bad := []*Type{
     {
         Key: "value"},
@@ -1107,7 +1107,7 @@ bad := []*Type{
 * 內部值也是字面量或 proto 構建器（即不是變量或其他表達式）
 
 ```go
-// 好的範例:
+// 較佳：
 good := []*Type{
     { // Not cuddled
         Field: "value",
@@ -1119,7 +1119,7 @@ good := []*Type{
 ```
 
 ```go
-// 好的範例:
+// 較佳：
 good := []*Type{{ // Cuddled correctly
     Field: "value",
 }, {
@@ -1128,7 +1128,7 @@ good := []*Type{{ // Cuddled correctly
 ```
 
 ```go
-// 好的範例:
+// 較佳：
 good := []*Type{
     first, // Can't be cuddled
     {Field: "second"},
@@ -1136,7 +1136,7 @@ good := []*Type{
 ```
 
 ```go
-// 好的範例:
+// 較佳：
 okay := []*pb.Type{pb.Type_builder{
     Field: "first", // Proto Builders may be cuddled to save vertical space
 }.Build(), pb.Type_builder{
@@ -1145,7 +1145,7 @@ okay := []*pb.Type{pb.Type_builder{
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 bad := []*Type{
     first,
     {
@@ -1160,7 +1160,7 @@ bad := []*Type{
 從切片和映射字面量中可以省略重複的類型名稱。這有助於減少混亂。當處理在您的項目中不常見的複雜類型時，明確重複類型名稱是一個合理的場合，特別是當重複的類型名稱出現在相隔很遠的行上，可以提醒讀者上下文。
 
 ```go
-// 好的範例:
+// 較佳：
 good := []*Type{
     {A: 42},
     {A: 43},
@@ -1168,7 +1168,7 @@ good := []*Type{
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 repetitive := []*Type{
     &Type{A: 42},
     &Type{A: 43},
@@ -1176,7 +1176,7 @@ repetitive := []*Type{
 ```
 
 ```go
-// 好的範例:
+// 較佳：
 good := map[Type1]*Type2{
     {A: 1}: {B: 2},
     {A: 3}: {B: 4},
@@ -1184,7 +1184,7 @@ good := map[Type1]*Type2{
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 repetitive := map[Type1]*Type2{
     Type1{A: 1}: &Type2{B: 2},
     Type1{A: 3}: &Type2{B: 4},
@@ -1204,7 +1204,7 @@ repetitive := map[Type1]*Type2{
 [零值]: https://golang.org/ref/spec#The_zero_value
 
 ```go
-// 不好的範例:
+// 不佳：
 import (
   "github.com/golang/leveldb"
   "github.com/golang/leveldb/db"
@@ -1227,7 +1227,7 @@ ldb := leveldb.Open("/my/table", &db.Options{
 ```
 
 ```go
-// 好的範例:
+// 較佳：
 import (
   "github.com/golang/leveldb"
   "github.com/golang/leveldb/db"
@@ -1297,7 +1297,7 @@ tests := []struct {
 對於大多數目的來說，`nil` 和空切片之間沒有功能上的差異。內建函數如 `len` 和 `cap` 對 `nil` 切片的行為如預期。
 
 ```go
-// 好的範例:
+// 較佳：
 import "fmt"
 
 var s []int         // nil
@@ -1314,26 +1314,26 @@ fmt.Println(s)      // [42]
 如果你聲明一個空切片作為局部變量（特別是如果它可以是返回值的來源），優先選擇 nil 初始化以減少呼叫者的錯誤風險。
 
 ```go
-// 好的範例:
+// 較佳：
 var t []string
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 t := []string{}
 ```
 
 不要創建強迫客戶端區分 nil 和空切片的 API。
 
 ```go
-// 好的範例:
+// 較佳：
 // Ping 對其目標進行 ping 操作。
 // 返回成功響應的主機。
 func Ping(hosts []string) ([]string, error) { ... }
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 // Ping 對其目標進行 ping 操作並返回成功響應的主機列表。
 // 如果輸入為空則可以為空。
 // nil 表示發生了系統錯誤。
@@ -1345,7 +1345,7 @@ func Ping(hosts []string) []string { ... }
 這個實現接受 `nil` 和長度為零的切片作為「空」：
 
 ```go
-// 好的範例:
+// 較佳：
 // describeInts 用給定的前綴描述 s，除非 s 為空。
 func describeInts(prefix string, s []int) {
     if len(s) == 0 {
@@ -1358,7 +1358,7 @@ func describeInts(prefix string, s []int) {
 而不是將區分作為 API 的一部分依賴：
 
 ```go
-// 不好的範例:
+// 不佳：
 func maybeInts() []int { /* ... */ }
 
 // describeInts 用給定的前綴描述 s；傳遞 nil 以完全跳過。
@@ -1384,7 +1384,7 @@ describeInts("這裡有一些整數：", maybeInts())
 避免引入換行符，如果這樣會使剩餘的行與縮進的代碼塊對齊。如果這是不可避免的，請留一個空格來分隔塊中的代碼與換行後的行。
 
 ```go
-// 不好的範例:
+// 不佳：
 if longCondition1 && longCondition2 &&
     // Conditions 3 and 4 have the same indentation as the code within the if.
     longCondition3 && longCondition4 {
@@ -1407,7 +1407,7 @@ if longCondition1 && longCondition2 &&
 函數參數列表可能會使 Go 源文件中的某些行變得很長。然而，它們預示著縮進的變化，因此很難以不會使後續行看起來像是以令人困惑的方式屬於函數體的一部分的方式斷行：
 
 ```go
-// 不好的範例:
+// 不佳：
 func (r *SomeType) SomeLongFunctionName(foo1, foo2, foo3 string,
     foo4, foo5, foo6 int) {
     foo7 := bar(foo1)
@@ -1420,7 +1420,7 @@ func (r *SomeType) SomeLongFunctionName(foo1, foo2, foo3 string,
 通過提取局部變量，經常可以縮短行。
 
 ```go
-// 好的範例:
+// 較佳：
 local := helper(some, parameters, here)
 good := foo.Call(list, of, parameters, local)
 ```
@@ -1428,12 +1428,12 @@ good := foo.Call(list, of, parameters, local)
 同樣，函數和方法呼叫不應僅基於行長度而被分開。
 
 ```go
-// 好的範例:
+// 較佳：
 good := foo.Call(long, list, of, parameters, all, on, one, line)
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 bad := foo.Call(long, list, of, parameters,
     with, arbitrary, line, breaks)
 ```
@@ -1441,12 +1441,12 @@ bad := foo.Call(long, list, of, parameters,
 盡可能避免對特定函數參數添加內聯註釋。相反，使用[選項結構](best-practices#option-structure)或在函數文檔中添加更多細節。
 
 ```go
-// 好的範例:
+// 較佳：
 good := server.New(ctx, server.Options{Port: 42})
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 bad := server.New(
     ctx,
     42, // Port
@@ -1456,7 +1456,7 @@ bad := server.New(
 如果 API 無法更改或者局部呼叫是不尋常的（無論呼叫是否太長），如果它有助於理解呼叫，始終允許添加斷行。
 
 ```go
-// 好的範例:
+// 較佳：
 canvas.RenderCube(cube,
     x0, y0, z0,
     x0, y0, z1,
@@ -1474,14 +1474,14 @@ canvas.RenderCube(cube,
 函數內的長字符串字面量不應該僅為了行長而被斷開。對於包含此類字符串的函數，可以在字符串格式之後添加換行符，並在下一行或後續行提供參數。關於斷行位置的決定應基於輸入的語義分組，而不僅僅是基於行長。
 
 ```go
-// 好的範例:
+// 較佳：
 log.Warningf("Database key (%q, %d, %q) incompatible in transaction started by (%q, %d, %q)",
     currentCustomer, currentOffset, currentKey,
     txCustomer, txOffset, txKey)
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 log.Warningf("Database key (%q, %d, %q) incompatible in"+
     " transaction started by (%q, %d, %q)",
     currentCustomer, currentOffset, currentKey, txCustomer,
@@ -1495,7 +1495,7 @@ log.Warningf("Database key (%q, %d, %q) incompatible in"+
 `if` 語句不應該換行；多行 `if` 子句可能導致[縮進混淆](#indentation-confusion)。
 
 ```go
-// 不好的範例:
+// 不佳：
 // The second if statement is aligned with the code within the if block, causing
 // indentation confusion.
 if db.CurrentStatusIs(db.InTransaction) &&
@@ -1507,7 +1507,7 @@ if db.CurrentStatusIs(db.InTransaction) &&
 如果不需要短路行為，則可以直接提取布林運算元：
 
 ```go
-// 好的範例:
+// 較佳：
 inTransaction := db.CurrentStatusIs(db.InTransaction)
 keysMatch := db.ValuesEqual(db.TransactionKey(), row.Key())
 if inTransaction && keysMatch {
@@ -1518,7 +1518,7 @@ if inTransaction && keysMatch {
 也可能有其他局部變量可以被提取，特別是如果條件已經重複：
 
 ```go
-// 好的範例:
+// 較佳：
 uid := user.GetUniqueUserID()
 if db.UserIsAdmin(uid) || db.UserHasPermission(uid, perms.ViewServerConfig) || db.UserHasPermission(uid, perms.CreateGroup) {
     // ...
@@ -1526,7 +1526,7 @@ if db.UserIsAdmin(uid) || db.UserHasPermission(uid, perms.ViewServerConfig) || d
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 if db.UserIsAdmin(user.GetUniqueUserID()) || db.UserHasPermission(user.GetUniqueUserID(), perms.ViewServerConfig) || db.UserHasPermission(user.GetUniqueUserID(), perms.CreateGroup) {
     // ...
 }
@@ -1535,7 +1535,7 @@ if db.UserIsAdmin(user.GetUniqueUserID()) || db.UserHasPermission(user.GetUnique
 包含閉包或多行結構字面量的 `if` 語句應確保[大括號匹配](#literal-matching-braces)以避免[縮進混淆](#indentation-confusion)。
 
 ```go
-// 好的範例:
+// 較佳：
 if err := db.RunInTransaction(func(tx *db.TX) error {
     return tx.Execute(userUpdate, x, y, z)
 }); err != nil {
@@ -1544,7 +1544,7 @@ if err := db.RunInTransaction(func(tx *db.TX) error {
 ```
 
 ```go
-// 好的範例:
+// 較佳：
 if _, err := client.Update(ctx, &upb.UserUpdateRequest{
     ID:   userID,
     User: user,
@@ -1556,7 +1556,7 @@ if _, err := client.Update(ctx, &upb.UserUpdateRequest{
 同樣，不要嘗試在 `for` 語句中插入人為的換行。如果沒有優雅的重構方式，可以讓行保持長度：
 
 ```go
-// 好的範例:
+// 較佳：
 for i, max := 0, collection.Size(); i < max && !collection.HasPendingWriters(); i++ {
     // ...
 }
@@ -1565,7 +1565,7 @@ for i, max := 0, collection.Size(); i < max && !collection.HasPendingWriters(); 
 然而，通常有辦法：
 
 ```go
-// 好的範例:
+// 較佳：
 for i, max := 0, collection.Size(); i < max; i++ {
     if collection.HasPendingWriters() {
         break
@@ -1577,7 +1577,7 @@ for i, max := 0, collection.Size(); i < max; i++ {
 `switch` 和 `case` 語句也應保持在單行上。
 
 ```go
-// 好的範例:
+// 較佳：
 switch good := db.TransactionStatus(); good {
 case db.TransactionStarting, db.TransactionActive, db.TransactionWaiting:
     // ...
@@ -1589,7 +1589,7 @@ default:
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 switch bad := db.TransactionStatus(); bad {
 case db.TransactionStarting,
     db.TransactionActive,
@@ -1606,7 +1606,7 @@ default:
 如果行過長，將所有案例縮進並用空行分隔，以避免[縮進混淆](#indentation-confusion)：
 
 ```go
-// 好的範例:
+// 較佳：
 switch db.TransactionStatus() {
 case
     db.TransactionStarting,
@@ -1625,7 +1625,7 @@ default:
 在將變量與常量進行比較的條件語句中，將變量值放在等號運算符的左側：
 
 ```go
-// 好的範例:
+// 較佳：
 if result == "foo" {
   // ...
 }
@@ -1634,7 +1634,7 @@ if result == "foo" {
 而不是不太清晰的語句，其中常量首先出現（["Yoda 風格條件"](https://en.wikipedia.org/wiki/Yoda_conditions)）:
 
 ```go
-// 不好的範例:
+// 不佳：
 if "foo" == result {
   // ...
 }
@@ -1653,7 +1653,7 @@ if "foo" == result {
 一般來說，如果一個類型 `T` 的方法與指針類型 `*T` 相關聯，則不要複製類型 `T` 的值。
 
 ```go
-// 不好的範例:
+// 不佳：
 b1 := bytes.Buffer{}
 b2 := b1
 ```
@@ -1663,7 +1663,7 @@ b2 := b1
 這些是可以接受的：
 
 ```go
-// 好的範例:
+// 較佳：
 type Record struct {
   buf bytes.Buffer
   // other fields omitted
@@ -1679,7 +1679,7 @@ func Consumer(r *Record) {...}
 但這些通常是錯誤的：
 
 ```go
-// 不好的範例:
+// 不佳：
 type Record struct {
   buf bytes.Buffer
   // other fields omitted
@@ -1719,7 +1719,7 @@ func Consumer(r Record) {...} // Makes a copy of r.buf
 這通常出現在僅在[包初始化時](https://golang.org/ref/spec#Package_initialization)調用的函數，用於初始化包級變量（例如 [template.Must](https://golang.org/pkg/text/template/#Must) 和 [regexp.MustCompile](https://golang.org/pkg/regexp/#MustCompile)）。
 
 ```go
-// 好的範例:
+// 較佳：
 func MustParse(version string) *Version {
     v, err := Parse(version)
     if err != nil {
@@ -1736,7 +1736,7 @@ var DefaultVersion = MustParse("1.2.3")
 相同的慣例也可以用在測試輔助函數中，這些函數只停止當前測試（使用 `t.Fatal`）。這樣的輔助函數在創建測試值時經常很方便，例如在[表驅動測試](#table-driven-tests)的結構字段中，因為返回錯誤的函數不能直接分配給結構字段。
 
 ```go
-// 好的範例:
+// 較佳：
 func mustMarshalAny(t *testing.T, m proto.Message) *anypb.Any {
   t.Helper()
   any, err := anypb.New(m)
@@ -1769,7 +1769,7 @@ func TestCreateObject(t *testing.T) {
 當[普通的錯誤處理](best-practices#error-handling)是可能的時候（包括一些重構），它們不應該被使用：
 
 ```go
-// 不好的範例:
+// 不佳：
 func Version(o *servicepb.Object) (*version.Version, error) {
     // Return error instead of using Must functions.
     v := version.MustParse(o.GetVersionString())
@@ -1790,7 +1790,7 @@ Goroutines 可以通過阻塞在通道發送或接收上而泄漏。即使沒有
 即使 goroutines 沒有泄漏，當它們不再需要時仍然讓它們在執行中，也可能導致其他微妙且難以診斷的問題。在已經關閉的通道上發送會導致恐慌。
 
 ```go
-// 不好的範例:
+// 不佳：
 ch := make(chan int)
 ch <- 42
 close(ch)
@@ -1804,7 +1804,7 @@ ch <- 13 // panic
 遵循最佳實踐的上下文使用相關代碼通常有助於澄清這一點。它通常是用 `context.Context` 管理的：
 
 ```go
-// 好的範例:
+// 較佳：
 func (w *Worker) Run(ctx context.Context) error {
     // ...
     for item := range w.q {
@@ -1820,7 +1820,7 @@ func (w *Worker) Run(ctx context.Context) error {
 相比之下，以下代碼對其啟動的 goroutines 何時結束不夠謹慎：
 
 ```go
-// 不好的範例:
+// 不佳：
 func (w *Worker) Run() {
     // ...
     for item := range w.q {
@@ -1880,7 +1880,7 @@ Go 介面通常屬於*使用*介面類型值的包，而不是*實現*介面類�
 [tott-438]: https://testing.googleblog.com/2017/08/code-health-eliminate-yagni-smells.html
 
 ```go
-// 好的範例:
+// 較佳：
 package consumer // consumer.go
 
 type Thinger interface { Thing() bool }
@@ -1889,7 +1889,7 @@ func Foo(t Thinger) string { ... }
 ```
 
 ```go
-// 好的範例:
+// 較佳：
 package consumer // consumer_test.go
 
 type fakeThinger struct{ ... }
@@ -1899,7 +1899,7 @@ if Foo(fakeThinger{...}) == "x" { ... }
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 package producer
 
 type Thinger interface { Thing() bool }
@@ -1911,7 +1911,7 @@ func NewThinger() Thinger { return defaultThinger{ ... } }
 ```
 
 ```go
-// 好的範例:
+// 較佳：
 package producer
 
 type Thinger struct{ ... }
@@ -1977,7 +1977,7 @@ func NewThinger() Thinger { return Thinger{ ... } }
 * 如果接收器是一個切片且方法不重新切片或重新分配切片，使用值而不是指針。
 
     ```go
-    // 好的範例:
+    // 較佳：
     type Buffer []byte
 
     func (b Buffer) Len() int { return len(b) }
@@ -1986,7 +1986,7 @@ func NewThinger() Thinger { return Thinger{ ... } }
 * 如果方法需要改變接收器，接收器必須是一個指針。
 
     ```go
-    // 好的範例:
+    // 較佳：
     type Counter int
 
     func (c *Counter) Inc() { *c++ }
@@ -2000,7 +2000,7 @@ func NewThinger() Thinger { return Thinger{ ... } }
 * 如果接收器是一個包含[不能安全複製]的字段的結構體，使用指針接收器。常見例子是 [`sync.Mutex`] 和其他同步類型。
 
     ```go
-    // 好的範例:
+    // 較佳：
     type Counter struct {
         mu    sync.Mutex
         total int
@@ -2022,7 +2022,7 @@ func NewThinger() Thinger { return Thinger{ ... } }
 * 如果接收器是一個結構體或數組，其任何元素是指向可能被改變的東西的指針，優先選擇指針接收器以使可變性的意圖對讀者清晰。
 
     ```go
-    // 好的範例:
+    // 較佳：
     type Counter struct {
         m *Metric
     }
@@ -2035,7 +2035,7 @@ func NewThinger() Thinger { return Thinger{ ... } }
 * 如果接收器是一個[內建類型]，如整數或字符串，不需要被修改，使用值。
 
     ```go
-    // 好的範例:
+    // 較佳：
     type User string
 
     func (u User) String() { return string(u) }
@@ -2044,7 +2044,7 @@ func NewThinger() Thinger { return Thinger{ ... } }
 * 如果接收器是一個映射、函數或通道，使用值而不是指針。
 
     ```go
-    // 好的範例:
+    // 較佳：
     // 參見 https://pkg.go.dev/net/http#Header。
     type Header map[string][]string
 
@@ -2054,7 +2054,7 @@ func NewThinger() Thinger { return Thinger{ ... } }
 * 如果接收器是一個“小型”數組或結構體，本質上是一個沒有可變字段和指針的值類型，值接收器通常是正確的選擇。
 
     ```go
-    // 好的範例:
+    // 較佳：
     // 參見 https://pkg.go.dev/time#Time。
     type Time struct { /* 省略 */ }
 
@@ -2080,7 +2080,7 @@ func NewThinger() Thinger { return Thinger{ ... } }
 不要在 `switch` 語句的末尾使用沒有目標標籤的 `break` 語句；它們是多餘的。與 C 和 Java 不同，Go 中的 `switch` 語句會自動中斷，需要 `fallthrough` 語句來實現 C 風格的行為。如果你想澄清一個空語句的目的，請使用註釋而不是 `break`。
 
 ```go
-// 好的範例:
+// 較佳：
 switch x {
 case "A", "B":
     buf.WriteString(x)
@@ -2092,7 +2092,7 @@ default:
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 switch x {
 case "A", "B":
     buf.WriteString(x)
@@ -2162,14 +2162,14 @@ default:
 Go 的格式化函數（`fmt.Printf` 等）有一個 `%q` 動詞，它會在雙引號內打印字符串。
 
 ```go
-// 好的範例:
+// 較佳：
 fmt.Printf("value %q looks like English text", someText)
 ```
 
 優先使用 `%q` 而不是手動進行等效操作，使用 `%s`：
 
 ```go
-// 不好的範例:
+// 不佳：
 fmt.Printf("value \"%s\" looks like English text", someText)
 // 也避免手動用單引號包圍字符串：
 fmt.Printf("value '%s' looks like English text", someText)
@@ -2196,14 +2196,14 @@ Go 1.18 引入了 `any` 類型作為 `interface{}` 的[別名]。因為它是一
 Google 代碼庫中的 Go 程序使用 [標準 `flag` 包] 的內部變體。它具有類似的接口，但與內部 Google 系統良好互操作。Go 二進制文件中的標誌名稱應該優先使用下劃線來分隔單詞，儘管持有標誌值的變量應該遵循標準 Go 名稱風格（[混合大小寫]）。具體來說，標誌名稱應該是蛇形大小寫，變量名稱懲罰是駝峰大小寫的等效名稱。
 
 ```go
-// 好的範例:
+// 較佳：
 var (
     pollInterval = flag.Duration("poll_interval", time.Minute, "Interval to use for polling.")
 )
 ```
 
 ```go
-// 不好的範例:
+// 不佳：
 var (
     poll_interval = flag.Int("pollIntervalSeconds", 60, "Interval to use for polling in seconds.")
 )
@@ -2287,7 +2287,7 @@ func F(ctx context.Context /* other arguments */) {}
 `context.Context` 在函數中排在第一位的慣例也適用於測試輔助函數。
 
 ```go
-// 好的範例:
+// 較佳：
 func readTestFile(ctx context.Context, t *testing.T, path string) string {}
 ```
 
@@ -2322,7 +2322,7 @@ Google 代碼庫中必須啟動可以在父上下文被取消後運行的後台�
 不要使用包 `math/rand` 來生成密鑰，即使是臨時的也不行。如果未種子化，生成器是完全可預測的。使用 `time.Nanoseconds()` 作為種子，只有幾位的熵。相反，使用 `crypto/rand` 的 Reader，如果你需要文本，輸出為十六進制或 base64。
 
 ```go
-// 好的範例:
+// 較佳：
 import (
     "crypto/rand"
     // "encoding/base64"
@@ -2371,7 +2371,7 @@ func Key() string {
 斷言庫是試圖在測試中結合驗證和產生失敗消息的庫（儘管相同的陷阱也可能適用於其他測試輔助工具）。有關測試輔助工具和斷言庫之間區別的更多信息，請參見[最佳實踐](best-practices#test-functions)。
 
 ```go
-// 不好的範例:
+// 不佳：
 var obj BlogPost
 
 assert.IsNotNil(t, "obj", obj)
@@ -2383,7 +2383,7 @@ assert.StringNotEq(t, "obj.Body", obj.Body, "")
 斷言庫傾向於要麼提前停止測試（如果 `assert` 調用了 `t.Fatalf` 或 `panic`），要麼省略了關於測試正確部分的相關信息：
 
 ```go
-// 不好的範例:
+// 不佳：
 package assert
 
 func IsNotNil(t *testing.T, name string, val any) {
@@ -2404,7 +2404,7 @@ func StringEq(t *testing.T, name, got, want string) {
 斷言庫經常將比較和相等檢查分離出來。優先使用標準庫，如 [`cmp`] 和 [`fmt`]：
 
 ```go
-// 好的範例:
+// 較佳：
 var got BlogPost
 
 want := BlogPost{
@@ -2420,7 +2420,7 @@ if !cmp.Equal(got, want) {
 對於更具領域特定的比較輔助工具，優先返回一個值或錯誤，這可以在測試的失敗消息中使用，而不是傳遞 `*testing.T` 並調用其錯誤報告方法：
 
 ```go
-// 好的範例:
+// 較佳：
 func postLength(p BlogPost) int { return len(p.Body) }
 
 func TestBlogPost_VeritableRant(t *testing.T) {
@@ -2480,7 +2480,7 @@ func TestBlogPost_VeritableRant(t *testing.T) {
 如果你的函數返回多個返回值，你不需要在比較它們之前將這些值包裝在一個結構體中。只需單獨比較返回值並打印它們。
 
 ```go
-// 好的範例:
+// 較佳：
 val, multi, tail, err := strconv.UnquoteChar(`\"Fran & Freddie's Diner\"`, '"')
 if err != nil {
   t.Fatalf(...)
@@ -2535,7 +2535,7 @@ if tail != `Fran & Freddie's Diner"` {
 [`cmp`] 套件可以比較 `==` 無法適當處理的更複雜的數據結構，如切片。使用 [`cmp.Equal`] 進行等值比較和 [`cmp.Diff`] 獲取對象之間的人類可讀差異。
 
 ```go
-// 好的範例:
+// 較佳：
 want := &Doc{
     Type:     "blogPost",
     Comments: 2,
@@ -2552,7 +2552,7 @@ if !cmp.Equal(got, want) {
 <!-- 這裡 want 和 got 的順序是故意的。參見 #print-diffs 中的評論。 -->
 
 ```go
-// 好的範例:
+// 較佳：
 if diff := cmp.Diff(want, got, protocmp.Transform()); diff != "" {
     t.Errorf("Foo() returned unexpected difference in protobuf messages (-want +got):\n%s", diff)
 }
@@ -2641,7 +2641,7 @@ Go中的錯誤值通常有一部分是為人眼而設計的，一部分是為了
 > **注意：** 如果一個測試使用了[`cmpopts.EquateErrors`]，但它的所有`wantErr`值要么是`nil`要么是`cmpopts.AnyError`，那麼使用`cmp`是[不必要的機制](guide#least-mechanism)。通過將want字段簡化為`bool`來簡化代碼。然後你可以使用一個簡單的比較與`!=`。
 >
 > ```go
-> // 好的範例:
+> // 較佳：
 > err := f(test.input)
 > gotErr := err != nil
 > if gotErr != test.wantErr {
@@ -2683,7 +2683,7 @@ Go中的錯誤值通常有一部分是為人眼而設計的，一部分是為了
 > **警告：** 在子測試名稱中使用斜線字符特別不友好，因為它們在測試過濾中有[特殊含義]。
 >
 > > ```sh
-> > # 不好的範例:
+> > # 不佳：
 > > # 假設TestTime和t.Run("America/New_York", ...)
 > > bazel test :mytest --test_filter="Time/New_York"    # 什麼都不運行！
 > > bazel test :mytest --test_filter="Time//New_York"   # 正確，但尷尬。
@@ -2692,7 +2692,7 @@ Go中的錯誤值通常有一部分是為人眼而設計的，一部分是為了
 為了[識別函數的輸入]，將它們包含在測試的失敗訊息中，在那裡它們不會被測試運行器轉義。
 
 ```go
-// 好的範例:
+// 較佳：
 func TestTranslate(t *testing.T) {
     data := []struct {
         name, desc, srcLang, dstLang, srcText, wantDstText string
@@ -2721,7 +2721,7 @@ func TestTranslate(t *testing.T) {
 以下是一些需要避免的例子：
 
 ```go
-// 不好的範例:
+// 不佳：
 // Too wordy.
 t.Run("check that there is no mention of scratched records or hovercrafts", ...)
 // Slashes cause problems on the command line.
@@ -2750,7 +2750,7 @@ t.Run("AM/PM confusion", ...)
 以下是表驅動測試的最小結構。如果需要，您可以使用不同的名稱或添加額外的設施，如子測試或設置和清理函數。始終記住[有用的測試失敗](#useful-test-failures)。
 
 ```go
-// 好的範例:
+// 較佳：
 func TestCompare(t *testing.T) {
     compareTests := []struct {
         a, b string
@@ -2796,7 +2796,7 @@ func TestCompare(t *testing.T) {
 表測試的行有時可能變得複雜，行值在測試案例內指定條件行為。從測試案例之間的重複中獲得的額外清晰度對於可讀性是必要的。
 
 ```go
-// 好的範例:
+// 較佳：
 type decodeCase struct {
     name   string
     input  string
@@ -2846,7 +2846,7 @@ func TestDecodeWithFake(t *testing.T) {
 在下面的反例中，請注意在案例設置中很難區分每個測試案例使用的`Codex`類型。（突出顯示的部分違反了[ToTT: 數據驅動陷阱！][tott-97]的建議。）
 
 ```go
-// 不好的範例:
+// 不佳：
 type decodeCase struct {
   name   string
   input  string
@@ -2897,7 +2897,7 @@ func TestDecode(t *testing.T) {
 不要使用測試表中測試的索引作為命名測試或打印輸入的替代品。沒有人想要通過你的測試表並計算條目數量來弄清楚哪個測試案例失敗了。
 
 ```go
-// 不好的範例:
+// 不佳：
 tests := []struct {
     input, want string
 }{
@@ -2929,7 +2929,7 @@ for i, d := range tests {
 如果你傳遞了一個`*testing.T`，調用[`t.Helper`]以將測試助手中的失敗歸因於調用助手的行。如果存在，這個參數應該在[上下文](#contexts)參數之後，以及在任何剩餘參數之前。
 
 ```go
-// 好的範例:
+// 較佳：
 func TestSomeFunction(t *testing.T) {
     golden := readFile(t, "testdata/golden-result.txt")
     // ... tests against golden ...
@@ -2974,7 +2974,7 @@ func readFile(t *testing.T, filename string) string {
 * 不要明確導入要測試的套件
 
 ```build
-# 好的範例:
+# 較佳：
 go_library(
     name = "foo",
     srcs = ["foo.go"],
