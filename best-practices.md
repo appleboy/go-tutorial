@@ -617,7 +617,13 @@ import (
 
 另見：
 
-*   [Effective Go 關於錯Request failed due to server shutdown
+*   [Effective Go on errors](https://go.dev/doc/effective_go#errors)
+*   [A post by the Go Blog on errors](https://go.dev/blog/go1.13-errors)
+*   [Package `errors`](https://pkg.go.dev/errors)
+*   [Package `upspin.io/errors`](https://commandcenter.blogspot.com/2017/12/error-handling-in-upspin.html)
+*   [GoTip #89: When to Use Canonical Status Codes as Errors](https://google.github.io/styleguide/go/index.html#gotip)
+*   [GoTip #48: Error Sentinel Values](https://google.github.io/styleguide/go/index.html#gotip)
+*   [GoTip #13: Designing Errors for Checking](https://google.github.io/styleguide/go/index.html#gotip)
 
 <a id="error-structure"></a>
 
