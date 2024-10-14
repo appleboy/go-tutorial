@@ -3051,10 +3051,7 @@ Go標準庫提供了[`testing`套件]。這是Google代碼庫中Go代碼唯一�
 
 ## 無法決策 Non-decisions
 
-A style guide cannot enumerate positive prescriptions for all matters, nor can
-it enumerate all matters about which it does not offer an opinion. That said,
-here are a few things where the readability community has previously debated and
-has not achieved consensus about.
+風格指南無法列舉所有事項的正面規定，也無法列舉所有它不提供意見的事項。話雖如此，以下是一些可讀性社群之前曾經討論過但尚未達成共識的事項。
 
 * **使用零值初始化局部變量**。`var i int`和`i := 0`是等價的。另見[初始化最佳實踐]。
 * **空的複合字面量與`new`或`make`的對比**。`&File{}`和`new(File)`是等價的。`map[string]bool{}`和`make(map[string]bool)`也是如此。另見[複合聲明最佳實踐]。
