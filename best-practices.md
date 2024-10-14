@@ -629,13 +629,9 @@ import (
 
 ### Error structure
 
-If callers need to interrogate the error (e.g., distinguish different error
-conditions), give the error value structure so that this can be done
-programmatically rather than having the caller perform string matching. This
-advice applies to production code as well as to tests that care about different
-error conditions.
+如果呼叫者需要檢查錯誤（例如，區分不同的錯誤情況），請給予錯誤值結構，以便可以通過程式方式完成，而不是讓呼叫者進行字串匹配。這個建議適用於生產代碼以及關心不同錯誤情況的測試。
 
-The simplest structured errors are unparameterized global values.
+最簡單的結構化錯誤是無參數的全域值。
 
 ```go
 type Animal string
@@ -662,8 +658,7 @@ func process(animal Animal) error {
 }
 ```
 
-The caller can simply compare the returned error value of the function with one
-of the known error values:
+呼叫者可以簡單地將函數返回的錯誤值與已知的錯誤值之一進行比較：
 
 ```go
 // 較佳：
@@ -679,9 +674,7 @@ func handlePet(...) {
 }
 ```
 
-The above uses sentinel values, where the error must be equal (in the sense of
-`==`) to the expected value. That is perfectly adequate in many cases. If
-`process` returns wrapped errors (discussed below), you can use [`errors.Is`].
+上述方法使用了哨兵值，其中錯誤必須等於（在 `==` 的意義上）預期值。在許多情況下，這是完全足夠的。如果 `process` 返回包裝錯誤（如下所述），您可以使用 [`errors.Is`]。
 
 ```go
 // 較佳：
