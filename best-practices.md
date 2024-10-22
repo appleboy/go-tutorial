@@ -701,17 +701,9 @@ func handlePet(...) {
 }
 ```
 
-If there is extra information in the error that the caller needs
-programmatically, it should ideally be presented structurally. For example, the
-[`os.PathError`] type is documented to place the pathname of the failing
-operation in a struct field which the caller can easily access.
+如果錯誤中有呼叫者需要以程式方式處理的額外資訊，理想情況下應以結構化方式呈現。例如，[`os.PathError`] 類型的文件說明將失敗操作的路徑名放在結構體欄位中，呼叫者可以輕鬆訪問。
 
-Other error structures can be used as appropriate, for example a project struct
-containing an error code and detail string. [Package `status`][status] is a
-common encapsulation; if you choose this approach (which you are not obligated
-to do), use [canonical codes]. See
-[Go Tip #89: When to Use Canonical Status Codes as Errors](https://google.github.io/styleguide/go/index.html#gotip)
-to know if using status codes is the right choice.
+其他錯誤結構可以根據需要使用，例如包含錯誤代碼和詳細字串的專案結構體。[`status` 套件][status] 是一種常見的封裝方式；如果選擇這種方法（您並不必須這樣做），請使用[標準代碼]。請參閱 [Go Tip #89: When to Use Canonical Status Codes as Errors](https://google.github.io/styleguide/go/index.html#gotip) 以了解是否應使用狀態代碼。
 
 [`os.PathError`]: https://pkg.go.dev/os#PathError
 [`errors.Is`]: https://pkg.go.dev/errors#Is
@@ -722,21 +714,11 @@ to know if using status codes is the right choice.
 
 <a id="error-extra-info"></a>
 
-### Adding information to errors
+### 為錯誤添加資訊
 
-Any function returning an error should strive to make the error value useful.
-Often, the function is in the middle of a callchain and is merely propagating an
-error from some other function that it called (maybe even from another package).
-Here there is an opportunity to annotate the error with extra information, but
-the programmer should ensure there's sufficient information in the error without
-adding duplicate or irrelevant detail. If you're unsure, try triggering the
-error condition during development: that's a good way to assess what the
-observers of the error (either humans or code) will end up with.
+任何返回錯誤的函數都應該努力使錯誤值變得有用。通常，該函數位於調用鏈的中間，只是傳播它所調用的其他函數（可能甚至是來自另一個包）的錯誤。在這種情況下，有機會用額外的信息來註釋錯誤，但程序員應確保錯誤中有足夠的信息，而不添加重複或無關的細節。如果不確定，請嘗試在開發過程中觸發錯誤條件：這是一種評估錯誤觀察者（無論是人類還是代碼）最終會得到什麼的好方法。
 
-Convention and good documentation help. For example, the standard package `os`
-advertises that its errors contain path information when it is available. This
-is a useful style, because callers getting back an error don't need to annotate
-it with information that they had already provided the failing function.
+約定和良好的文檔有助於此。例如，標準包 `os` 宣傳其錯誤在可用時包含路徑信息。這是一種有用的風格，因為調用者在返回錯誤時不需要用他們已經提供給失敗函數的訊息來註釋它。
 
 ```go
 // 較佳：
