@@ -731,83 +731,60 @@ if err := os.Open("settings.txt"); err != nil {
 // open settings.txt: no such file or directory
 ```
 
-If there is something interesting to say about the *meaning* of the error, of
-course it can be added. Just consider which level of the callchain is best
-positioned to understand this meaning.
+如果有關於錯誤的*意義*有什麼有趣的事情要說，當然可以添加。只需考慮哪個呼叫鏈的層級最適合理解這個意義。
 
 ```go
 // 較佳：
 if err := os.Open("settings.txt"); err != nil {
-    // We convey the significance of this error to us. Note that the current
-    // function might perform more than one file operation that can fail, so
-    // these annotations can also serve to disambiguate to the caller what went
-    // wrong.
-    return fmt.Errorf("launch codes unavailable: %v", err)
+    // 我們傳達這個錯誤對我們的重要性。請注意，目前的函數可能會執行多個可能失敗的文件操作，
+    // 因此這些註釋也可以用來向呼叫者澄清到底出了什麼問題。
+    return fmt.Errorf("啟動代碼不可用: %v", err)
 }
 
-// Output:
+// 輸出:
 //
-// launch codes unavailable: open settings.txt: no such file or directory
+// 啟動代碼不可用: open settings.txt: no such file or directory
 ```
 
-Contrast with the redundant information here:
+對比這裡的冗餘信息：
 
 ```go
 // 不佳：
 if err := os.Open("settings.txt"); err != nil {
-    return fmt.Errorf("could not open settings.txt: %w", err)
+    return fmt.Errorf("無法打開 settings.txt: %w", err)
 }
 
-// Output:
+// 輸出:
 //
-// could not open settings.txt: open settings.txt: no such file or directory
+// 無法打開 settings.txt: open settings.txt: no such file or directory
 ```
 
-When adding information to a propagated error, you can either wrap the error or
-present a fresh error. Wrapping the error with the `%w` verb in `fmt.Errorf`
-allows callers to access data from the original error. This can be very useful
-at times, but in other cases these details are misleading or uninteresting to
-the caller. See the
-[blog post on error wrapping](https://blog.golang.org/go1.13-errors) for more
-information. Wrapping errors also expands the API surface of your package in a
-non-obvious way, and this can cause breakages if you change the implementation
-details of your package.
+當向傳播的錯誤添加信息時，你可以選擇包裝錯誤或呈現一個新的錯誤。使用 `fmt.Errorf` 中的 `%w` 來包裝錯誤允許呼叫者訪問原始錯誤的數據。這在某些時候非常有用，但在其他情況下，這些細節對呼叫者來說可能是誤導或不感興趣的。請參閱[錯誤包裝的博客文章](https://blog.golang.org/go1.13-errors)以獲取更多信息。包裝錯誤還會以不明顯的方式擴展你的包的 API 表面，如果你更改包的實現細節，這可能會導致破壞。
 
-It is best to avoid using `%w` unless you also document (and have tests that
-validate) the underlying errors that you expose. If you do not expect your
-caller to call `errors.Unwrap`, `errors.Is` and so on, don't bother with `%w`.
+除非你也記錄（並有測試驗證）你暴露的底層錯誤，否則最好避免使用 `%w`。如果你不期望你的呼叫者調用 `errors.Unwrap`、`errors.Is` 等等，那麼就不要使用 `%w`。
 
-The same concept applies to [structured errors](#error-structure) like
-[`*status.Status`][status] (see [canonical codes]). For example, if your server
-sends malformed requests to a backend and receives an `InvalidArgument` code,
-this code should *not* be propagated to the client, assuming that the client has
-done nothing wrong. Instead, return an `Internal` canonical code to the client.
+同樣的概念適用於[結構化錯誤](#error-structure)如 [`*status.Status`][status]（請參閱[標準代碼]）。例如，如果你的服務器向後端發送格式錯誤的請求並收到 `InvalidArgument` 代碼，假設客戶端沒有做錯任何事情，這個代碼不應該傳播給客戶端。相反，應該向客戶端返回一個 `Internal` 標準代碼。
 
-However, annotating errors helps automated logging systems preserve the status
-payload of an error. For example, annotating the error is appropriate in an
-internal function:
+然而，註釋錯誤有助於自動化日誌系統保留錯誤的狀態負載。例如，在內部函數中註釋錯誤是合適的：
 
 ```go
 // 較佳：
 func (s *Server) internalFunction(ctx context.Context) error {
     // ...
     if err != nil {
-        return fmt.Errorf("couldn't find remote file: %w", err)
+        return fmt.Errorf("無法找到遠程文件: %w", err)
     }
 }
 ```
 
-Code directly at system boundaries (typically RPC, IPC, storage, and similar)
-should report errors using the canonical error space. It is the responsibility
-of code here to handle domain-specific errors and represent them canonically.
-For example:
+直接在系統邊界（通常是 RPC、IPC、存儲等）處的代碼應使用標準錯誤空間報告錯誤。這裡的代碼有責任處理特定領域的錯誤並以標準方式表示它們。例如：
 
 ```go
 // 不佳：
 func (*FortuneTeller) SuggestFortune(context.Context, *pb.SuggestionRequest) (*pb.SuggestionResponse, error) {
     // ...
     if err != nil {
-        return nil, fmt.Errorf("couldn't find remote file: %w", err)
+        return nil, fmt.Errorf("無法找到遠程文件: %w", err)
     }
 }
 ```
@@ -821,16 +798,15 @@ import (
 func (*FortuneTeller) SuggestFortune(context.Context, *pb.SuggestionRequest) (*pb.SuggestionResponse, error) {
     // ...
     if err != nil {
-        // Or use fmt.Errorf with the %w verb if deliberately wrapping an
-        // error which the caller is meant to unwrap.
-        return nil, status.Errorf(codes.Internal, "couldn't find fortune database", status.ErrInternal)
+        // 或者使用 fmt.Errorf 和 %w 動詞，如果故意包裝一個呼叫者應該解包的錯誤。
+        return nil, status.Errorf(codes.Internal, "無法找到財富數據庫", status.ErrInternal)
     }
 }
 ```
 
-See also:
+另請參閱：
 
-*   [Error Documentation Conventions](#documentation-conventions-errors)
+*   [錯誤文檔約定](#documentation-conventions-errors)
 
 <a id="error-percent-w"></a>
 
