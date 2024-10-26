@@ -810,19 +810,13 @@ func (*FortuneTeller) SuggestFortune(context.Context, *pb.SuggestionRequest) (*p
 
 <a id="error-percent-w"></a>
 
-### Placement of %w in errors
+### %w 在錯誤中的位置
 
-Prefer to place `%w` at the end of an error string.
+建議將 `%w` 放在錯誤字串的末尾。
 
-Errors can be wrapped with
-[the `%w` verb](https://blog.golang.org/go1.13-errors), or by placing them in a
-[structured error](https://google.github.io/styleguide/go/index.html#gotip) that
-implements `Unwrap() error` (ex:
-[`fs.PathError`](https://pkg.go.dev/io/fs#PathError)).
+錯誤可以使用 [`%w` 動詞](https://blog.golang.org/go1.13-errors) 包裝，或將它們放在實作 `Unwrap() error` 的[結構化錯誤](https://google.github.io/styleguide/go/index.html#gotip)中（例如：[`fs.PathError`](https://pkg.go.dev/io/fs#PathError)）。
 
-Wrapped errors form error chains: each new layer of wrapping adds a new entry to
-the front of the error chain. The error chain can be traversed with the
-`Unwrap() error` method. For example:
+包裝的錯誤會形成錯誤鏈：每一層新的包裝都會在錯誤鏈的前端新增一個新條目。錯誤鏈可以使用 `Unwrap() error` 方法遍歷。例如：
 
 ```go
 err1 := fmt.Errorf("err1")
@@ -830,7 +824,7 @@ err2 := fmt.Errorf("err2: %w", err1)
 err3 := fmt.Errorf("err3: %w", err2)
 ```
 
-This forms an error chain of the form,
+這形成了一個如下形式的錯誤鏈，
 
 ```mermaid
 flowchart LR
@@ -838,13 +832,9 @@ flowchart LR
   err2 == err2 wraps err1 ==> err1;
 ```
 
-Regardless of where the `%w` verb is placed, the error returned always
-represents the front of the error chain, and the `%w` is the next child.
-Similarly, `Unwrap() error` always traverses the error chain from newest to
-oldest error.
+無論 `%w` 動詞放在哪裡，返回的錯誤總是代表錯誤鏈的前端，而 `%w` 是下一個子錯誤。同樣，`Unwrap() error` 總是從最新的錯誤遍歷到最舊的錯誤。
 
-Placement of the `%w` verb does, however, affect whether the error chain is
-printed newest to oldest, oldest to newest, or neither:
+然而，`%w` 動詞的位置會影響錯誤鏈是按最新到最舊、最舊到最新還是既不是最新到最舊也不是最舊到最新的順序打印：
 
 ```go
 // 較佳：
@@ -852,7 +842,7 @@ err1 := fmt.Errorf("err1")
 err2 := fmt.Errorf("err2: %w", err1)
 err3 := fmt.Errorf("err3: %w", err2)
 fmt.Println(err3) // err3: err2: err1
-// err3 is a newest-to-oldest error chain, that prints newest-to-oldest.
+// err3 是一個從最新到最舊的錯誤鏈，按最新到最舊的順序打印。
 ```
 
 ```go
@@ -861,7 +851,7 @@ err1 := fmt.Errorf("err1")
 err2 := fmt.Errorf("%w: err2", err1)
 err3 := fmt.Errorf("%w: err3", err2)
 fmt.Println(err3) // err1: err2: err3
-// err3 is a newest-to-oldest error chain, that prints oldest-to-newest.
+// err3 是一個從最新到最舊的錯誤鏈，按最舊到最新的順序打印。
 ```
 
 ```go
@@ -870,12 +860,10 @@ err1 := fmt.Errorf("err1")
 err2 := fmt.Errorf("err2-1 %w err2-2", err1)
 err3 := fmt.Errorf("err3-1 %w err3-2", err2)
 fmt.Println(err3) // err3-1 err2-1 err1 err2-2 err3-2
-// err3 is a newest-to-oldest error chain, that neither prints newest-to-oldest
-// nor oldest-to-newest.
+// err3 是一個從最新到最舊的錯誤鏈，既不是按最新到最舊也不是按最舊到最新的順序打印。
 ```
 
-Therefore, in order for error text to mirror error chain structure, prefer
-placing the `%w` verb at the end with the form `[...]: %w`.
+因此，為了使錯誤文本反映錯誤鏈結構，建議將 `%w` 動詞放在末尾，形式為 `[...]: %w`。
 
 <a id="error-logging"></a>
 
