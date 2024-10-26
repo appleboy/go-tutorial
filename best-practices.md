@@ -891,20 +891,15 @@ fmt.Println(err3) // err3-1 err2-1 err1 err2-2 err3-2
 
 <a id="vlog"></a>
 
-#### Custom verbosity levels
+#### 自訂詳細等級
 
-Use verbose logging ([`log.V`]) to your advantage. Verbose logging can be useful
-for development and tracing. Establishing a convention around verbosity levels
-can be helpful. For example:
+善用詳細日誌記錄（[`log.V`]）。詳細日誌記錄對於開發和追蹤非常有用。建立一個關於詳細等級的慣例會很有幫助。例如：
 
-*   Write a small amount of extra information at `V(1)`
-*   Trace more information in `V(2)`
-*   Dump large internal states in `V(3)`
+*   在 `V(1)` 寫入少量額外資訊
+*   在 `V(2)` 追蹤更多資訊
+*   在 `V(3)` 傾倒大量內部狀態
 
-To minimize the cost of verbose logging, you should ensure not to accidentally
-call expensive functions even when `log.V` is turned off. `log.V` offers two
-APIs. The more convenient one carries the risk of this accidental expense. When
-in doubt, use the slightly more verbose style.
+為了將詳細日誌記錄的成本降到最低，你應該確保即使在 `log.V` 關閉時也不會意外呼叫昂貴的函式。`log.V` 提供了兩種 API。較方便的一種有可能會導致這種意外的開銷。如果有疑慮，請使用稍微冗長的風格。
 
 ```go
 // 較佳：
@@ -919,9 +914,8 @@ for _, sql := range queries {
 
 ```go
 // 不佳：
-// sql.Explain called even when this log is not printed.
-log.V(2).Infof("Handling %v", sql.Explain())
-```
+// 即使這個日誌沒有被打印，sql.Explain 也會被呼叫。
+log.V(2).Infof("處理 %v", sql.Explain())
 
 [`log.V`]: https://pkg.go.dev/github.com/golang/glog#V
 
