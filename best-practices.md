@@ -867,43 +867,26 @@ fmt.Println(err3) // err3-1 err2-1 err1 err2-2 err3-2
 
 <a id="error-logging"></a>
 
-### Logging errors
+### 錯誤日誌
 
-Functions sometimes need to tell an external system about an error without
-propagating it to their callers. Logging is an obvious choice here; but be
-conscious of what and how you log errors.
+函式有時需要告訴外部系統發生了錯誤，但不會將錯誤傳遞給它們的呼叫者。此時記錄日誌是一個明顯的選擇；但要注意你記錄錯誤的內容和方式。
 
-*   Like [good test failure messages], log messages should clearly express what
-    went wrong and help the maintainer by including relevant information to
-    diagnose the problem.
+*   就像[好的測試失敗訊息]一樣，日誌訊息應該清楚地表達出問題所在，並透過包含相關資訊來幫助維護者診斷問題。
 
-*   Avoid duplication. If you return an error, it's usually better not to log it
-    yourself but rather let the caller handle it. The caller can choose to log
-    the error, or perhaps rate-limit logging using [`rate.Sometimes`]. Other
-    options include attempting recovery or even [stopping the program]. In any
-    case, giving the caller control helps avoid logspam.
+*   避免重複。如果你返回一個錯誤，通常最好不要自己記錄日誌，而是讓呼叫者處理它。呼叫者可以選擇記錄錯誤，或者使用 [`rate.Sometimes`] 來限制日誌記錄的頻率。其他選項包括嘗試恢復或甚至[停止程式]。無論如何，讓呼叫者控制有助於避免日誌垃圾。
 
-    The downside to this approach, however, is that any logging is written using
-    the caller's line coordinates.
+    然而，這種方法的缺點是，任何日誌都是使用呼叫者的行號記錄的。
 
-*   Be careful with [PII]. Many log sinks are not appropriate destinations for
-    sensitive end-user information.
+*   小心處理[個人識別資訊 (PII)]。許多日誌接收端並不適合存放敏感的終端使用者資訊。
 
-*   Use `log.Error` sparingly. ERROR level logging causes a flush and is more
-    expensive than lower logging levels. This can have serious performance
-    impact on your code. When deciding between error and warning levels,
-    consider the best practice that messages at the error level should be
-    actionable rather than "more serious" than a warning.
+*   謹慎使用 `log.Error`。ERROR 等級的日誌會觸發刷新，並且比較低等級的日誌更耗費資源。這可能對你的程式碼造成嚴重的效能影響。在決定使用錯誤等級還是警告等級時，考慮最佳實踐，即錯誤等級的訊息應該是可操作的，而不是比警告更「嚴重」。
 
-*   Inside Google, we have monitoring systems that can be set up for more
-    effective alerting than writing to a log file and hoping someone notices it.
-    This is similar but not identical to the standard library
-    [package `expvar`].
+*   在 Google 內部，我們有監控系統，可以設置更有效的警報，而不是寫入日誌檔案並希望有人注意到它。這類似但不完全等同於標準函式庫中的 [package `expvar`]。
 
-[good test failure messages]: https://google.github.io/styleguide/go/decisions#useful-test-failures
-[stopping the program]: #checks-and-panics
+[好的測試失敗訊息]: https://google.github.io/styleguide/go/decisions#useful-test-failures
+[停止程式]: #checks-and-panics
 [`rate.Sometimes`]: https://pkg.go.dev/golang.org/x/time/rate#Sometimes
-[PII]: https://en.wikipedia.org/wiki/Personal_data
+[個人識別資訊 (PII)]: https://en.wikipedia.org/wiki/Personal_data
 [package `expvar`]: https://pkg.go.dev/expvar
 
 <a id="vlog"></a>
