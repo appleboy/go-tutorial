@@ -21,14 +21,14 @@ https://google.github.io/styleguide/go/decisions (英文版)
 
 以下部分已從風格決策移至指南的其他部分：
 
-* **混合大小寫**：見 [指南#混合大小寫](guide#mixed-caps)
-    <a id="mixed-caps"></a>
+- **混合大小寫**：見 [指南#混合大小寫](guide#mixed-caps)
+  <a id="mixed-caps"></a>
 
-* **格式化**：見 [指南#格式化](guide#formatting)
-    <a id="formatting"></a>
+- **格式化**：見 [指南#格式化](guide#formatting)
+  <a id="formatting"></a>
 
-* **行長**：見 [指南#行長](guide#line-length)
-    <a id="line-length"></a>
+- **行長**：見 [指南#行長](guide#line-length)
+  <a id="line-length"></a>
 
 <a id="naming"></a>
 
@@ -62,10 +62,10 @@ Go 套件名稱不應有底線。如果您需要導入一個包含底線的套�
 
 此規則的例外是，僅由生成的代碼導入的套件名稱可能包含底線。具體例子包括：
 
-* 使用 `_test` 後綴的外部測試套件，例如集成測試
+- 使用 `_test` 後綴的外部測試套件，例如集成測試
 
-* 使用 `_test` 後綴的
-    [套件級文檔示例](https://go.dev/blog/examples)
+- 使用 `_test` 後綴的
+  [套件級文檔示例](https://go.dev/blog/examples)
 
 [`tabwriter`]: https://pkg.go.dev/text/tabwriter
 [遮蔽]: best-practices#shadowing
@@ -87,16 +87,16 @@ Go 套件名稱不應有底線。如果您需要導入一個包含底線的套�
 
 [接收者] 變量名稱必須是：
 
-* 短的（通常是一到兩個字母長）
-* 該類型本身的縮寫
-* 對該類型的每個接收者一致應用
+- 短的（通常是一到兩個字母長）
+- 該類型本身的縮寫
+- 對該類型的每個接收者一致應用
 
-Long Name                   | Better Name
---------------------------- | -------------------------
-`func (tray Tray)`          | `func (t Tray)`
-`func (info *ResearchInfo)` | `func (ri *ResearchInfo)`
-`func (this *ReportWriter)` | `func (w *ReportWriter)`
-`func (self *Scanner)`      | `func (s *Scanner)`
+| Long Name                   | Better Name               |
+| --------------------------- | ------------------------- |
+| `func (tray Tray)`          | `func (t Tray)`           |
+| `func (info *ResearchInfo)` | `func (ri *ResearchInfo)` |
+| `func (this *ReportWriter)` | `func (w *ReportWriter)`  |
+| `func (self *Scanner)`      | `func (s *Scanner)`       |
 
 [接收者]: https://golang.org/ref/spec#Method_declarations
 
@@ -151,23 +151,23 @@ const (
 
 名稱中作為首字母縮略詞或縮寫的單詞（例如，`URL` 和 `NATO`）應該具有相同的大小寫。`URL` 應該出現為 `URL` 或 `url`（如在 `urlPony` 或 `URLPony` 中），永遠不應該是 `Url`。這也適用於 `ID` 當它是 "identifier" 的縮寫時；寫作 `appID` 而不是 `appId`。
 
-* 在包含多個首字母縮略詞的名稱中（例如 `XMLAPI` 因為它包含 `XML` 和 `API`），給定首字母縮略詞內的每個字母應該具有相同的大小寫，但名稱中的每個首字母縮略詞不需要具有相同的大小寫。
-* 在包含含有小寫字母的首字母縮略詞的名稱中（例如 `DDoS`、`iOS`、`gRPC`），首字母縮略詞應該出現如同在標準散文中一樣，除非您需要為了 [導出性] 改變第一個字母。在這些情況下，整個首字母縮略詞應該是相同的大小寫（例如 `ddos`、`IOS`、`GRPC`）。
+- 在包含多個首字母縮略詞的名稱中（例如 `XMLAPI` 因為它包含 `XML` 和 `API`），給定首字母縮略詞內的每個字母應該具有相同的大小寫，但名稱中的每個首字母縮略詞不需要具有相同的大小寫。
+- 在包含含有小寫字母的首字母縮略詞的名稱中（例如 `DDoS`、`iOS`、`gRPC`），首字母縮略詞應該出現如同在標準散文中一樣，除非您需要為了 [導出性] 改變第一個字母。在這些情況下，整個首字母縮略詞應該是相同的大小寫（例如 `ddos`、`IOS`、`GRPC`）。
 
 [導出性]: https://golang.org/ref/spec#Exported_identifiers
 
 <!-- 保持這個表格窄。如果必須變寬，用列表替換。 -->
 
-首字母縮略詞 | 範圍       | 正確      | 錯誤
-------------- | ---------- | -------- | --------------------------------------
-XML API       | 導出       | `XMLAPI` | `XmlApi`, `XMLApi`, `XmlAPI`, `XMLapi`
-XML API       | 未導出     | `xmlAPI` | `xmlapi`, `xmlApi`
-iOS           | 導出       | `IOS`    | `Ios`, `IoS`
-iOS           | 未導出     | `iOS`    | `ios`
-gRPC          | 導出       | `GRPC`   | `Grpc`
-gRPC          | 未導出     | `gRPC`   | `grpc`
-DDoS          | 導出       | `DDoS`   | `DDOS`, `Ddos`
-DDoS          | 未導出     | `ddos`   | `dDoS`, `dDOS`
+| 首字母縮略詞 | 範圍   | 正確     | 錯誤                                   |
+| ------------ | ------ | -------- | -------------------------------------- |
+| XML API      | 導出   | `XMLAPI` | `XmlApi`, `XMLApi`, `XmlAPI`, `XMLapi` |
+| XML API      | 未導出 | `xmlAPI` | `xmlapi`, `xmlApi`                     |
+| iOS          | 導出   | `IOS`    | `Ios`, `IoS`                           |
+| iOS          | 未導出 | `iOS`    | `ios`                                  |
+| gRPC         | 導出   | `GRPC`   | `Grpc`                                 |
+| gRPC         | 未導出 | `gRPC`   | `grpc`                                 |
+| DDoS         | 導出   | `DDoS`   | `DDOS`, `Ddos`                         |
+| DDoS         | 未導出 | `ddos`   | `dDoS`, `dDOS`                         |
 
 <!--#include file="/go/g3doc/style/includes/special-name-exception.md"-->
 
@@ -193,10 +193,10 @@ DDoS          | 未導出     | `ddos`   | `dDoS`, `dDOS`
 
 這裡是一個大致的基線。這些數字指南不是嚴格的規則。基於上下文、[清晰性] 和 [簡練性] 應用判斷。
 
-* 小範圍是執行一兩個小操作的範圍，比如 1-7 行。
-* 中等範圍是幾個小操作或一個大操作，比如 8-15 行。
-* 大範圍是一個或幾個大操作，比如 15-25 行。
-* 非常大的範圍是跨越超過一頁的任何範圍（比如，超過 25 行）。
+- 小範圍是執行一兩個小操作的範圍，比如 1-7 行。
+- 中等範圍是幾個小操作或一個大操作，比如 8-15 行。
+- 大範圍是一個或幾個大操作，比如 15-25 行。
+- 非常大的範圍是跨越超過一頁的任何範圍（比如，超過 25 行）。
 
 [清晰性]: guide#clarity
 [簡練性]: guide#concision
@@ -209,14 +209,14 @@ DDoS          | 未導出     | `ddos`   | `dDoS`, `dDOS`
 
 一般來說：
 
-* 單詞名稱如 `count` 或 `options` 是一個好的起點。
-* 可以添加額外的單詞來消除相似名稱的歧義，例如 `userCount` 和 `projectCount`。
-* 不要簡單地刪除字母來節省打字。例如，`Sandbox` 比 `Sbx` 更好，特別是對於導出的名稱。
-* 從大多數變量名稱中省略 [類型和類型化的詞]。
-    * 對於一個數字，`userCount` 是一個比 `numUsers` 或 `usersInt` 更好的名稱。
-    * 對於一個切片，`users` 是一個比 `userSlice` 更好的名稱。
-    * 如果範圍內有兩個版本的值，可以接受包含類型化的限定詞，例如你可能有一個存儲在 `ageString` 中的輸入，並使用 `age` 作為解析後的值。
-* 省略從 [周圍上下文] 中清楚的詞。例如，在 `UserCount` 方法的實現中，一個叫做 `userCount` 的局部變量可能是多餘的；`count`、`users` 或甚至 `c` 一樣可讀。
+- 單詞名稱如 `count` 或 `options` 是一個好的起點。
+- 可以添加額外的單詞來消除相似名稱的歧義，例如 `userCount` 和 `projectCount`。
+- 不要簡單地刪除字母來節省打字。例如，`Sandbox` 比 `Sbx` 更好，特別是對於導出的名稱。
+- 從大多數變量名稱中省略 [類型和類型化的詞]。
+  - 對於一個數字，`userCount` 是一個比 `numUsers` 或 `usersInt` 更好的名稱。
+  - 對於一個切片，`users` 是一個比 `userSlice` 更好的名稱。
+  - 如果範圍內有兩個版本的值，可以接受包含類型化的限定詞，例如你可能有一個存儲在 `ageString` 中的輸入，並使用 `age` 作為解析後的值。
+- 省略從 [周圍上下文] 中清楚的詞。例如，在 `UserCount` 方法的實現中，一個叫做 `userCount` 的局部變量可能是多餘的；`count`、`users` 或甚至 `c` 一樣可讀。
 
 [類型和類型化的詞]: #repetitive-with-type
 [周圍上下文]: #repetitive-in-context
@@ -230,12 +230,12 @@ DDoS          | 未導出     | `ddos`   | `dDoS`, `dDOS`
 
 一般來說：
 
-* 對於 [方法接收者變量]，一個字母或兩個字母的名稱是首選。
-* 對於常見類型使用熟悉的變量名稱通常很有幫助：
-    * `r` 用於 `io.Reader` 或 `*http.Request`
-    * `w` 用於 `io.Writer` 或 `http.ResponseWriter`
-* 單字母標識符作為整數循環變量是可以接受的，特別是對於索引（例如，`i`）和坐標（例如，`x` 和 `y`）。
-* 當範圍短時，縮寫可以作為可接受的循環標識符，例如 `for _, n := range nodes { ... }`。
+- 對於 [方法接收者變量]，一個字母或兩個字母的名稱是首選。
+- 對於常見類型使用熟悉的變量名稱通常很有幫助：
+  - `r` 用於 `io.Reader` 或 `*http.Request`
+  - `w` 用於 `io.Writer` 或 `http.ResponseWriter`
+- 單字母標識符作為整數循環變量是可以接受的，特別是對於索引（例如，`i`）和坐標（例如，`x` 和 `y`）。
+- 當範圍短時，縮寫可以作為可接受的循環標識符，例如 `for _, n := range nodes { ... }`。
 
 [方法接收者變量]: #receiver-names
 
@@ -261,13 +261,13 @@ Go 源代碼應該避免不必要的重複。一個常見的來源是重複的�
 
 > **例子：** 重複的名稱 -> 更好的名稱
 >
-> * `widget.NewWidget` -> `widget.New`
-> * `widget.NewWidgetWithName` -> `widget.NewWithName`
-> * `db.LoadFromDatabase` -> `db.Load`
-> * `goatteleportutil.CountGoatsTeleported` -> `gtutil.CountGoatsTeleported`
->     或 `goatteleport.Count`
-> * `myteampb.MyTeamMethodRequest` -> `mtpb.MyTeamMethodRequest` 或
->     `myteampb.MethodRequest`
+> - `widget.NewWidget` -> `widget.New`
+> - `widget.NewWidgetWithName` -> `widget.NewWithName`
+> - `db.LoadFromDatabase` -> `db.Load`
+> - `goatteleportutil.CountGoatsTeleported` -> `gtutil.CountGoatsTeleported`
+>   或 `goatteleport.Count`
+> - `myteampb.MyTeamMethodRequest` -> `mtpb.MyTeamMethodRequest` 或
+>   `myteampb.MethodRequest`
 
 <a id="repetitive-with-type"></a>
 
@@ -277,13 +277,13 @@ Go 源代碼應該避免不必要的重複。一個常見的來源是重複的�
 
 > **範例：** 重複的名稱 -> 更好的名稱
 >
-> * `widget.NewWidget` -> `widget.New`
-> * `widget.NewWidgetWithName` -> `widget.NewWithName`
-> * `db.LoadFromDatabase` -> `db.Load`
-> * `goatteleportutil.CountGoatsTeleported` -> `gtutil.CountGoatsTeleported`
->     或 `goatteleport.Count`
-> * `myteampb.MyTeamMethodRequest` -> `mtpb.MyTeamMethodRequest` 或
->     `myteampb.MethodRequest`
+> - `widget.NewWidget` -> `widget.New`
+> - `widget.NewWidgetWithName` -> `widget.NewWithName`
+> - `db.LoadFromDatabase` -> `db.Load`
+> - `goatteleportutil.CountGoatsTeleported` -> `gtutil.CountGoatsTeleported`
+>   或 `goatteleport.Count`
+> - `myteampb.MyTeamMethodRequest` -> `mtpb.MyTeamMethodRequest` 或
+>   `myteampb.MethodRequest`
 
 <a id="repetitive-with-type"></a>
 
@@ -291,11 +291,11 @@ Go 源代碼應該避免不必要的重複。一個常見的來源是重複的�
 
 編譯器總是知道一個變量的類型，在大多數情況下，讀者也能通過變量的使用方式清楚地知道變量的類型。只有在同一作用域內變量的值出現兩次時，才需要明確變量的類型。
 
-重複的名稱               | 更好的名稱
------------------------------ | ----------------------
-`var numUsers int`            | `var users int`
-`var nameString string`       | `var name string`
-`var primaryProject *Project` | `var primary *Project`
+| 重複的名稱                    | 更好的名稱             |
+| ----------------------------- | ---------------------- |
+| `var numUsers int`            | `var users int`        |
+| `var nameString string`       | `var name string`      |
+| `var primaryProject *Project` | `var primary *Project` |
 
 如果值以多種形式出現，可以通過額外的單詞如 `raw` 和 `parsed` 或底層表示來進行說明：
 
@@ -395,7 +395,7 @@ func (db *DB) UserCount() (int, error) {
 **提示：** Godoc 使用的特殊格式化非常少；列表和代碼片段通常應該縮進以避免換行。除了縮進，通常應避免裝飾。
 
 [doc preview]: best-practices#documentation-preview
-[文檔慣例]:  best-practices#documentation-conventions
+[文檔慣例]: best-practices#documentation-conventions
 
 <a id="comment-line-length"></a>
 
@@ -622,23 +622,23 @@ package main
 
 Tips:
 
-* 示例命令行調用和 API 使用可以是有用的文檔。對於 Godoc 格式，縮進包含代碼的註解行。
+- 示例命令行調用和 API 使用可以是有用的文檔。對於 Godoc 格式，縮進包含代碼的註解行。
 
-* 如果沒有明顯的主文件，或者如果套件註解非常長，則可以接受將文檔註解放在一個名為 `doc.go` 的文件中，該文件僅包含註解和套件子句。
+- 如果沒有明顯的主文件，或者如果套件註解非常長，則可以接受將文檔註解放在一個名為 `doc.go` 的文件中，該文件僅包含註解和套件子句。
 
-* 多行註解可以代替多個單行註解。如果文檔包含可能需要從源文件中複製和粘貼的部分，這主要是有用的，如示例命令行（對於二進制文件）和模板示例。
+- 多行註解可以代替多個單行註解。如果文檔包含可能需要從源文件中複製和粘貼的部分，這主要是有用的，如示例命令行（對於二進制文件）和模板示例。
 
-    ```go
-    // 較佳：
-    /*
-    seed_generator 命令是一個實用工具，它從一組 JSON 研究配置生成 Finch 種子文件。
+  ```go
+  // 較佳：
+  /*
+  seed_generator 命令是一個實用工具，它從一組 JSON 研究配置生成 Finch 種子文件。
 
-        seed_generator *.json | base64 > finch-seed.base64
-    */
-    package template
-    ```
+      seed_generator *.json | base64 > finch-seed.base64
+  */
+  package template
+  ```
 
-* 旨在供維護者使用且適用於整個文件的註解通常放在導入聲明之後。這些在 Godoc 中不會顯示，也不受上述套件註解規則的約束。
+- 旨在供維護者使用且適用於整個文件的註解通常放在導入聲明之後。這些在 Godoc 中不會顯示，也不受上述套件註解規則的約束。
 
 <a id="imports"></a>
 
@@ -683,9 +683,9 @@ import (
 
 引入應該組織成兩組：
 
-* 標準庫套件
+- 標準庫套件
 
-* 其他（專案和 vendored）套件
+- 其他（專案和 vendored）套件
 
 ```go
 // 較佳：
@@ -707,8 +707,8 @@ import (
 
 如果您想要一個單獨的組，則可以將專案套件分成多個組，只要這些組有一些意義即可。這樣做的常見原因包括：
 
-* 重新命名的引入
-* 為了它們的副作用而引入的套件
+- 重新命名的引入
+- 為了它們的副作用而引入的套件
 
 範例:
 
@@ -751,17 +751,17 @@ Gofmt 負責按引入路徑對每組進行排序。然而，它不會自動將�
 
 這類套件的一些例子包括：
 
-* [time/tzdata](https://pkg.go.dev/time/tzdata)
+- [time/tzdata](https://pkg.go.dev/time/tzdata)
 
-* [image/jpeg](https://pkg.go.dev/image/jpeg) 在圖像處理代碼中
+- [image/jpeg](https://pkg.go.dev/image/jpeg) 在圖像處理代碼中
 
 避免在庫套件中進行空白引入，即使庫間接依賴於它們。將副作用引入限制在主套件中有助於控制依賴關係，並使得撰寫依賴不同引入的測試成為可能，而不會產生衝突或浪費建構成本。
 
 以下是此規則的唯一例外：
 
-* 您可以使用空白引入來繞過 [nogo 靜態檢查器] 中對禁止引入的檢查。
+- 您可以使用空白引入來繞過 [nogo 靜態檢查器] 中對禁止引入的檢查。
 
-* 您可以在使用 `//go:embed` 編譯器指令的源文件中，空白引入 [embed](https://pkg.go.dev/embed) 套件。
+- 您可以在使用 `//go:embed` 編譯器指令的源文件中，空白引入 [embed](https://pkg.go.dev/embed) 套件。
 
 **提示：** 如果您創建了一個在生產中間接依賴副作用引入的庫套件，請記錄預期的使用方式。
 
@@ -877,9 +877,9 @@ t.Errorf("Op(%q) failed unexpectedly; err=%v", args, err)
 
 遇到錯誤的代碼應該有意識地選擇如何處理它。通常不適合使用 `_` 變量來丟棄錯誤。如果函數返回一個錯誤，請執行以下操作之一：
 
-* 立即處理並解決錯誤。
-* 將錯誤返回給調用者。
-* 在特殊情況下，調用 [`log.Fatal`] 或（如果絕對必要）`panic`。
+- 立即處理並解決錯誤。
+- 將錯誤返回給調用者。
+- 在特殊情況下，調用 [`log.Fatal`] 或（如果絕對必要）`panic`。
 
 **注意：** `log.Fatalf` 不是標準庫日誌。參見 [#logging]。
 
@@ -1020,46 +1020,46 @@ Go 擁有異常強大的[複合字面量語法]，可以用單一表達式來表
 
 對於在當前套件外定義的類型，結構字面量必須指定**字段名稱**。
 
-* 包括來自其他套件的類型的字段名稱。
+- 包括來自其他套件的類型的字段名稱。
 
-    ```go
-    // 較佳：
-    // https://pkg.go.dev/encoding/csv#Reader
-    r := csv.Reader{
-      Comma: ',',
-      Comment: '#',
-      FieldsPerRecord: 4,
-    }
-    ```
+  ```go
+  // 較佳：
+  // https://pkg.go.dev/encoding/csv#Reader
+  r := csv.Reader{
+    Comma: ',',
+    Comment: '#',
+    FieldsPerRecord: 4,
+  }
+  ```
 
-    結構中字段的位置和字段的完整集合（省略字段名稱時必須正確的兩個條件）通常不被認為是結構的公共 API 的一部分；指定字段名稱是為了避免不必要的耦合。
+  結構中字段的位置和字段的完整集合（省略字段名稱時必須正確的兩個條件）通常不被認為是結構的公共 API 的一部分；指定字段名稱是為了避免不必要的耦合。
 
-    ```go
-    // 不佳：
-    r := csv.Reader{',', '#', 4, false, false, false, false}
-    ```
+  ```go
+  // 不佳：
+  r := csv.Reader{',', '#', 4, false, false, false, false}
+  ```
 
-* 對於套件內部類型，字段名稱是可選的。
+- 對於套件內部類型，字段名稱是可選的。
 
-    ```go
-    // 較佳：
-    okay := Type{42}
-    also := internalType{4, 2}
-    ```
+  ```go
+  // 較佳：
+  okay := Type{42}
+  also := internalType{4, 2}
+  ```
 
-    如果使用字段名稱可以使代碼更清晰，則仍應使用字段名稱，這樣做是非常常見的。例如，具有大量字段的結構幾乎總是應該使用字段名稱進行初始化。
+  如果使用字段名稱可以使代碼更清晰，則仍應使用字段名稱，這樣做是非常常見的。例如，具有大量字段的結構幾乎總是應該使用字段名稱進行初始化。
 
     <!-- TODO: Maybe a better example here that doesn't have many fields. -->
 
-    ```go
-    // 較佳：
-    okay := StructWithLotsOfFields{
-      field1: 1,
-      field2: "two",
-      field3: 3.14,
-      field4: true,
-    }
-    ```
+  ```go
+  // 較佳：
+  okay := StructWithLotsOfFields{
+    field1: 1,
+    field2: "two",
+    field3: 3.14,
+    field4: true,
+  }
+  ```
 
 <a id="literal-matching-braces"></a>
 
@@ -1103,8 +1103,8 @@ bad := []*Type{
 
 對於切片和數組字面量，只有在以下兩個條件都滿足時，才允許去掉大括號之間的空白（也就是所謂的「緊靠」它們）。
 
-* [縮進匹配](#literal-matching-braces)
-* 內部值也是字面量或 proto 構建器（即不是變量或其他表達式）
+- [縮進匹配](#literal-matching-braces)
+- 內部值也是字面量或 proto 構建器（即不是變量或其他表達式）
 
 ```go
 // 較佳：
@@ -1394,9 +1394,9 @@ if longCondition1 && longCondition2 &&
 
 請參閱以下部分以獲得具體指南和示例：
 
-* [函數格式化](#func-formatting)
-* [條件和循環](#conditional-formatting)
-* [字面量格式化](#literal-formatting)
+- [函數格式化](#func-formatting)
+- [條件和循環](#conditional-formatting)
+- [字面量格式化](#literal-formatting)
 
 <a id="func-formatting"></a>
 
@@ -1834,15 +1834,15 @@ func (w *Worker) Run() {
 
 這段代碼看起來可能沒問題，但存在幾個潛在問題：
 
-* 代碼在生產中可能有未定義的行為，即使操作系統釋放了資源，程序也可能無法乾淨地終止。
-* 由於代碼的不確定生命週期，測試代碼意義不大。
-* 如上所述，代碼可能泄漏資源。
+- 代碼在生產中可能有未定義的行為，即使操作系統釋放了資源，程序也可能無法乾淨地終止。
+- 由於代碼的不確定生命週期，測試代碼意義不大。
+- 如上所述，代碼可能泄漏資源。
 
 另見：
 
-* [永遠不要啟動一個 goroutine 而不知道它將如何停止][cheney-stop]
-* 重新思考傳統並發模式：[幻燈片][rethinking-slides]，[視頻][rethinking-video]
-* [Go 程序何時結束]
+- [永遠不要啟動一個 goroutine 而不知道它將如何停止][cheney-stop]
+- 重新思考傳統並發模式：[幻燈片][rethinking-slides]，[視頻][rethinking-video]
+- [Go 程序何時結束]
 
 [同步函數]: #synchronous-functions
 [cheney-stop]: https://dave.cheney.net/2016/12/22/never-start-a-goroutine-without-knowing-how-it-will-stop
@@ -1934,15 +1934,15 @@ func NewThinger() Thinger { return Thinger{ ... } }
 
 一般來說：
 
-* [寫代碼，不要設計類型]。來自 Robert Griesemer 和 Ian Lance Taylor 的 GopherCon 演講。
-* 如果你有幾種類型共享一個有用的統一介面，考慮使用該介面來建模解決方案。可能不需要泛型。
-* 否則，不要依賴 `any` 類型和過度的[類型切換](https://tour.golang.org/methods/16)，考慮使用泛型。
+- [寫代碼，不要設計類型]。來自 Robert Griesemer 和 Ian Lance Taylor 的 GopherCon 演講。
+- 如果你有幾種類型共享一個有用的統一介面，考慮使用該介面來建模解決方案。可能不需要泛型。
+- 否則，不要依賴 `any` 類型和過度的[類型切換](https://tour.golang.org/methods/16)，考慮使用泛型。
 
 另見：
 
-* [在 Go 中使用泛型]，Ian Lance Taylor 的演講
+- [在 Go 中使用泛型]，Ian Lance Taylor 的演講
 
-* Go 網頁上的[泛型教程]
+- Go 網頁上的[泛型教程]
 
 [泛型教程]: https://go.dev/doc/tutorial/generics
 [類型參數]: https://go.dev/design/43651-type-parameters
@@ -1974,94 +1974,94 @@ func NewThinger() Thinger { return Thinger{ ... } }
 
 下面的列表進一步詳細說明了每種情況：
 
-* 如果接收器是一個切片且方法不重新切片或重新分配切片，使用值而不是指針。
+- 如果接收器是一個切片且方法不重新切片或重新分配切片，使用值而不是指針。
 
-    ```go
-    // 較佳：
-    type Buffer []byte
+  ```go
+  // 較佳：
+  type Buffer []byte
 
-    func (b Buffer) Len() int { return len(b) }
-    ```
+  func (b Buffer) Len() int { return len(b) }
+  ```
 
-* 如果方法需要改變接收器，接收器必須是一個指針。
+- 如果方法需要改變接收器，接收器必須是一個指針。
 
-    ```go
-    // 較佳：
-    type Counter int
+  ```go
+  // 較佳：
+  type Counter int
 
-    func (c *Counter) Inc() { *c++ }
+  func (c *Counter) Inc() { *c++ }
 
-    // 參見 https://pkg.go.dev/container/heap。
-    type Queue []Item
+  // 參見 https://pkg.go.dev/container/heap。
+  type Queue []Item
 
-    func (q *Queue) Push(x Item) { *q = append([]Item{x}, *q...) }
-    ```
+  func (q *Queue) Push(x Item) { *q = append([]Item{x}, *q...) }
+  ```
 
-* 如果接收器是一個包含[不能安全複製]的字段的結構體，使用指針接收器。常見例子是 [`sync.Mutex`] 和其他同步類型。
+- 如果接收器是一個包含[不能安全複製]的字段的結構體，使用指針接收器。常見例子是 [`sync.Mutex`] 和其他同步類型。
 
-    ```go
-    // 較佳：
-    type Counter struct {
-        mu    sync.Mutex
-        total int
-    }
+  ```go
+  // 較佳：
+  type Counter struct {
+      mu    sync.Mutex
+      total int
+  }
 
-    func (c *Counter) Inc() {
-        c.mu.Lock()
-        defer c.mu.Unlock()
-        c.total++
-    }
-    ```
+  func (c *Counter) Inc() {
+      c.mu.Lock()
+      defer c.mu.Unlock()
+      c.total++
+  }
+  ```
 
-    **提示：** 檢查類型的 [Godoc] 以獲取關於它是否安全或不安全複製的信息。
+  **提示：** 檢查類型的 [Godoc] 以獲取關於它是否安全或不安全複製的信息。
 
-* 如果接收器是一個“大型”結構體或數組，指針接收器可能更有效。傳遞一個結構體等同於將其所有字段或元素作為參數傳遞給方法。如果這看起來太大而無法[按值傳遞]，指針是一個好選擇。
+- 如果接收器是一個“大型”結構體或數組，指針接收器可能更有效。傳遞一個結構體等同於將其所有字段或元素作為參數傳遞給方法。如果這看起來太大而無法[按值傳遞]，指針是一個好選擇。
 
-* 對於將與修改接收器的其他函數同時調用或運行的方法，如果這些修改不應該對你的方法可見，使用值；否則使用指針。
+- 對於將與修改接收器的其他函數同時調用或運行的方法，如果這些修改不應該對你的方法可見，使用值；否則使用指針。
 
-* 如果接收器是一個結構體或數組，其任何元素是指向可能被改變的東西的指針，優先選擇指針接收器以使可變性的意圖對讀者清晰。
+- 如果接收器是一個結構體或數組，其任何元素是指向可能被改變的東西的指針，優先選擇指針接收器以使可變性的意圖對讀者清晰。
 
-    ```go
-    // 較佳：
-    type Counter struct {
-        m *Metric
-    }
+  ```go
+  // 較佳：
+  type Counter struct {
+      m *Metric
+  }
 
-    func (c *Counter) Inc() {
-        c.m.Add(1)
-    }
-    ```
+  func (c *Counter) Inc() {
+      c.m.Add(1)
+  }
+  ```
 
-* 如果接收器是一個[內建類型]，如整數或字符串，不需要被修改，使用值。
+- 如果接收器是一個[內建類型]，如整數或字符串，不需要被修改，使用值。
 
-    ```go
-    // 較佳：
-    type User string
+  ```go
+  // 較佳：
+  type User string
 
-    func (u User) String() { return string(u) }
-    ```
+  func (u User) String() { return string(u) }
+  ```
 
-* 如果接收器是一個映射、函數或通道，使用值而不是指針。
+- 如果接收器是一個映射、函數或通道，使用值而不是指針。
 
-    ```go
-    // 較佳：
-    // 參見 https://pkg.go.dev/net/http#Header。
-    type Header map[string][]string
+  ```go
+  // 較佳：
+  // 參見 https://pkg.go.dev/net/http#Header。
+  type Header map[string][]string
 
-    func (h Header) Add(key, value string) { /* 省略 */ }
-    ```
+  func (h Header) Add(key, value string) { /* 省略 */ }
+  ```
 
-* 如果接收器是一個“小型”數組或結構體，本質上是一個沒有可變字段和指針的值類型，值接收器通常是正確的選擇。
+- 如果接收器是一個“小型”數組或結構體，本質上是一個沒有可變字段和指針的值類型，值接收器通常是正確的選擇。
 
-    ```go
-    // 較佳：
-    // 參見 https://pkg.go.dev/time#Time。
-    type Time struct { /* 省略 */ }
+  ```go
+  // 較佳：
+  // 參見 https://pkg.go.dev/time#Time。
+  type Time struct { /* 省略 */ }
 
-    func (t Time) Add(d Duration) Time { /* 省略 */ }
-    ```
+  func (t Time) Add(d Duration) Time { /* 省略 */ }
+  ```
 
-* 如有疑問，使用指針接收器。
+- 如有疑問，使用指針接收器。
 
 作為一般指導原則，傾向於使一個類型的方法要麼全部是指針方法，要麼全部是值方法。
 
@@ -2141,7 +2141,7 @@ default:
 
 另見：
 
-* Bryan Mills 的演講 "Rethinking Classical Concurrency Patterns"：[幻燈片][rethinking-slides]，[視頻][rethinking-video]
+- Bryan Mills 的演講 "Rethinking Classical Concurrency Patterns"：[幻燈片][rethinking-slides]，[視頻][rethinking-video]
 
 <a id="type-aliases"></a>
 
@@ -2219,9 +2219,9 @@ var (
 
 另見：
 
-* [每週提示 #45: 避免標誌，特別是在庫代碼中][totw-45]
-* [Go 提示 #10: 配置結構體和標誌](https://google.github.io/styleguide/go/index.html#gotip)
-* [Go 提示 #80: 依賴注入原則](https://google.github.io/styleguide/go/index.html#gotip)
+- [每週提示 #45: 避免標誌，特別是在庫代碼中][totw-45]
+- [Go 提示 #10: 配置結構體和標誌](https://google.github.io/styleguide/go/index.html#gotip)
+- [Go 提示 #80: 依賴注入原則](https://google.github.io/styleguide/go/index.html#gotip)
 
 [標準 `flag` 包]: https://golang.org/pkg/flag/
 [混合大小寫]: guide#mixed-caps
@@ -2240,8 +2240,8 @@ Google 代碼庫中的 Go 程序使用標準 [`log`] 包的一個變體。它具
 
 另見：
 
-* 關於[錯誤日誌記錄](best-practices#error-logging)和[自定義詳細級別](best-practices#vlog)的最佳實踐
-* 何時以及如何使用 log 包來[停止程序](best-practices#checks-and-panics)
+- 關於[錯誤日誌記錄](best-practices#error-logging)和[自定義詳細級別](best-practices#vlog)的最佳實踐
+- 何時以及如何使用 log 包來[停止程序](best-practices#checks-and-panics)
 
 [`log`]: https://pkg.go.dev/log
 [`log/slog`]: https://pkg.go.dev/log/slog
@@ -2267,16 +2267,16 @@ func F(ctx context.Context /* other arguments */) {}
 
 例外情況有：
 
-* 在 HTTP 處理器中，上下文來自 [`req.Context()`](https://pkg.go.dev/net/http#Request.Context)。
-* 在流式 RPC 方法中，上下文來自流。
+- 在 HTTP 處理器中，上下文來自 [`req.Context()`](https://pkg.go.dev/net/http#Request.Context)。
+- 在流式 RPC 方法中，上下文來自流。
 
-    使用 gRPC 流的代碼從生成的服務器類型中的 `Context()` 方法訪問上下文，該方法實現了 `grpc.ServerStream`。參見 [gRPC 生成代碼文檔](https://grpc.io/docs/languages/go/generated-code/)。
+  使用 gRPC 流的代碼從生成的服務器類型中的 `Context()` 方法訪問上下文，該方法實現了 `grpc.ServerStream`。參見 [gRPC 生成代碼文檔](https://grpc.io/docs/languages/go/generated-code/)。
 
-* 在入口點函數中（見下面的例子），使用 [`context.Background()`](https://pkg.go.dev/context/#Background)。
+- 在入口點函數中（見下面的例子），使用 [`context.Background()`](https://pkg.go.dev/context/#Background)。
 
-    * 在二進制目標中：`main`
-    * 在通用代碼和庫中：`init`
-    * 在測試中：`TestXXX`、`BenchmarkXXX`、`FuzzXXX`
+  - 在二進制目標中：`main`
+  - 在通用代碼和庫中：`init`
+  - 在測試中：`TestXXX`、`BenchmarkXXX`、`FuzzXXX`
 
 > **注意**：在調用鏈中間的代碼很少需要使用 `context.Background()` 創建自己的基礎上下文。總是優先從你的調用者那裡獲取上下文，除非它是錯誤的上下文。
 >
@@ -2299,7 +2299,7 @@ Google 代碼庫中必須啟動可以在父上下文被取消後運行的後台�
 
 另見：
 
-* [上下文和結構體]
+- [上下文和結構體]
 
 [上下文和結構體]: https://go.dev/blog/context-and-structs
 
@@ -2353,10 +2353,10 @@ func Key() string {
 
 在不閱讀測試源碼的情況下，應該能夠診斷出測試的失敗原因。測試應該提供有幫助的消息來詳細說明：
 
-* 導致失敗的原因
-* 什麼輸入導致了錯誤
-* 實際結果
-* 預期的結果
+- 導致失敗的原因
+- 什麼輸入導致了錯誤
+- 實際結果
+- 預期的結果
 
 下面概述了實現此目標的具體慣例。
 
@@ -2436,9 +2436,9 @@ func TestBlogPost_VeritableRant(t *testing.T) {
 
 另見：
 
-* [相等性比較和差異](#types-of-equality)
-* [打印差異](#print-diffs)
-* 有關測試輔助工具和斷言輔助工具之間區別的更多信息，請參見[最佳實踐](best-practices#test-functions)
+- [相等性比較和差異](#types-of-equality)
+- [打印差異](#print-diffs)
+- 有關測試輔助工具和斷言輔助工具之間區別的更多信息，請參見[最佳實踐](best-practices#test-functions)
 
 [有用的失敗消息]: #useful-test-failures
 [`fmt`]: https://golang.org/pkg/fmt/
@@ -2469,7 +2469,6 @@ func TestBlogPost_VeritableRant(t *testing.T) {
 <a id="compare-full-structures"></a>
 
 ### 完整結構比較 Full structure comparisons
-
 
 如果你的函數返回一個結構體（或任何具有多個字段的數據類型，如切片、數組和映射），避免編寫進行手工逐字段比較結構體的測試代碼。相反，構造你期望你的函數返回的數據，並直接使用[深度比較]進行比較。
 
@@ -2569,7 +2568,7 @@ if diff := cmp.Diff(want, got, protocmp.Transform()); diff != "" {
 
 現有代碼可能使用以下較舊的庫，並可能繼續使用它們以保持一致性：
 
-* [`pretty`] 產生美觀的差異報告。然而，它相當故意地將視覺表示相同的值視為等值。特別是，`pretty` 不會捕捉到 nil 切片和空切片之間的差異，對於具有相同字段的不同介面實現不敏感，並且可以使用嵌套映射作為與結構體值比較的基礎。它還在產生差異之前將整個值序列化為字符串，因此不適合比較大值。默認情況下，它比較未導出的字段，這使它對依賴性中的實現細節的變化很敏感。因此，不適合在 protobuf 消息上使用 `pretty`。
+- [`pretty`] 產生美觀的差異報告。然而，它相當故意地將視覺表示相同的值視為等值。特別是，`pretty` 不會捕捉到 nil 切片和空切片之間的差異，對於具有相同字段的不同介面實現不敏感，並且可以使用嵌套映射作為與結構體值比較的基礎。它還在產生差異之前將整個值序列化為字符串，因此不適合比較大值。默認情況下，它比較未導出的字段，這使它對依賴性中的實現細節的變化很敏感。因此，不適合在 protobuf 消息上使用 `pretty`。
 
 [`pretty`]: https://pkg.go.dev/github.com/kylelemons/godebug/pretty
 
@@ -2583,20 +2582,20 @@ if diff := cmp.Diff(want, got, protocmp.Transform()); diff != "" {
 
 ### 細節層次 Level of detail
 
-傳統的失敗訊息，適用於大多數Go測試，是
+傳統的失敗訊息，適用於大多數 Go 測試，是
 `YourFunc(%v) = %v, want %v`。然而，在某些情況下，可能需要更多或更少的細節：
 
-* 執行複雜互動的測試應該描述這些互動。例如，如果同一個`YourFunc`被多次呼叫，應該識別哪次呼叫導致測試失敗。如果系統的額外狀態很重要，應該在失敗輸出中包含這些資訊（或至少在日誌中）。
-* 如果數據是一個包含大量樣板的複雜結構，只描述訊息中重要的部分是可以接受的，但不要過度隱藏數據。
-* 設置失敗不需要同樣的細節層次。如果一個測試助手填充了一個Spanner表，但Spanner當機了，你可能不需要包含你打算儲存在數據庫中的哪個測試輸入。通常`t.Fatalf("Setup: Failed to set up test database: %s", err)`就足夠有幫助來解決問題。
+- 執行複雜互動的測試應該描述這些互動。例如，如果同一個`YourFunc`被多次呼叫，應該識別哪次呼叫導致測試失敗。如果系統的額外狀態很重要，應該在失敗輸出中包含這些資訊（或至少在日誌中）。
+- 如果數據是一個包含大量樣板的複雜結構，只描述訊息中重要的部分是可以接受的，但不要過度隱藏數據。
+- 設置失敗不需要同樣的細節層次。如果一個測試助手填充了一個 Spanner 表，但 Spanner 當機了，你可能不需要包含你打算儲存在數據庫中的哪個測試輸入。通常`t.Fatalf("Setup: Failed to set up test database: %s", err)`就足夠有幫助來解決問題。
 
 **提示：** 在開發過程中觸發你的失敗模式。審視失敗訊息的樣子，以及維護者是否能有效處理失敗。
 
 以下是一些清晰重現測試輸入和輸出的技巧：
 
-* 在打印字符串數據時，[`%q`經常很有用](#use-percent-q)來強調值的重要性，並更容易發現錯誤的值。
-* 在打印（小）結構時，`%+v`可能比`%v`更有用。
-* 當大值的驗證失敗時，[打印差異](#print-diffs)可以使理解失敗變得更容易。
+- 在打印字符串數據時，[`%q`經常很有用](#use-percent-q)來強調值的重要性，並更容易發現錯誤的值。
+- 在打印（小）結構時，`%+v`可能比`%v`更有用。
+- 當大值的驗證失敗時，[打印差異](#print-diffs)可以使理解失敗變得更容易。
 
 <a id="print-diffs"></a>
 
@@ -2606,9 +2605,9 @@ if diff := cmp.Diff(want, got, protocmp.Transform()); diff != "" {
 
 為了計算這些值的差異，首選使用`cmp.Diff`，特別是對於新的測試和新的代碼，但也可以使用其他工具。有關每個函數的優缺點，請參見[等值類型]的指南。
 
-* [`cmp.Diff`]
+- [`cmp.Diff`]
 
-* [`pretty.Compare`]
+- [`pretty.Compare`]
 
 你可以使用[`diff`]包來比較多行字符串或字符串列表。你可以將其作為其他類型差異的構建塊。
 
@@ -2622,9 +2621,9 @@ if diff := cmp.Diff(want, got, protocmp.Transform()); diff != "" {
 這些例子中期望和實際值的順序顛倒是有意的，因為這是Google代碼庫中普遍的順序。關於使用哪個順序也沒有明確立場，因為沒有共識哪個是“最易讀的。”
 -->
 
-* 當你使用`cmp`、`pretty`和`diff`包時（如果你將`(want, got)`傳遞給函數），像`diff (-want +got)`這樣的東西是好的，因為你添加到格式字符串的`-`和`+`將與實際出現在差異行開頭的`-`和`+`匹配。如果你將`(got, want)`傳遞給你的函數，正確的鍵將是`(-got +want)`。
+- 當你使用`cmp`、`pretty`和`diff`包時（如果你將`(want, got)`傳遞給函數），像`diff (-want +got)`這樣的東西是好的，因為你添加到格式字符串的`-`和`+`將與實際出現在差異行開頭的`-`和`+`匹配。如果你將`(got, want)`傳遞給你的函數，正確的鍵將是`(-got +want)`。
 
-* `messagediff`包使用不同的輸出格式，所以當你使用它時（如果你將`(want, got)`傳遞給函數），`diff (want -> got)`訊息是合適的，因為箭頭的方向將與“修改”行中的箭頭方向匹配。
+- `messagediff`包使用不同的輸出格式，所以當你使用它時（如果你將`(want, got)`傳遞給函數），`diff (want -> got)`訊息是合適的，因為箭頭的方向將與“修改”行中的箭頭方向匹配。
 
 差異將跨越多行，所以你應該在打印差異之前打印一個換行符。
 
@@ -2634,11 +2633,11 @@ if diff := cmp.Diff(want, got, protocmp.Transform()); diff != "" {
 
 當單元測試進行字符串比較或使用普通的`cmp`來檢查特定輸入是否返回特定類型的錯誤時，如果將來這些錯誤訊息被改寫，你可能會發現你的測試很脆弱。由於這可能將你的單元測試變成變更檢測器（參見[ToTT: 考慮有害的變更檢測器測試][tott-350]），不要使用字符串比較來檢查你的函數返回了哪種類型的錯誤。然而，允許使用字符串比較來檢查來自被測試包的錯誤訊息是否滿足某些特性，例如，它是否包含了參數名稱。
 
-Go中的錯誤值通常有一部分是為人眼而設計的，一部分是為了語義控制流程。測試應該只檢查可以可靠觀察到的語義信息，而不是為人類調試而設計的顯示信息，因為這經常會受到未來變化的影響。有關構建具有語義意義的錯誤的指南，請參見[關於錯誤的最佳實踐](best-practices#error-handling)。如果來自你無法控制的依賴項的錯誤缺乏語義信息，考慮對所有者提出錯誤報告以幫助改進API，而不是依賴於解析錯誤訊息。
+Go 中的錯誤值通常有一部分是為人眼而設計的，一部分是為了語義控制流程。測試應該只檢查可以可靠觀察到的語義信息，而不是為人類調試而設計的顯示信息，因為這經常會受到未來變化的影響。有關構建具有語義意義的錯誤的指南，請參見[關於錯誤的最佳實踐](best-practices#error-handling)。如果來自你無法控制的依賴項的錯誤缺乏語義信息，考慮對所有者提出錯誤報告以幫助改進 API，而不是依賴於解析錯誤訊息。
 
 在單元測試中，通常只關心是否發生了錯誤。如果是這樣，那麼當你期望出現錯誤時，只測試錯誤是否非空就足夠了。如果你想測試錯誤在語義上是否與某些其他錯誤匹配，那麼考慮使用[`errors.Is`]或`cmp`與[`cmpopts.EquateErrors`]。
 
-> **注意：** 如果一個測試使用了[`cmpopts.EquateErrors`]，但它的所有`wantErr`值要么是`nil`要么是`cmpopts.AnyError`，那麼使用`cmp`是[不必要的機制](guide#least-mechanism)。通過將want字段簡化為`bool`來簡化代碼。然後你可以使用一個簡單的比較與`!=`。
+> **注意：** 如果一個測試使用了[`cmpopts.EquateErrors`]，但它的所有`wantErr`值要么是`nil`要么是`cmpopts.AnyError`，那麼使用`cmp`是[不必要的機制](guide#least-mechanism)。通過將 want 字段簡化為`bool`來簡化代碼。然後你可以使用一個簡單的比較與`!=`。
 >
 > ```go
 > // 較佳：
@@ -2664,10 +2663,10 @@ Go中的錯誤值通常有一部分是為人眼而設計的，一部分是為了
 
 ### 子測試 Subtests
 
-標準Go測試庫提供了一種[定義子測試]的功能。這允許在設置和清理、控制並行性以及測試過濾方面提供靈活性。子測試可能很有用（特別是對於表驅動測試），但使用它們並非強制性的。另見
-[Go博客關於子測試的文章](https://blog.golang.org/subtests)。
+標準 Go 測試庫提供了一種[定義子測試]的功能。這允許在設置和清理、控制並行性以及測試過濾方面提供靈活性。子測試可能很有用（特別是對於表驅動測試），但使用它們並非強制性的。另見
+[Go 博客關於子測試的文章](https://blog.golang.org/subtests)。
 
-子測試不應該依賴其他案例的執行來確保成功或初始狀態，因為預期子測試能夠單獨運行，使用`go test -run`標誌或Bazel [測試過濾]表達式。
+子測試不應該依賴其他案例的執行來確保成功或初始狀態，因為預期子測試能夠單獨運行，使用`go test -run`標誌或 Bazel [測試過濾]表達式。
 
 [定義子測試]: https://pkg.go.dev/testing#hdr-Subtests_and_Sub_benchmarks
 [測試過濾]: https://bazel.build/docs/user-manual#test-filter
@@ -2678,7 +2677,7 @@ Go中的錯誤值通常有一部分是為人眼而設計的，一部分是為了
 
 命名你的子測試，使其在測試輸出中可讀並對測試過濾的用戶在命令行上有用。當你使用`t.Run`創建子測試時，第一個參數被用作測試的描述性名稱。為了確保測試結果對閱讀日誌的人類來說是易讀的，選擇在轉義後仍然有用且可讀的子測試名稱。將子測試名稱視為函數標識符，而不是散文描述。測試運行器會將空格替換為下劃線，並轉義非打印字符。如果你的測試數據受益於更長的描述，請考慮將描述放在一個單獨的字段中（也許是使用`t.Log`打印或與失敗訊息一起）。
 
-子測試可以使用[Go測試運行器]或Bazel [測試過濾]的標誌單獨運行，因此選擇描述性名稱，同時也易於輸入。
+子測試可以使用[Go 測試運行器]或 Bazel [測試過濾]的標誌單獨運行，因此選擇描述性名稱，同時也易於輸入。
 
 > **警告：** 在子測試名稱中使用斜線字符特別不友好，因為它們在測試過濾中有[特殊含義]。
 >
@@ -2741,8 +2740,8 @@ t.Run("AM/PM confusion", ...)
 
 當許多不同的測試案例可以使用類似的測試邏輯進行測試時，請使用表驅動測試。
 
-* 當測試函數的實際輸出是否等於預期輸出時。例如，許多[`fmt.Sprintf`的測試]或下面的最小片段。
-* 當測試函數的輸出始終符合同一組不變量時。例如，[`net.Dial`的測試]。
+- 當測試函數的實際輸出是否等於預期輸出時。例如，許多[`fmt.Sprintf`的測試]或下面的最小片段。
+- 當測試函數的輸出始終符合同一組不變量時。例如，[`net.Dial`的測試]。
 
 [`fmt.Sprintf`的測試]: https://cs.opensource.google/go/go/+/master:src/fmt/fmt_test.go
 [`net.Dial`的測試]: https://cs.opensource.google/go/go/+/master:src/net/dial_test.go;l=318;drc=5b606a9d2b7649532fe25794fa6b99bd24e7697c
@@ -2969,9 +2968,9 @@ func readFile(t *testing.T, filename string) string {
 
 要在同一套件中寫測試：
 
-* 將測試放在`foo_test.go`文件中
-* 對測試文件使用`package foo`
-* 不要明確導入要測試的套件
+- 將測試放在`foo_test.go`文件中
+- 對測試文件使用`package foo`
+- 不要明確導入要測試的套件
 
 ```build
 # 較佳：
@@ -3005,43 +3004,43 @@ go_test(
 
 並不總是適合或甚至可能在與被測試代碼相同的套件中定義測試。在這些情況下，使用帶有`_test`後綴的套件名稱。這是對[套件名稱](#package-names)中“無下劃線”規則的一個例外。例如：
 
-* 如果集成測試沒有一個明顯屬於它的套件
+- 如果集成測試沒有一個明顯屬於它的套件
 
-    ```go
-    // 好的範例：
-    package gmailintegration_test
+  ```go
+  // 好的範例：
+  package gmailintegration_test
 
-    import "testing"
-    ```
+  import "testing"
+  ```
 
-* 如果在同一套件中定義測試會導致循環依賴
+- 如果在同一套件中定義測試會導致循環依賴
 
-    ```go
-    // 好的範例：
-    package fireworks_test
+  ```go
+  // 好的範例：
+  package fireworks_test
 
-    import (
-      "fireworks"
-      "fireworkstestutil" // fireworkstestutil 也導入了 fireworks
-    )
-    ```
+  import (
+    "fireworks"
+    "fireworkstestutil" // fireworkstestutil 也導入了 fireworks
+  )
+  ```
 
 <a id="use-package-testing"></a>
 
 ### 使用 `testing` 套件
 
-Go標準庫提供了[`testing`套件]。這是Google代碼庫中Go代碼唯一允許使用的測試框架。特別是，不允許使用[斷言庫](#assert)和第三方測試框架。
+Go 標準庫提供了[`testing`套件]。這是 Google 代碼庫中 Go 代碼唯一允許使用的測試框架。特別是，不允許使用[斷言庫](#assert)和第三方測試框架。
 
 `testing`套件為編寫良好的測試提供了一套最小但完整的功能：
 
-* 頂層測試
-* 基準測試
-* [可運行範例](https://blog.golang.org/examples)
-* 子測試
-* 日誌記錄
-* 失敗和致命失敗
+- 頂層測試
+- 基準測試
+- [可運行範例](https://blog.golang.org/examples)
+- 子測試
+- 日誌記錄
+- 失敗和致命失敗
 
-這些旨在與核心語言特性如[複合字面量]和[帶初始化器的if語句]語法協同工作，使測試作者能夠編寫[清晰、可讀和可維護的測試]。
+這些旨在與核心語言特性如[複合字面量]和[帶初始化器的 if 語句]語法協同工作，使測試作者能夠編寫[清晰、可讀和可維護的測試]。
 
 [`testing`套件]: https://pkg.go.dev/testing
 [複合字面量]: https://go.dev/ref/spec#Composite_literals
@@ -3053,12 +3052,12 @@ Go標準庫提供了[`testing`套件]。這是Google代碼庫中Go代碼唯一�
 
 風格指南無法列舉所有事項的正面規定，也無法列舉所有它不提供意見的事項。話雖如此，以下是一些可讀性社群之前曾經討論過但尚未達成共識的事項。
 
-* **使用零值初始化局部變量**。`var i int`和`i := 0`是等價的。另見[初始化最佳實踐]。
-* **空的複合字面量與`new`或`make`的對比**。`&File{}`和`new(File)`是等價的。`map[string]bool{}`和`make(map[string]bool)`也是如此。另見[複合聲明最佳實踐]。
-* **在cmp.Diff調用中got, want參數排序**。保持局部一致性，
-    並在您的失敗訊息中[包含一個圖例](#print-diffs)。
-* **`errors.New`與`fmt.Errorf`在非格式化字符串上的使用**。
-    `errors.New("foo")`和`fmt.Errorf("foo")`可以互換使用。
+- **使用零值初始化局部變量**。`var i int`和`i := 0`是等價的。另見[初始化最佳實踐]。
+- **空的複合字面量與`new`或`make`的對比**。`&File{}`和`new(File)`是等價的。`map[string]bool{}`和`make(map[string]bool)`也是如此。另見[複合聲明最佳實踐]。
+- **在 cmp.Diff 調用中 got, want 參數排序**。保持局部一致性，
+  並在您的失敗訊息中[包含一個圖例](#print-diffs)。
+- **`errors.New`與`fmt.Errorf`在非格式化字符串上的使用**。
+  `errors.New("foo")`和`fmt.Errorf("foo")`可以互換使用。
 
 如果在特殊情況下它們再次出現，可讀性導師可能會做出一個可選的評論，但通常作者可以自由選擇他們在給定情況下偏好的風格。
 
