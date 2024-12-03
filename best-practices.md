@@ -216,7 +216,7 @@ type Stub struct{}
 func (Stub) Charge(*creditcard.Card, money.Money) error { return nil }
 ```
 
-這絕對比像 `StubService` 或非常差的 `StubCreditCardService` 這樣的命名選擇更好，因為基礎包名和其領域類型暗示了 `creditcardtest.Stub` 是什麼。
+這絕對比像 `StubService` 或非 ��� 差的 `StubCreditCardService` 這樣的命名選擇更好，因為基礎包名和其領域類型暗示了 `creditcardtest.Stub` 是什麼。
 
 最後，如果包是用 Bazel 構建的，請確保新的 `go_library` 規則標記為 `testonly`：
 
@@ -921,76 +921,37 @@ log.V(2).Infof("處理 %v", sql.Explain())
 
 <a id="program-init"></a>
 
-### Program initialization
+### 程式初始化 (Program initialization)
 
-Program initialization errors (such as bad flags and configuration) should be
-propagated upward to `main`, which should call `log.Exit` with an error that
-explains how to fix the error. In these cases, `log.Fatal` should not generally
-be used, because a stack trace that points at the check is not likely to be as
-useful as a human-generated, actionable message.
+程式初始化錯誤（例如錯誤的標誌和配置）應該向上傳遞到 `main`，`main` 應該調用 `log.Exit` 並附帶解釋如何修復錯誤的訊息。在這些情況下，一般不應使用 `log.Fatal`，因為指向檢查的堆疊追蹤不太可能像人類生成的可操作訊息那樣有用。
 
 <a id="checks-and-panics"></a>
 
-### Program checks and panics
+### 程式檢查和恐慌 (Program checks and panics)
 
-As stated in the [decision against panics], standard error handling should be
-structured around error return values. Libraries should prefer returning an
-error to the caller rather than aborting the program, especially for transient
-errors.
+如[反對恐慌的決定]所述，標準錯誤處理應圍繞錯誤返回值進行結構化。庫應該更傾向於向調用者返回錯誤，而不是中止程式，特別是對於臨時錯誤。
 
-It is occasionally necessary to perform consistency checks on an invariant and
-terminate the program if it is violated. In general, this is only done when a
-failure of the invariant check means that the internal state has become
-unrecoverable. The most reliable way to do this in the Google codebase is to
-call `log.Fatal`. Using `panic` in these cases is not reliable, because it is
-possible for deferred functions to deadlock or further corrupt internal or
-external state.
+有時需要對不變量進行一致性檢查，如果違反則終止程式。一般來說，只有當不變量檢查失敗意味著內部狀態已經無法恢復時才會這樣做。在 Google 代碼庫中，最可靠的方法是調用 `log.Fatal`。在這些情況下使用 `panic` 不可靠，因為延遲函數可能會死鎖或進一步損壞內部或外部狀態。
 
-Similarly, resist the temptation to recover panics to avoid crashes, as doing so
-can result in propagating a corrupted state. The further you are from the panic,
-the less you know about the state of the program, which could be holding locks
-or other resources. The program can then develop other unexpected failure modes
-that can make the problem even more difficult to diagnose. Instead of trying to
-handle unexpected panics in code, use monitoring tools to surface unexpected
-failures and fix related bugs with a high priority.
+同樣，抵制恢復恐慌以避免崩潰的誘惑，因為這樣做可能會導致傳播損壞的狀態。離恐慌越遠，你對程式狀態的了解就越少，程式可能持有鎖或其他資源。然後程式可能會出現其他意想不到的故障模式，使問題更難診斷。與其嘗試在代碼中處理意外的恐慌，不如使用監控工具來顯示意外的故障，並優先修復相關的錯誤。
 
-**Note:** The standard [`net/http` server] violates this advice and recovers
-panics from request handlers. Consensus among experienced Go engineers is that
-this was a historical mistake. If you sample server logs from application
-servers in other languages, it is common to find large stacktraces that are left
-unhandled. Avoid this pitfall in your servers.
+**注意：** 標準的 [`net/http` 服務器] 違反了這個建議，並從請求處理程序中恢復恐慌。經驗豐富的 Go 工程師一致認為這是歷史性的錯誤。如果你從其他語言的應用服務器中抽樣服務器日誌，通常會發現大量未處理的堆棧跟踪。在你的服務器中避免這個陷阱。
 
-[decision against panics]: https://google.github.io/styleguide/go/decisions#dont-panic
-[`net/http` server]: https://pkg.go.dev/net/http#Server
+[反對恐慌的決定]: https://google.github.io/styleguide/go/decisions#dont-panic
+[`net/http` 服務器]: https://pkg.go.dev/net/http#Server
 
 <a id="when-to-panic"></a>
 
-### When to panic
+### 何時恐慌 (When to panic)
 
-The standard library panics on API misuse. For example, [`reflect`] issues a
-panic in many cases where a value is accessed in a way that suggests it was
-misinterpreted. This is analogous to the panics on core language bugs such as
-accessing an element of a slice that is out of bounds. Code review and tests
-should discover such bugs, which are not expected to appear in production code.
-These panics act as invariant checks that do not depend on a library, as the
-standard library does not have access to the [levelled `log`] package that the
-Google codebase uses.
+標準庫在 API 誤用時會恐慌。例如，[`reflect`] 在許多情況下發出恐慌，當值以表明它被誤解的方式訪問時。這類似於核心語言錯誤的恐慌，例如訪問超出範圍的切片元素。代碼審查和測試應該發現這些錯誤，這些錯誤不應出現在生產代碼中。這些恐慌充當不依賴於庫的不變量檢查，因為標準庫無法訪問 Google 代碼庫使用的[分級 `log`] 包。
 
 [`reflect`]: https://pkg.go.dev/reflect
-[levelled `log`]: decisions#logging
+[分級 `log`]: decisions#logging
 
-Another case in which panics can be useful, though uncommon, is as an internal
-implementation detail of a package which always has a matching recover in the
-callchain. Parsers and similar deeply nested, tightly coupled internal function
-groups can benefit from this design, where plumbing error returns adds
-complexity without value. The key attribute of this design is that these panics
-are never allowed to escape across package boundaries and do not form part of
-the package's API. This is typically accomplished with a top-level deferred
-recover that translates a propagating panic into a returned error at the public
-API surfaces.
+另一種恐慌可能有用的情況，雖然不常見，是作為包的內部實現細節，總是在調用鏈中有匹配的恢復。解析器和類似的深度嵌套、緊密耦合的內部函數組可以從這種設計中受益，其中管道錯誤返回增加了複雜性而沒有價值。這種設計的關鍵屬性是這些恐慌永遠不允許跨包邊界傳播，並且不構成包的 API 的一部分。這通常通過頂層延遲恢復來實現，將傳播的恐慌轉換為在公共 API 表面返回的錯誤。
 
-Panic is also used when the compiler cannot identify unreachable code, for
-example when using a function like `log.Fatal` that will not return:
+當編譯器無法識別不可達代碼時，例如使用不會返回的函數
 
 ```go
 // 較佳：
