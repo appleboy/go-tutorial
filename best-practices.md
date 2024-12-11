@@ -1031,13 +1031,11 @@ func Sprintf(format string, data ...any) string
 
 <a id="documentation-conventions-contexts"></a>
 
-#### Contexts
+#### Contexts (上下文)
 
-It is implied that the cancellation of a context argument interrupts the
-function it is provided to. If the function can return an error, conventionally
-it is `ctx.Err()`.
+上下文參數的取消會中斷提供給它的函數，這是隱含的。如果函數可以返回錯誤，通常是 `ctx.Err()`。
 
-This fact does not need to be restated:
+這一事實不需要重述：
 
 ```go
 // 不佳：
@@ -1048,7 +1046,7 @@ This fact does not need to be restated:
 func (Worker) Run(ctx context.Context) error
 ```
 
-Because that is implied, the following is better:
+因為這是隱含的，以下更好：
 
 ```go
 // 較佳：
@@ -1056,11 +1054,9 @@ Because that is implied, the following is better:
 func (Worker) Run(ctx context.Context) error
 ```
 
-Where context behavior is different or non-obvious, it should be expressly
-documented if any of the following are true.
+當上下文行為不同或不明顯時，如果以下任何一項為真，則應明確記錄。
 
-- The function returns an error other than `ctx.Err()` when the context is
-  cancelled:
+- 當上下文被取消時，函數返回 `ctx.Err()` 以外的錯誤：
 
   ```go
   // 較佳：
@@ -1071,38 +1067,35 @@ documented if any of the following are true.
   ```
 
 - The function has other mechanisms that may interrupt it or affect lifetime:
+- 函數有其他機制可能中斷它或影響其生命周期：
 
   ```go
   // 較佳：
-  // Run executes the worker's run loop.
+  // Run 執行工作者的運行循環。
   //
-  // Run processes work until the context is cancelled or Stop is called.
-  // Context cancellation is handled asynchronously internally: run may return
-  // before all work has stopped. The Stop method is synchronous and waits
-  // until all operations from the run loop finish. Use Stop for graceful
-  // shutdown.
+  // Run 處理工作，直到上下文被取消或調用 Stop。
+  // 上下文取消在內部異步處理：run 可能在所有工作停止之前返回。
+  // Stop 方法是同步的，並等待運行循環中的所有操作完成。
+  // 使用 Stop 進行優雅的關閉。
   func (Worker) Run(ctx context.Context) error
 
   func (Worker) Stop()
   ```
 
-- The function has special expectations about context lifetime, lineage, or
-  attached values:
+- 函數對上下文生命周期、血統或附加值有特殊期望：
 
   ```go
   // 較佳：
-  // NewReceiver starts receiving messages sent to the specified queue.
-  // The context should not have a deadline.
+  // NewReceiver 開始接收發送到指定隊列的消息。
+  // 上下文不應該有截止日期。
   func NewReceiver(ctx context.Context) *Receiver
 
-  // Principal returns a human-readable name of the party who made the call.
-  // The context must have a value attached to it from security.NewContext.
+  // Principal 返回發起調用的方的可讀名稱。
+  // 上下文必須具有從 security.NewContext 附加的值。
   func Principal(ctx context.Context) (name string, ok bool)
   ```
 
-  **Warning:** Avoid designing APIs that make such demands (like contexts not
-  having deadlines) from their callers. The above is only an example of how to
-  document this if it cannot be avoided, not an endorsement of the pattern.
+**警告：** 避免設計使其調用者做出這樣要求（如上下文沒有截止日期）的 API。上述僅是如何記錄這種情況的示例，而不是對該模式的認可。
 
 <a id="documentation-conventions-concurrency"></a>
 
