@@ -1066,7 +1066,6 @@ func (Worker) Run(ctx context.Context) error
   func (Worker) Run(ctx context.Context) error
   ```
 
-- The function has other mechanisms that may interrupt it or affect lifetime:
 - 函數有其他機制可能中斷它或影響其生命周期：
 
   ```go
