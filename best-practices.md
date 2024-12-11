@@ -968,42 +968,36 @@ func answer(i int) string {
 }
 ````
 
-[Do not call `log` functions before flags have been parsed.](https://pkg.go.dev/github.com/golang/glog#pkg-overview)
-If you must die in an `init` func, a panic is acceptable in place of the logging
-call.
+[在標誌解析之前不要調用 `log` 函數。](https://pkg.go.dev/github.com/golang/glog#pkg-overview)
+如果你必須在 `init` 函數中終止，恐慌（panic）是可以接受的，代替記錄調用。
 
 <a id="documentation"></a>
 
-## Documentation
+## Documentation (文件)
 
 <a id="documentation-conventions"></a>
 
-### Conventions
+### Conventions (慣例)
 
-This section augments the decisions document's [commentary] section.
+本節補充了決策文件的[評論]部分。
 
-Go code that is documented in familiar style is easier to read and less likely
-to be misused than something misdocumented or not documented at all. Runnable
-[examples] show up in Godoc and Code Search and are an excellent way of
-explaining how to use your code.
+以熟悉的風格記錄的 Go 代碼更易於閱讀，也不太可能被誤用，而不是被錯誤記錄或根本沒有記錄的代碼。可運行的[示例]會顯示在 Godoc 和代碼搜索中，是解釋如何使用代碼的絕佳方式。
 
 [examples]: decisions#examples
 
 <a id="documentation-conventions-params"></a>
 
-#### Parameters and configuration
+#### Parameters and configuration (參數和配置)
 
-Not every parameter must be enumerated in the documentation. This applies to:
+並非每個參數都必須在文檔中列出。這適用於：
 
-- function and method parameters
-- struct fields
-- APIs for options
+- 函數和方法參數
+- 結構字段
+- 選項的 API
 
-Document the error-prone or non-obvious fields and parameters by saying why they
-are interesting.
+通過說明它們為什麼有趣來記錄容易出錯或不明顯的字段和參數。
 
-In the following snippet, the highlighted commentary adds little useful
-information to the reader:
+在以下代碼片段中，突出顯示的評論對讀者幾乎沒有用處：
 
 ```go
 // 不佳：
@@ -1014,36 +1008,26 @@ information to the reader:
 func Sprintf(format string, data ...any) string
 ```
 
-However, this snippet demonstrates a code scenario similar to the previous where
-the commentary instead states something non-obvious or materially helpful to the
-reader:
+然而，這個片段展示了一個類似於前面的代碼場景，其中評論改為說明一些不明顯或對讀者有實質幫助的內容：
 
 ```go
 // 較佳：
-// Sprintf formats according to a format specifier and returns the resulting
-// string.
+// Sprintf 根據格式規範進行格式化並返回結果字符串。
 //
-// The provided data is used to interpolate the format string. If the data does
-// not match the expected format verbs or the amount of data does not satisfy
-// the format specification, the function will inline warnings about formatting
-// errors into the output string as described by the Format errors section
-// above.
+// 提供的數據用於插值格式字符串。如果數據與預期的格式動詞不匹配或數據量不滿足格式規範，該函數將根據上面描述的格式錯誤部分將格式錯誤警告內聯到輸出字符串中。
 func Sprintf(format string, data ...any) string
 ```
 
-Consider your likely audience in choosing what to document and at what depth.
-Maintainers, newcomers to the team, external users, and even yourself six months
-in the future may appreciate slightly different information from what is on your
-mind when you first come to write your docs.
+在選擇記錄什麼以及記錄到什麼深度時，請考慮你的可能受眾。維護者、團隊的新成員、外部用戶，甚至是六個月後的你自己，可能會欣賞與你首次編寫文檔時所想的略有不同的信息。
 
-See also:
+另請參見：
 
-- [GoTip #41: Identify Function Call Parameters]
-- [GoTip #51: Patterns for Configuration]
+- [GoTip #41: 識別函數調用參數]
+- [GoTip #51: 配置模式]
 
 [commentary]: decisions#commentary
-[GoTip #41: Identify Function Call Parameters]: https://google.github.io/styleguide/go/index.html#gotip
-[GoTip #51: Patterns for Configuration]: https://google.github.io/styleguide/go/index.html#gotip
+[GoTip #41: 識別函數調用參數]: https://google.github.io/styleguide/go/index.html#gotip
+[GoTip #51: 配置模式]: https://google.github.io/styleguide/go/index.html#gotip
 
 <a id="documentation-conventions-contexts"></a>
 
