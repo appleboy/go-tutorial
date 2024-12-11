@@ -1099,30 +1099,28 @@ func (Worker) Run(ctx context.Context) error
 
 <a id="documentation-conventions-concurrency"></a>
 
-#### Concurrency
+#### Concurrency (並發)
 
-Go users assume that conceptually read-only operations are safe for concurrent
-use and do not require extra synchronization.
+Go 使用者假設概念上只讀操作是安全的，可以並發使用，且不需要額外的同步。
 
-The extra remark about concurrency can safely be removed in this Godoc:
+在這個 Godoc 中，可以安全地刪除關於並發的額外說明：
 
 ```go
-// Len returns the number of bytes of the unread portion of the buffer;
-// b.Len() == len(b.Bytes()).
+// Len 返回緩衝區未讀部分的字節數；
+// b.Len() == len(b.Bytes())。
 //
-// It is safe to be called concurrently by multiple goroutines.
+// 它可以安全地被多個 goroutine 並發調用。
 func (*Buffer) Len() int
 ```
 
-Mutating operations, however, are not assumed to be safe for concurrent use and
-require the user to consider synchronization.
+然而，變更操作則不假設是安全的並發使用，並且需要使用者考慮同步。
 
-Similarly, the extra remark about concurrency can safely be removed here:
+同樣，關於並發的額外說明可以安全地刪除：
 
 ```go
-// Grow grows the buffer's capacity.
+// Grow 增加緩衝區的容量。
 //
-// It is not safe to be called concurrently by multiple goroutines.
+// 它不安全，不能被多個 goroutine 並發調用。
 func (*Buffer) Grow(n int)
 ```
 
