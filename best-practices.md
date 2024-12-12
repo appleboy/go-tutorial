@@ -916,6 +916,7 @@ for _, sql := range queries {
 // 不佳：
 // 即使這個日誌沒有被打印，sql.Explain 也會被呼叫。
 log.V(2).Infof("處理 %v", sql.Explain())
+```
 
 [`log.V`]: https://pkg.go.dev/github.com/golang/glog#V
 
