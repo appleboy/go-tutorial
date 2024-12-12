@@ -1123,41 +1123,38 @@ func (*Buffer) Len() int
 func (*Buffer) Grow(n int)
 ```
 
-Documentation is strongly encouraged if any of the following are true.
+如果以下任何一項為真，強烈建議進行文檔記錄。
 
-- It is unclear whether the operation is read-only or mutating:
+- 不清楚操作是只讀還是變更：
 
   ```go
   // 較佳：
   package lrucache
 
-  // Lookup returns the data associated with the key from the cache.
+  // Lookup 返回緩存中與鍵相關聯的數據。
   //
-  // This operation is not safe for concurrent use.
+  // 此操作不安全，不能並發使用。
   func (*Cache) Lookup(key string) (data []byte, ok bool)
   ```
 
-  Why? A cache hit when looking up the key mutate a LRU cache internally. How
-  this is implemented may not be obvious to all readers.
+為什麼？查找鍵時的緩存命中會在內部更改 LRU 緩存。這種實現方式對所有讀者來說可能並不明顯。
 
-- Synchronization is provided by the API:
+- 同步由 API 提供：
 
   ```go
   // 較佳：
   package fortune_go_proto
 
-  // NewFortuneTellerClient returns an *rpc.Client for the FortuneTeller service.
-  // It is safe for simultaneous use by multiple goroutines.
+  // NewFortuneTellerClient 返回一個用於 FortuneTeller 服務的 *rpc.Client。
+  // 它可以安全地被多個 goroutine 同時使用。
   func NewFortuneTellerClient(cc *rpc.ClientConn) *FortuneTellerClient
   ```
 
-  Why? Stubby provides synchronization.
+為什麼？Stubby 提供同步。
 
-  **Note:** If the API is a type and the API provides synchronization in
-  entirety, conventionally only the type definition documents the semantics.
+**注意：** 如果 API 是一種類型，並且 API 完全提供同步，通常只有類型定義記錄語義。
 
-- The API consumes user-implemented types of interfaces, and the interface's
-  consumer has particular concurrency requirements:
+- API 消費者使用用戶實現的接口類型，並且接口的消費者有特定的並發要求：
 
   ```go
   // 較佳：
@@ -1165,20 +1162,17 @@ Documentation is strongly encouraged if any of the following are true.
 
   // A Watcher reports the health of some entity (usually a backend service).
   //
-  // Watcher methods are safe for simultaneous use by multiple goroutines.
+  // Watcher 方法可以安全地被多個 goroutine 同時使用。
   type Watcher interface {
-      // Watch sends true on the passed-in channel when the Watcher's
-      // status has changed.
-      Watch(changed chan<- bool) (unwatch func())
+    // Watch 當 Watcher 的狀態發生變化時，會在傳入的通道上發送 true。
+    Watch(changed chan<- bool) (unwatch func())
 
-      // Health returns nil if the entity being watched is healthy, or a
-      // non-nil error explaining why the entity is not healthy.
-      Health() error
+    // Health 如果被監視的實體是健康的，則返回 nil，否則返回一個非 nil 的錯誤，解釋為什麼實體不健康。
+    Health() error
   }
   ```
 
-  Why? Whether an API is safe for use by multiple goroutines is part of its
-  contract.
+為什麼？API 是否可以安全地被多個 goroutine 使用是其契約的一部分。
 
 <a id="documentation-conventions-cleanup"></a>
 
