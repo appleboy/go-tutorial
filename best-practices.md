@@ -912,7 +912,7 @@ for _, sql := range queries {
 }
 ```
 
-````go
+```go
 // 不佳：
 // 即使這個日誌沒有被打印，sql.Explain 也會被呼叫。
 log.V(2).Infof("處理 %v", sql.Explain())
@@ -967,7 +967,7 @@ func answer(i int) string {
         panic("unreachable")
     }
 }
-````
+```
 
 [在標誌解析之前不要調用 `log` 函數。](https://pkg.go.dev/github.com/golang/glog#pkg-overview)
 如果你必須在 `init` 函數中終止，恐慌（panic）是可以接受的，代替記錄調用。
