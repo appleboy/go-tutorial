@@ -1274,33 +1274,28 @@ package os
 
 <a id="documentation-preview"></a>
 
-### Preview
+### Preview (預覽)
 
-Go features a
-[documentation server](https://pkg.go.dev/golang.org/x/pkgsite/cmd/pkgsite). It
-is recommended to preview the documentation your code produces both before and
-during the code review process. This helps to validate that the
-[godoc formatting] is rendered correctly.
+Go 提供了一個[文檔服務器](https://pkg.go.dev/golang.org/x/pkgsite/cmd/pkgsite)。建議在代碼審查過程中預覽你的代碼生成的文檔，這有助於驗證[godoc 格式]是否正確渲染。
 
 [godoc formatting]: #godoc-formatting
 
 <a id="godoc-formatting"></a>
 
-### Godoc formatting
+### Godoc formatting (Godoc 格式化)
 
-[Godoc] provides some specific syntax to [format documentation].
+[Godoc] 提供了一些特定的語法來[格式化文檔]。
 
-- A blank line is required to separate paragraphs:
+- 段落之間需要空行：
 
   ```go
   // 較佳：
-  // LoadConfig reads a configuration out of the named file.
+  // LoadConfig 從指定的文件中讀取配置。
   //
-  // See some/shortlink for config file format details.
+  // 有關配置文件格式的詳細信息，請參見 some/shortlink。
   ```
 
-- Test files can contain [runnable examples] that appear attached to the
-  corresponding documentation in godoc:
+- 測試文件可以包含[可運行的示例]，這些示例會附加到 godoc 中的相應文檔：
 
   ```go
   // 較佳：
@@ -1318,37 +1313,33 @@ during the code review process. This helps to validate that the
   }
   ```
 
-- Indenting lines by an additional two spaces formats them verbatim:
+- 行首額外縮進兩個空格會按原樣格式化它們：
 
   ```go
   // 較佳：
-  // Update runs the function in an atomic transaction.
+  // Update 以原子交易方式運行該函數。
   //
-  // This is typically used with an anonymous TransactionFunc:
+  // 這通常與匿名的 TransactionFunc 一起使用：
   //
   //   if err := db.Update(func(state *State) { state.Foo = bar }); err != nil {
   //     //...
   //   }
   ```
 
-  Note, however, that it can often be more appropriate to put code in a
-  runnable example instead of including it in a comment.
+請注意，將代碼放在可運行的示例中通常比將其包含在註釋中更合適。
 
-  This verbatim formatting can be leveraged for formatting that is not native
-  to godoc, such as lists and tables:
+這種逐字格式化可以用於 godoc 本身不支持的格式，例如列表和表格：
 
-  ```go
-  // 較佳：
-  // LoadConfig reads a configuration out of the named file.
-  //
-  // LoadConfig treats the following keys in special ways:
-  //   "import" will make this configuration inherit from the named file.
-  //   "env" if present will be populated with the system environment.
-  ```
+```go
+// 較佳：
+// LoadConfig 從指定的文件中讀取配置。
+//
+// LoadConfig 以特殊方式處理以下鍵：
+//   "import" 將使此配置繼承自指定文件。
+//   "env" 如果存在，將用系統環境填充。
+```
 
-- A single line that begins with a capital letter, contains no punctuation
-  except parentheses and commas, and is followed by another paragraph, is
-  formatted as a header:
+- 以大寫字母開頭的單行，不包含標點符號（括號和逗號除外），並且後面跟著另一個段落，會被格式化為標題：
 
   ```go
   // 較佳：
@@ -1360,8 +1351,8 @@ during the code review process. This helps to validate that the
   ```
 
 [Godoc]: https://pkg.go.dev/
-[format documentation]: https://go.dev/doc/comment
-[runnable examples]: decisions#examples
+[格式化文檔]: https://go.dev/doc/comment
+[可運行的示例]: decisions#examples
 
 <a id="signal-boost"></a>
 
