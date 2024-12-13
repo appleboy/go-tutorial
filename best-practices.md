@@ -1219,25 +1219,21 @@ func (c *Client) Get(url string) (resp *Response, err error)
 
 <a id="documentation-conventions-errors"></a>
 
-#### Errors
+#### Errors (錯誤)
 
-Document significant error sentinel values or error types that your functions
-return to callers so that callers can anticipate what types of conditions they
-can handle in their code.
+記錄你的函數返回給調用者的重要錯誤哨兵值或錯誤類型，以便調用者可以預期他們可以在代碼中處理哪些類型的情況。
 
 ```go
 // 較佳：
 package os
 
-// Read reads up to len(b) bytes from the File and stores them in b. It returns
-// the number of bytes read and any error encountered.
+// Read 從文件中讀取最多 len(b) 字節並將它們存儲在 b 中。它返回讀取的字節數和遇到的任何錯誤。
 //
-// At end of file, Read returns 0, io.EOF.
+// 在文件結尾，Read 返回 0 和 io.EOF。
 func (*File) Read(b []byte) (n int, err error) {
 ```
 
-When a function returns a specific error type, correctly note whether the error
-is a pointer receiver or not:
+當函數返回特定錯誤類型時，正確註明錯誤是否為指針接收者：
 
 ```go
 // 較佳：
@@ -1249,45 +1245,32 @@ type PathError struct {
     Err  error
 }
 
-// Chdir changes the current working directory to the named directory.
+// Chdir 更改當前工作目錄為指定目錄。
 //
-// If there is an error, it will be of type *PathError.
+// 如果有錯誤，它將是 *PathError 類型。
 func Chdir(dir string) error {
 ```
 
-Documenting whether the values returned are pointer receivers enables callers to
-correctly compare the errors using [`errors.Is`], [`errors.As`], and
-[`package cmp`]. This is because a non-pointer value is not equivalent to a
-pointer value.
+記錄返回值是否為指針接收者，使調用者能夠正確地使用 [`errors.Is`]、[`errors.As`] 和 [`package cmp`] 來比較錯誤。這是因為非指針值不等同於指針值。
 
-**Note:** In the `Chdir` example, the return type is written as `error` rather
-than `*PathError` due to
-[how nil interface values work](https://go.dev/doc/faq#nil_error).
+**注意：** 在 `Chdir` 示例中，返回類型寫為 `error` 而不是 `*PathError`，這是由於[空接口值的工作方式](https://go.dev/doc/faq#nil_error)。
 
-Document overall error conventions in the
-[package's documentation](decisions#package-comments) when the behavior is
-applicable to most errors found in the package:
+當行為適用於包中的大多數錯誤時，在[包的文檔](decisions#package-comments)中記錄整體錯誤約定：
 
 ```go
 // 較佳：
-// Package os provides a platform-independent interface to operating system
-// functionality.
+// Package os 提供與操作系統功能的跨平台接口。
 //
-// Often, more information is available within the error. For example, if a
-// call that takes a file name fails, such as Open or Stat, the error will
-// include the failing file name when printed and will be of type *PathError,
-// which may be unpacked for more information.
+// 通常，錯誤中會包含更多信息。例如，如果一個需要文件名的調用失敗，如 Open 或 Stat，錯誤將在打印時包含失敗的文件名，並且將是 *PathError 類型，可以解包以獲取更多信息。
 package os
 ```
 
-Thoughtful application of these approaches can add
-[extra information to errors](#error-extra-info) without much effort and help
-callers avoid adding redundant annotations.
+深思熟慮地應用這些方法可以在不費太多力氣的情況下為錯誤添加[額外信息](#error-extra-info)，並幫助調用者避免添加冗餘的註釋。
 
-See also:
+另請參見：
 
-- [Go Tip #106: Error Naming Conventions](https://google.github.io/styleguide/go/index.html#gotip)
-- [Go Tip #89: When to Use Canonical Status Codes as Errors](https://google.github.io/styleguide/go/index.html#gotip)
+- [Go Tip #106: 錯誤命名慣例](https://google.github.io/styleguide/go/index.html#gotip)
+- [Go Tip #89: 何時使用標準狀態碼作為錯誤](https://google.github.io/styleguide/go/index.html#gotip)
 
 <a id="documentation-preview"></a>
 
