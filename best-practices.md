@@ -1177,19 +1177,17 @@ func (*Buffer) Grow(n int)
 
 <a id="documentation-conventions-cleanup"></a>
 
-#### Cleanup
+#### Cleanup (清理)
 
-Document any explicit cleanup requirements that the API has. Otherwise, callers
-won't use the API correctly, leading to resource leaks and other possible bugs.
+記錄 API 的任何明確清理要求。否則，調用者將無法正確使用 API，導致資源洩漏和其他可能的錯誤。
 
-Call out cleanups that are up to the caller:
+指出由調用者負責的清理工作：
 
 ```go
 // 較佳：
-// NewTicker returns a new Ticker containing a channel that will send the
-// current time on the channel after each tick.
+// NewTicker 返回一個新的 Ticker，其中包含一個通道，該通道會在每次滴答後發送當前時間。
 //
-// Call Stop to release the Ticker's associated resources when done.
+// 完成後調用 Stop 以釋放 Ticker 的相關資源。
 func NewTicker(d Duration) *Ticker
 
 func (*Ticker) Stop()
@@ -1199,10 +1197,10 @@ If it is potentially unclear how to clean up the resources, explain how:
 
 ```go
 // 較佳：
-// Get issues a GET to the specified URL.
+// Get 發送一個 GET 請求到指定的 URL。
 //
-// When err is nil, resp always contains a non-nil resp.Body.
-// Caller should close resp.Body when done reading from it.
+// 當 err 為 nil 時，resp 總是包含一個非 nil 的 resp.Body。
+// 調用者在讀取完 resp.Body 後應該關閉它。
 //
 //    resp, err := http.Get("http://example.com/")
 //    if err != nil {
@@ -1213,11 +1211,11 @@ If it is potentially unclear how to clean up the resources, explain how:
 func (c *Client) Get(url string) (resp *Response, err error)
 ```
 
-See also:
+另請參見：
 
-- [GoTip #110: Don’t Mix Exit With Defer]
+- [GoTip #110: 不要將 Exit 與 Defer 混用]
 
-[GoTip #110: Don’t Mix Exit With Defer]: https://google.github.io/styleguide/go/index.html#gotip
+[GoTip #110: 不要將 Exit 與 Defer 混用]: https://google.github.io/styleguide/go/index.html#gotip
 
 <a id="documentation-conventions-errors"></a>
 
