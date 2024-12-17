@@ -1356,11 +1356,9 @@ Go 提供了一個[文檔服務器](https://pkg.go.dev/golang.org/x/pkgsite/cmd/
 
 <a id="signal-boost"></a>
 
-### Signal boosting
+### Signal boosting (信號增強)
 
-Sometimes a line of code looks like something common, but actually isn't. One of
-the best examples of this is an `err == nil` check (since `err != nil` is much
-more common). The following two conditional checks are hard to distinguish:
+有時一行代碼看起來像是常見的東西，但實際上不是。最好的例子之一是 `err == nil` 檢查（因為 `err != nil` 更常見）。以下兩個條件檢查很難區分：
 
 ```go
 // 較佳：
@@ -1376,7 +1374,7 @@ if err := doSomething(); err == nil {
 }
 ```
 
-You can instead "boost" the signal of the conditional by adding a comment:
+你可以通過添加註釋來“增強”條件的信號：
 
 ```go
 // 較佳：
@@ -1385,18 +1383,17 @@ if err := doSomething(); err == nil { // if NO error
 }
 ```
 
-The comment draws attention to the difference in the conditional.
+這條註釋引起了對條件差異的注意。
 
 <a id="vardecls"></a>
 
-## Variable declarations
+## Variable declarations (變數宣告)
 
 <a id="vardeclinitialization"></a>
 
-### Initialization
+### Initialization (初始化)
 
-For consistency, prefer `:=` over `var` when initializing a new variable with a
-non-zero value.
+為了一致性，當用非零值初始化新變數時，優先使用 `:=` 而不是 `var`。
 
 ```go
 // 較佳：
