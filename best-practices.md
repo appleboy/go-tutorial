@@ -1407,9 +1407,9 @@ var i = 42
 
 <a id="vardeclzero"></a>
 
-### Non-pointer zero values
+### Non-pointer zero values (非指針零值)
 
-The following declarations use the [zero value]:
+以下宣告使用[零值]：
 
 ```go
 // 較佳：
@@ -1420,11 +1420,9 @@ var (
 )
 ```
 
-[zero value]: https://golang.org/ref/spec#The_zero_value
+[零值]: https://golang.org/ref/spec#The_zero_value
 
-You should declare values using the zero value when you want to convey an empty
-value that **is ready for later use**. Using composite literals with explicit
-initialization can be clunky:
+當你想傳達一個**已準備好供以後使用**的空值時，應該使用零值來宣告值。使用帶有顯式初始化的複合文字可能會很笨拙：
 
 ```go
 // 不佳：
@@ -1435,8 +1433,7 @@ var (
 )
 ```
 
-A common application of zero value declaration is when using a variable as the
-output when unmarshalling:
+零值宣告的一個常見應用是在解組時用作變數的輸出：
 
 ```go
 // 較佳：
@@ -1444,10 +1441,7 @@ var coords Point
 if err := json.Unmarshal(data, &coords); err != nil {
 ```
 
-If you need a lock or other field that [must not be copied](decisions#copying)
-in your struct, you can make it a value type to take advantage of zero value
-initialization. It does mean that the containing type must now be passed via a
-pointer and not a value. Methods on the type must take pointer receivers.
+如果你需要在結構中使用鎖或其他[不能被複製](decisions#copying)的字段，你可以將其設為值類型以利用零值初始化。這意味著包含該字段的類型現在必須通過指針而不是值來傳遞。該類型的方法必須使用指針接收者。
 
 ```go
 // 較佳：
@@ -1462,11 +1456,7 @@ type Counter struct {
 func (c *Counter) IncrementBy(name string, n int64)
 ```
 
-It's acceptable to use value types for local variables of composites (such as
-structs and arrays) even if they contain such uncopyable fields. However, if the
-composite is returned by the function, or if all accesses to it end up needing
-to take an address anyway, prefer declaring the variable as a pointer type at
-the outset. Similarly, protobufs should be declared as pointer types.
+對於包含不可複製字段的複合類型（如結構和數組）的局部變量，使用值類型是可以接受的。然而，如果該複合類型由函數返回，或者所有對它的訪問最終都需要取地址，則應該從一開始就將變量聲明為指針類型。同樣，protobufs 應該聲明為指針類型。
 
 ```go
 // 較佳：
@@ -1479,8 +1469,7 @@ func NewCounter(name string) *Counter {
 var myMsg = new(pb.Bar) // or "&pb.Bar{}".
 ```
 
-This is because `*pb.Something` satisfies [`proto.Message`] while `pb.Something`
-does not.
+這是因為 `*pb.Something` 滿足 [`proto.Message`] 而 `pb.Something` 則不滿足。
 
 ```go
 // 不佳：
@@ -1493,19 +1482,15 @@ func NewCounter(name string) *Counter {
 var myMsg = pb.Bar{}
 ```
 
-[`proto.Message`]: https://pkg.go.dev/google.golang.org/protobuf/proto#Message
-
-> **Important:** Map types must be explicitly initialized before they can be
-> modified. However, reading from zero-value maps is perfectly fine.
+> **重要：** 映射類型必須在修改之前顯式初始化。然而，從零值映射中讀取是完全可以的。
 >
-> For map and slice types, if the code is particularly performance sensitive and
-> if you know the sizes in advance, see the [size hints](#vardeclsize) section.
+> 對於映射和切片類型，如果代碼對性能特別敏感並且你提前知道大小，請參見[大小提示](#vardeclsize)部分。
 
 <a id="vardeclcomposite"></a>
 
-### Composite literals
+### Composite literals (複合文字)
 
-The following are [composite literal] declarations:
+以下是[複合文字]宣告：
 
 ```go
 // 較佳：
@@ -1517,15 +1502,11 @@ var (
 )
 ```
 
-You should declare a value using a composite literal when you know initial
-elements or members.
+當你知道初始元素或成員時，應該使用複合文字來宣告值。
 
-In contrast, using composite literals to declare empty or memberless values can
-be visually noisy compared to [zero-value initialization](#vardeclzero).
+相比之下，使用複合文字來宣告空值或無成員值，與[零值初始化](#vardeclzero)相比，可能會顯得視覺上雜亂。
 
-When you need a pointer to a zero value, you have two options: empty composite
-literals and `new`. Both are fine, but the `new` keyword can serve to remind the
-reader that if a non-zero value were needed, a composite literal wouldn't work:
+當你需要一個指向零值的指針時，你有兩個選擇：空的複合文字和 `new`。兩者都可以，但 `new` 關鍵字可以提醒讀者，如果需要非零值，複合文字將不起作用：
 
 ```go
 // 較佳：
@@ -1535,7 +1516,7 @@ var (
 )
 ```
 
-[composite literal]: https://golang.org/ref/spec#Composite_literals
+[複合文字]: https://golang.org/ref/spec#Composite_literals
 
 <a id="vardeclsize"></a>
 
