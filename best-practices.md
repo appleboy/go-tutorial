@@ -1605,23 +1605,19 @@ func sum(values chan int) (out int) {
 
 <a id="option-structure"></a>
 
-### Option structure
+### Option structure (選項結構)
 
-An option structure is a struct type that collects some or all of the arguments
-of a function or method, that is then passed as the last argument to the
-function or method. (The struct should be exported only if it is used in an
-exported function.)
+選項結構是一種結構類型，它收集函數或方法的一些或全部參數，然後作為最後一個參數傳遞給函數或方法。（只有在導出函數中使用時，該結構才應導出。）
 
-Using an option structure has a number of benefits:
+使用選項結構有很多好處：
 
-- The struct literal includes both fields and values for each argument, which
-  makes them self-documenting and harder to swap.
-- Irrelevant or "default" fields can be omitted.
-- Callers can share the options struct and write helpers to operate on it.
-- Structs provide cleaner per-field documentation than function arguments.
-- Option structs can grow over time without impacting call-sites.
+- 結構字面量包括每個參數的字段和值，這使它們具有自我記錄功能且不易混淆。
+- 不相關或“默認”的字段可以省略。
+- 調用者可以共享選項結構並編寫助手來操作它。
+- 結構比函數參數提供更清晰的每字段文檔。
+- 選項結構可以隨時間增長而不影響調用點。
 
-Here is an example of a function that could be improved:
+這是一個可以改進的函數示例：
 
 ```go
 // 不佳：
@@ -1630,7 +1626,7 @@ func EnableReplication(ctx context.Context, config *replicator.Config, primaryRe
 }
 ```
 
-The function above could be rewritten with an option structure as follows:
+上面的函數可以使用選項結構重寫如下：
 
 ```go
 // 較佳：
@@ -1650,7 +1646,7 @@ func EnableReplication(ctx context.Context, opts ReplicationOptions) {
 }
 ```
 
-The function can then be called in a different package:
+然後可以在不同的包中調用該函數：
 
 ```go
 // 較佳：
@@ -1674,43 +1670,31 @@ func foo(ctx context.Context) {
 }
 ```
 
-**Note:** [Contexts are never included in option structs](decisions#contexts).
+**注意：** [上下文從不包含在選項結構中](decisions#contexts)。
 
-This option is often preferred when some of the following apply:
+當以下某些情況適用時，通常首選此選項：
 
-- All callers need to specify one or more of the options.
-- A large number of callers need to provide many options.
-- The options are shared between multiple functions that the user will call.
+- 所有調用者都需要指定一個或多個選項。
+- 許多調用者需要提供許多選項。
+- 選項在用戶將調用的多個函數之間共享。
 
 <a id="variadic-options"></a>
 
-### Variadic options
+### Variadic options (可變參數選項)
 
-Using variadic options, exported functions are created which return closures
-that can be passed to the [variadic (`...`) parameter] of a function. The
-function takes as its parameters the values of the option (if any), and the
-returned closure accepts a mutable reference (usually a pointer to a struct
-type) that will be updated based on the inputs.
+使用可變參數選項，創建導出函數，這些函數返回可以傳遞給函數的[可變參數 (`...`) 參數](https://golang.org/ref/spec#Passing_arguments_to_..._parameters)的閉包。該函數將選項的值（如果有）作為其參數，並且返回的閉包接受一個可變引用（通常是指向結構類型的指針），該引用將根據輸入進行更新。
 
-[variadic (`...`) parameter]: https://golang.org/ref/spec#Passing_arguments_to_..._parameters
+使用可變參數選項可以提供許多好處：
 
-Using variadic options can provide a number of benefits:
+- 當不需要配置時，選項在調用點不佔用空間。
+- 選項仍然是值，因此調用者可以共享它們、編寫助手並累積它們。
+- 選項可以接受多個參數（例如 `cartesian.Translate(dx, dy int) TransformOption`）。
+- 選項函數可以返回一個命名類型，以在 godoc 中將選項組合在一起。
+- 包可以允許（或防止）第三方包定義（或防止定義）自己的選項。
 
-- Options take no space at a call-site when no configuration is needed.
-- Options are still values, so callers can share them, write helpers, and
-  accumulate them.
-- Options can accept multiple parameters (e.g. `cartesian.Translate(dx, dy
-int) TransformOption`).
-- The option functions can return a named type to group options together in
-  godoc.
-- Packages can allow (or prevent) third-party packages to define (or from
-  defining) their own options.
+**注意：** 使用可變參數選項需要大量額外的代碼（請參見以下示例），因此僅在優勢超過開銷時使用。
 
-**Note:** Using variadic options requires a substantial amount of additional
-code (see the following example), so it should only be used when the advantages
-outweigh the overhead.
-
-Here is an example of a function that could be improved:
+這是一個可以改進的函數示例：
 
 ```go
 // 不佳：
@@ -1719,7 +1703,7 @@ func EnableReplication(ctx context.Context, config *placer.Config, primaryCells,
 }
 ```
 
-The example above could be rewritten with variadic options as follows:
+上面的例子可以使用可變參數選項重寫如下：
 
 ```go
 // 較佳：
@@ -1782,7 +1766,7 @@ func EnableReplication(ctx context.Context, config *placer.Config, primaryCells 
 }
 ```
 
-The function can then be called in a different package:
+然後可以在不同的包中調用該函數：
 
 ```go
 // 較佳：
@@ -1801,82 +1785,51 @@ func foo(ctx context.Context) {
 }
 ```
 
-Prefer this option when many of the following apply:
+當以下許多情況適用時，請優先選擇此選項：
 
-- Most callers will not need to specify any options.
-- Most options are used infrequently.
-- There are a large number of options.
-- Options require arguments.
-- Options could fail or be set incorrectly (in which case the option function
-  returns an `error`).
-- Options require a lot of documentation that can be hard to fit in a struct.
-- Users or other packages can provide custom options.
+- 大多數調用者不需要指定任何選項。
+- 大多數選項很少使用。
+- 有大量選項。
+- 選項需要參數。
+- 選項可能會失敗或設置不正確（在這種情況下，選項函數返回 `error`）。
+- 選項需要大量文檔，這些文檔很難適合結構中。
+- 用戶或其他包可以提供自定義選項。
 
-Options in this style should accept parameters rather than using presence to
-signal their value; the latter can make dynamic composition of arguments much
-more difficult. For example, binary settings should accept a boolean (e.g.
-`rpc.FailFast(enable bool)` is preferable to `rpc.EnableFailFast()`). An
-enumerated option should accept an enumerated constant (e.g.
-`log.Format(log.Capacitor)` is preferable to `log.CapacitorFormat()`). The
-alternative makes it much more difficult for users who must programmatically
-choose which options to pass; such users are forced to change the actual
-composition of the parameters rather than simply changing the arguments to the
-options. Don't assume that all users will know the full set of options
-statically.
+這種風格的選項應該接受參數，而不是使用存在來表示它們的值；後者會使參數的動態組合變得更加困難。例如，二進制設置應該接受布爾值（例如 `rpc.FailFast(enable bool)` 比 `rpc.EnableFailFast()` 更可取）。枚舉選項應該接受枚舉常量（例如 `log.Format(log.Capacitor)` 比 `log.CapacitorFormat()` 更可取）。替代方法使得必須以編程方式選擇要傳遞的選項的用戶更加困難；這些用戶被迫更改參數的實際組合，而不是簡單地更改選項的參數。不要假設所有用戶都會靜態地知道所有選項集。
 
-In general, options should be processed in order. If there is a conflict or if a
-non-cumulative option is passed multiple times, the last argument should win.
+一般來說，選項應按順序處理。如果存在衝突或非累積選項被多次傳遞，則最後一個參數應獲勝。
 
-The parameter to the option function is generally unexported in this pattern, to
-restrict the options to being defined only within the package itself. This is a
-good default, though there may be times when it is appropriate to allow other
-packages to define options.
+在此模式中，選項函數的參數通常不導出，以限制選項僅在包內部定義。這是一個很好的默認設置，儘管有時允許其他包定義選項是合適的。
 
-See [Rob Pike's original blog post] and [Dave Cheney's talk] for a more in-depth
-look at how these options can be used.
+請參見 [Rob Pike's original blog post] 和 [Dave Cheney's talk] 以更深入地了解如何使用這些選項。
 
 [Rob Pike's original blog post]: http://commandcenter.blogspot.com/2014/01/self-referential-functions-and-design.html
 [Dave Cheney's talk]: https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis
 
 <a id="complex-clis"></a>
 
-## Complex command-line interfaces
+## Complex command-line interfaces (複雜的命令行介面)
 
-Some programs wish to present users with a rich command-line interface that
-includes sub-commands. For example, `kubectl create`, `kubectl run`, and many
-other sub-commands are all provided by the program `kubectl`. There are at least
-the following libraries in common use for achieving this.
+一些程序希望向用戶提供豐富的命令行介面，包括子命令。例如，`kubectl create`、`kubectl run` 和許多其他子命令都是由程序 `kubectl` 提供的。至少有以下常用庫可以實現這一點。
 
-If you don't have a preference or other considerations are equal, [subcommands]
-is recommended, since it is the simplest and is easy to use correctly. However,
-if you need different features that it doesn't provide, pick one of the other
-options.
+如果你沒有偏好或其他考慮因素相同，建議使用 [subcommands]，因為它是最簡單且易於正確使用的。然而，如果你需要它不提供的不同功能，請選擇其他選項之一。
 
 - **[cobra]**
 
   - Flag convention: getopt
-  - Common outside the Google codebase.
-  - Many extra features.
-  - Pitfalls in usage (see below).
+  - 在 Google 代碼庫外部常見。
+  - 許多額外功能。
+  - 使用中的陷阱（見下文）。
 
 - **[subcommands]**
 
   - Flag convention: Go
-  - Simple and easy to use correctly.
-  - Recommended if you don't need extra features.
+  - 簡單且易於正確使用。
+  - 如果不需要額外功能，建議使用。
 
-**Warning**: cobra command functions should use `cmd.Context()` to obtain a
-context rather than creating their own root context with `context.Background`.
-Code that uses the subcommands package already receives the correct context as a
-function parameter.
+**警告**: cobra 命令函數應使用 `cmd.Context()` 獲取上下文，而不是使用 `context.Background` 創建自己的根上下文。使用 subcommands 包的代碼已經作為函數參數接收到正確的上下文。
 
-You are not required to place each subcommand in a separate package, and it is
-often not necessary to do so. Apply the same considerations about package
-boundaries as in any Go codebase. If your code can be used both as a library and
-as a binary, it is usually beneficial to separate the CLI code and the library,
-making the CLI just one more of its clients. (This is not specific to CLIs that
-have subcommands, but is mentioned here because it is a common place where it
-comes up.)
+你不需要將每個子命令放在單獨的包中，通常也沒有必要這樣做。應用與任何 Go 代碼庫中相同的包邊界考慮。如果你的代碼既可以作為庫使用，也可以作為二進制文件使用，通常將 CLI 代碼和庫分開是有益的，使 CLI 成為其客戶端之一。（這並不是特定於具有子命令的 CLI，但在這裡提到是因為這是一個常見的情況。）
 
 [subcommands]: https://pkg.go.dev/github.com/google/subcommands
 [cobra]: https://pkg.go.dev/github.com/spf13/cobra
