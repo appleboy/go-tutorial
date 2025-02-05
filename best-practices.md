@@ -1585,29 +1585,17 @@ func sum(values chan int) (out int) {
 
 <a id="funcargs"></a>
 
-## Function argument lists
+## Function argument lists (函數參數列表)
 
-Don't let the signature of a function get too long. As more parameters are added
-to a function, the role of individual parameters becomes less clear, and
-adjacent parameters of the same type become easier to confuse. Functions with
-large numbers of arguments are less memorable and more difficult to read at the
-call-site.
+不要讓函數的簽名變得太長。隨著函數中參數的增加，單個參數的角色變得不那麼明確，相同類型的相鄰參數更容易混淆。參數數量多的函數不易記住，並且在調用時更難閱讀。
 
-When designing an API, consider splitting a highly configurable function whose
-signature is growing complex into several simpler ones. These can share an
-(unexported) implementation if necessary.
+在設計 API 時，考慮將簽名變得複雜的高度可配置函數拆分為幾個更簡單的函數。如果需要，這些函數可以共享一個（未導出）實現。
 
-Where a function requires many inputs, consider introducing an [option struct]
-for some of the arguments or employing the more advanced [variadic options]
-technique. The primary consideration for which strategy to choose should be how
-the function call looks across all expected use cases.
+當函數需要許多輸入時，考慮為某些參數引入[選項結構](#option-structure)或採用更高級的[可變參數選項](#variadic-options)技術。選擇哪種策略的主要考慮因素應該是函數調用在所有預期用例中的外觀。
 
-The recommendations below primarily apply to exported APIs, which are held to a
-higher standard than unexported ones. These techniques may be unnecessary for
-your use case. Use your judgment, and balance the principles of [clarity] and
-[least mechanism].
+以下建議主要適用於導出的 API，這些 API 被要求達到比未導出的 API 更高的標準。這些技術對於你的用例可能是不必要的。使用你的判斷，並平衡[清晰性](guide#clarity)和[最少機制](guide#least-mechanism)的原則。
 
-See also:
+另請參見：
 [Go Tip #24: Use Case-Specific Constructions](https://google.github.io/styleguide/go/index.html#gotip)
 
 [option struct]: #option-structure
