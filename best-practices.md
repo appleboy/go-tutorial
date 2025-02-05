@@ -1520,10 +1520,9 @@ var (
 
 <a id="vardeclsize"></a>
 
-### Size hints
+### Size hints (大小提示)
 
-The following are declarations that take advantage of size hints in order to
-preallocate capacity:
+以下是利用大小提示來預分配容量的宣告：
 
 ```go
 // 較佳：
@@ -1537,28 +1536,19 @@ var (
 )
 ```
 
-Size hints and preallocation are important steps **when combined with empirical
-analysis of the code and its integrations**, to create performance-sensitive and
-resource-efficient code.
+大小提示和預分配是重要的步驟**當與代碼及其集成的實證分析結合使用時**，可以創建性能敏感和資源高效的代碼。
 
-Most code does not need a size hint or preallocation, and can allow the runtime
-to grow the slice or map as necessary. It is acceptable to preallocate when the
-final size is known (e.g. when converting between a map and a slice) but this is
-not a readability requirement, and may not be worth the clutter in small cases.
+大多數代碼不需要大小提示或預分配，可以允許運行時根據需要增長切片或映射。當最終大小已知時（例如在映射和切片之間轉換時），預分配是可以接受的，但這不是可讀性的要求，在小情況下可能不值得這樣做。
 
-**Warning:** Preallocating more memory than you need can waste memory in the
-fleet or even harm performance. When in doubt, see
-[GoTip #3: Benchmarking Go Code] and default to a
-[zero initialization](#vardeclzero) or a
-[composite literal declaration](#vardeclcomposite).
+**警告：** 預分配超過所需的內存可能會浪費內存，甚至損害性能。如果有疑問，請參見[GoTip #3: Benchmarking Go Code]，並默認使用[零初始化](#vardeclzero)或[複合文字宣告](#vardeclcomposite)。
 
 [GoTip #3: Benchmarking Go Code]: https://google.github.io/styleguide/go/index.html#gotip
 
 <a id="decl-chan"></a>
 
-### Channel direction
+### Channel direction (通道方向)
 
-Specify [channel direction] where possible.
+儘可能指定[通道方向]。
 
 ```go
 // 較佳：
@@ -1569,7 +1559,7 @@ func sum(values <-chan int) int {
 }
 ```
 
-This prevents casual programming errors that are possible without specification:
+這可以防止在沒有指定的情況下可能發生的隨意編程錯誤：
 
 ```go
 // 不佳：
@@ -1583,10 +1573,10 @@ func sum(values chan int) (out int) {
 }
 ```
 
-When the direction is specified, the compiler catches simple errors like this.
-It also helps to convey a measure of ownership to the type.
+當指定方向時，編譯器會捕捉到這樣的簡單錯誤。
+它還有助於傳達對類型的一定所有權。
 
-See also Bryan Mills' talk "Rethinking Classical Concurrency Patterns":
+另請參見 Bryan Mills 的演講 "Rethinking Classical Concurrency Patterns":
 [slides][rethinking-concurrency-slides] [video][rethinking-concurrency-video].
 
 [rethinking-concurrency-slides]: https://drive.google.com/file/d/1nPdvhB0PutEJzdCq5ms6UI58dp50fcAN/view?usp=sharing
