@@ -965,7 +965,6 @@ if err != nil {
 
 ```go
 // 不佳：
-// 不佳：
 if err != nil {
     // 錯誤處理
 } else {
