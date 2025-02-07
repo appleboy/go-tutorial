@@ -408,7 +408,7 @@ func abs(i int) int {
 }
 ```
 
-當使用 [短變量聲明] 與 `:=` 運算符時，在某些情況下不會創建新變量。我們可以稱這為*踩踏*。當原始值不再需要時，這樣做是可以的。
+當使用 [短變量聲明] 與 `:=` 運算符時，在某些情況下不會創建新變量。我們可以稱這為**踩踏**。當原始值不再需要時，這樣做是可以的。
 
 ```go
 // 較佳：
@@ -485,7 +485,7 @@ func LongFunction() {
 
 Go 的套件有一個在 `package` 聲明上指定的名稱，與導入路徑分開。對於可讀性來說，套件名稱比路徑更重要。
 
-Go 套件名稱應該[與套件提供的內容相關](decisions#package-names)。僅將一個套件命名為 `util`、`helper`、`common` 或類似的通常是一個糟糕的選擇（雖然可以用作名稱的*一部分*）。不具信息性的名稱使代碼更難閱讀，如果使用得太廣泛，它們可能會導致不必要的[導入衝突](decisions#import-renaming)。
+Go 套件名稱應該[與套件提供的內容相關](decisions#package-names)。僅將一個套件命名為 `util`、`helper`、`common` 或類似的通常是一個糟糕的選擇（雖然可以用作名稱的**一部分**）。不具信息性的名稱使代碼更難閱讀，如果使用得太廣泛，它們可能會導致不必要的[導入衝突](decisions#import-renaming)。
 
 相反，考慮調用點將會看起來像什麼。
 
@@ -710,7 +710,7 @@ func handlePet(...) {
 [`errors.As`]: https://pkg.go.dev/errors#As
 [`package cmp`]: https://pkg.go.dev/github.com/google/go-cmp/cmp
 [status]: https://pkg.go.dev/google.golang.org/grpc/status
-[canonical codes]: https://pkg.go.dev/google.golang.org/grpc/codes
+[標準代碼]: https://pkg.go.dev/google.golang.org/grpc/codes
 
 <a id="error-extra-info"></a>
 
