@@ -216,7 +216,7 @@ type Stub struct{}
 func (Stub) Charge(*creditcard.Card, money.Money) error { return nil }
 ```
 
-這絕對比像 `StubService` 或非 ��� 差的 `StubCreditCardService` 這樣的命名選擇更好，因為基礎包名和其領域類型暗示了 `creditcardtest.Stub` 是什麼。
+這絕對比像 `StubService` 或非常糟糕的 `StubCreditCardService` 這樣的命名選擇更好，因為基礎包名和其領域類型暗示了 `creditcardtest.Stub` 是什麼。
 
 最後，如果包是用 Bazel 構建的，請確保新的 `go_library` 規則標記為 `testonly`：
 
