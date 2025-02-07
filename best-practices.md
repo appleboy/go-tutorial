@@ -1847,23 +1847,13 @@ decisions#mark-test-helpers. The point is not to repeat information, but
 to have one place that summarizes the distinction that newcomers to the
 language often wonder about. -->
 
-Go distinguishes between "test helpers" and "assertion helpers":
+Go 區分了“測試助手”和“斷言助手”：
 
-- **Test helpers** are functions that do setup or cleanup tasks. All failures
-  that occur in test helpers are expected to be failures of the environment
-  (not from the code under test) — for example when a test database cannot be
-  started because there are no more free ports on this machine. For functions
-  like these, calling `t.Helper` is often appropriate to
-  [mark them as a test helper]. See [error handling in test helpers] for more
-  details.
+- **測試助手** 是執行設置或清理任務的函數。所有在測試助手中發生的失敗都預期是環境的失敗（而不是被測代碼的失敗）——例如，當測試數據庫無法啟動，因為這台機器上沒有更多的可用端口。對於這樣的函數，調用 `t.Helper` 是合適的，以[將它們標記為測試助手](decisions#mark-test-helpers)。有關更多詳細信息，請參見[測試助手中的錯誤處理](#test-helper-error-handling)。
 
-- **Assertion helpers** are functions that check the correctness of a system
-  and fail the test if an expectation is not met. Assertion helpers are
-  [not considered idiomatic] in Go.
+- **斷言助手** 是檢查系統正確性並在期望未滿足時使測試失敗的函數。在 Go 中，[斷言助手不被認為是慣用的](decisions#assert)。
 
-The purpose of a test is to report pass/fail conditions of the code under test.
-The ideal place to fail a test is within the `Test` function itself, as that
-ensures that [failure messages] and the test logic are clear.
+測試的目的是報告被測代碼的通過/失敗條件。理想的測試失敗位置是在 `Test` 函數內，因為這確保了[失敗消息](decisions#useful-test-failures)和測試邏輯是清晰的。
 
 [mark them as a test helper]: decisions#mark-test-helpers
 [error handling in test helpers]: #test-helper-error-handling
@@ -2131,73 +2121,41 @@ func TestAcceptance(t *testing.T) {
 
 <a id="use-real-transports"></a>
 
-### Use real transports
+### Use real transports (使用真實傳輸)
 
-When testing component integrations, especially where HTTP or RPC are used as
-the underlying transport between the components, prefer using the real
-underlying transport to connect to the test version of the backend.
+在測試組件集成時，尤其是使用 HTTP 或 RPC 作為組件之間的底層傳輸時，應優先使用真實的底層傳輸來連接到後端的測試版本。
 
-For example, suppose the code you want to test (sometimes referred to as "system
-under test" or SUT) interacts with a backend that implements the
-[long running operations] API. To test your SUT, use a real [OperationsClient]
-that is connected to a
-[test double](https://abseil.io/resources/swe-book/html/ch13.html#basic_concepts)
-(e.g., a mock, stub, or fake) of the [OperationsServer].
+例如，假設您要測試的代碼（有時稱為“被測系統”或 SUT）與實現 [long running operations] API 的後端交互。要測試您的 SUT，請使用連接到 [OperationsServer] 的 [test double](https://abseil.io/resources/swe-book/html/ch13.html#basic_concepts)（例如，模擬、存根或假冒）的真實 [OperationsClient]。
 
 [test double]: https://abseil.io/resources/swe-book/html/ch13.html#basic_concepts
 [long running operations]: https://pkg.go.dev/google.golang.org/genproto/googleapis/longrunning
 [OperationsClient]: https://pkg.go.dev/google.golang.org/genproto/googleapis/longrunning#OperationsClient
 [OperationsServer]: https://pkg.go.dev/google.golang.org/genproto/googleapis/longrunning#OperationsServer
 
-This is recommended over hand-implementing the client, due to the complexity of
-imitating client behavior correctly. By using the production client with a
-test-specific server, you ensure your test is using as much of the real code as
-possible.
+這比手動實現客戶端更推薦，因為正確模仿客戶端行為的複雜性。通過使用具有測試特定服務器的生產客戶端，您可以確保您的測試使用盡可能多的真實代碼。
 
-**Tip:** Where possible, use a testing library provided by the authors of the
-service under test.
+**提示：** 在可能的情況下，使用被測服務的作者提供的測試庫。
 
 <a id="t-fatal"></a>
 
 ### `t.Error` vs. `t.Fatal`
 
-As discussed in [decisions](decisions#keep-going), tests should generally not
-abort at the first encountered problem.
+如[決策](decisions#keep-going)中所述，測試通常不應在遇到第一個問題時中止。
 
-However, some situations require that the test not proceed. Calling `t.Fatal` is
-appropriate when some piece of test setup fails, especially in
-[test setup helpers], without which you cannot run the rest of the test. In a
-table-driven test, `t.Fatal` is appropriate for failures that set up the whole
-test function before the test loop. Failures that affect a single entry in the
-test table, which make it impossible to continue with that entry, should be
-reported as follows:
+然而，有些情況要求測試不能繼續進行。當某些測試設置失敗時，特別是在[測試設置助手](#test-helper-error-handling)中，調用 `t.Fatal` 是合適的，否則您無法運行其餘的測試。在表驅動測試中，`t.Fatal` 適用於在測試循環之前設置整個測試函數的失敗。影響測試表中單個條目的失敗，使得無法繼續該條目的測試，應報告如下：
 
-- If you're not using `t.Run` subtests, use `t.Error` followed by a `continue`
-  statement to move on to the next table entry.
-- If you're using subtests (and you're inside a call to `t.Run`), use
-  `t.Fatal`, which ends the current subtest and allows your test case to
-  progress to the next subtest.
+- 如果您沒有使用 `t.Run` 子測試，請使用 `t.Error`，然後使用 `continue` 語句繼續下一個表條目。
+- 如果您正在使用子測試（並且在調用 `t.Run` 內部），請使用 `t.Fatal`，這將結束當前的子測試並允許您的測試用例進入下一個子測試。
 
-**Warning:** It is not always safe to call `t.Fatal` and similar functions.
-[More details here](#t-fatal-goroutine).
-
-[test setup helpers]: #test-helper-error-handling
+**警告：** 調用 `t.Fatal` 和類似函數並不總是安全的。[更多詳細信息在這裡](#t-fatal-goroutine)。
 
 <a id="test-helper-error-handling"></a>
 
-### Error handling in test helpers
+### Error handling in test helpers (測試助手中的錯誤處理)
 
-**Note:** This section discusses [test helpers] in the sense Go uses the term:
-functions that perform test setup and cleanup, not common assertion facilities.
-See the [test functions](#test-functions) section for more discussion.
+**注意：** 本節討論 Go 使用術語[測試助手](decisions#mark-test-helpers)的意義：執行測試設置和清理的函數，而不是常見的斷言工具。更多討論請參見[測試函數](#test-functions)部分。
 
-[test helpers]: decisions#mark-test-helpers
-
-Operations performed by a test helper sometimes fail. For example, setting up a
-directory with files involves I/O, which can fail. When test helpers fail, their
-failure often signifies that the test cannot continue, since a setup
-precondition failed. When this happens, prefer calling one of the `Fatal`
-functions in the helper:
+測試助手執行的操作有時會失敗。例如，設置包含文件的目錄涉及 I/O，這可能會失敗。當測試助手失敗時，通常意味著測試無法繼續，因為設置前提條件失敗。當這種情況發生時，請優先調用助手中的 `Fatal` 函數：
 
 ```go
 // 較佳：
@@ -2212,8 +2170,7 @@ func mustAddGameAssets(t *testing.T, dir string) {
 }
 ```
 
-This keeps the calling side cleaner than if the helper were to return the error
-to the test itself:
+這保持了調用方的清潔性，而不是讓助手將錯誤返回給測試本身：
 
 ```go
 // 不佳：
@@ -2229,22 +2186,13 @@ func addGameAssets(t *testing.T, dir string) error {
 }
 ```
 
-**Warning:** It is not always safe to call `t.Fatal` and similar functions.
-[More details](#t-fatal-goroutine) here.
+**警告：** 調用 `t.Fatal` 和類似函數並不總是安全的。[更多詳細信息在這裡](#t-fatal-goroutine)。
 
-The failure message should include a description of what happened. This is
-important, as you may be providing a testing API to many users, especially as
-the number of error-producing steps in the helper increases. When the test
-fails, the user should know where, and why.
+失敗消息應包括發生了什麼的描述。這很重要，因為您可能會向許多用戶提供測試 API，特別是隨著助手中產生錯誤的步驟數量增加。當測試失敗時，用戶應該知道在哪裡以及為什麼失敗。
 
-**Tip:** Go 1.14 introduced a [`t.Cleanup`] function that can be used to
-register cleanup functions that run when your test completes. The function also
-works with test helpers. See
-[GoTip #4: Cleaning Up Your Tests](https://google.github.io/styleguide/go/index.html#gotip)
-for guidance on simplifying test helpers.
+**提示：** Go 1.14 引入了一個 [`t.Cleanup`] 函數，可以用來註冊在測試完成時運行的清理函數。該函數也適用於測試助手。請參見 [GoTip #4: Cleaning Up Your Tests](https://google.github.io/styleguide/go/index.html#gotip) 以獲取有關簡化測試助手的指導。
 
-The snippet below in a fictional file called `paint_test.go` demonstrates how
-`(*testing.T).Helper` influences failure reporting in a Go test:
+下面在名為 `paint_test.go` 的虛構文件中的代碼片段演示了 `(*testing.T).Helper` 如何影響 Go 測試中的失敗報告：
 
 ```go
 package paint_test
@@ -2283,8 +2231,7 @@ func TestGood(t *testing.T) {
 }
 ```
 
-Here is an example of this output when run. Note the highlighted text and how it
-differs:
+以下是運行時此輸出的示例。請注意突出顯示的文本及其不同之處：
 
 ```text
 === RUN   TestBad
@@ -2296,29 +2243,23 @@ differs:
 FAIL
 ```
 
-The error with `paint_test.go:15` refers to the line of the setup function that
-failed in `badSetup`:
+`paint_test.go:15` 的錯誤指的是 `badSetup` 中設置函數失敗的那一行：
 
 `t.Fatalf("Could not paint the house under test: %v", err)`
 
-Whereas `paint_test.go:32` refers to the line of the test that failed in
-`TestGood`:
+而 `paint_test.go:32` 指的是 `TestGood` 中測試失敗的那一行：
 
 `goodSetup(t)`
 
-Correctly using `(*testing.T).Helper` attributes the location of the failure
-much better when:
+正確使用 `(*testing.T).Helper` 在以下情況下能更好地標示失敗的位置：
 
-- the helper functions grow
-- the helper functions call other helpers
-- the amount of helper usage in the test functions grow
+- 幫助函數增長
+- 幫助函數調用其他幫助函數
+- 測試函數中幫助函數的使用量增長
 
-**Tip:** If a helper calls `(*testing.T).Error` or `(*testing.T).Fatal`, provide
-some context in the format string to help determine what went wrong and why.
+**提示：** 如果幫助函數調用 `(*testing.T).Error` 或 `(*testing.T).Fatal`，請在格式字符串中提供一些上下文，以幫助確定出了什麼問題以及為什麼。
 
-**Tip:** If nothing a helper does can cause a test to fail, it doesn't need to
-call `t.Helper`. Simplify its signature by removing `t` from the function
-parameter list.
+**提示：** 如果幫助函數所做的任何事情都不會導致測試失敗，則不需要調用 `t.Helper`。通過從函數參數列表中刪除 `t` 來簡化其簽名。
 
 [`t.Cleanup`]: https://pkg.go.dev/testing#T.Cleanup
 
