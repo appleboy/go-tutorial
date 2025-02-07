@@ -2265,16 +2265,11 @@ FAIL
 
 <a id="t-fatal-goroutine"></a>
 
-### Don't call `t.Fatal` from separate goroutines
+### Don't call `t.Fatal` from separate goroutines (不要從單獨的 goroutine 調用 `t.Fatal`)
 
-As [documented in package testing](https://pkg.go.dev/testing#T), it is
-incorrect to call `t.FailNow`, `t.Fatal`, etc. from any goroutine but the one
-running the Test function (or the subtest). If your test starts new goroutines,
-they must not call these functions from inside these goroutines.
+如[在 testing 包中記錄的](https://pkg.go.dev/testing#T)，從運行 Test 函數（或子測試）的 goroutine 之外的任何 goroutine 調用 `t.FailNow`、`t.Fatal` 等都是不正確的。如果您的測試啟動了新的 goroutine，它們不得從這些 goroutine 內部調用這些函數。
 
-[Test helpers](#test-functions) usually don't signal failure from new
-goroutines, and therefore it is all right for them to use `t.Fatal`. If in
-doubt, call `t.Error` and return instead.
+[測試助手](#test-functions) 通常不會從新的 goroutine 發出失敗信號，因此它們可以使用 `t.Fatal`。如果有疑問，請調用 `t.Error` 並返回。
 
 ```go
 // 較佳：
@@ -2308,16 +2303,9 @@ func TestRevEngine(t *testing.T) {
 }
 ```
 
-Adding `t.Parallel` to a test or subtest does not make it unsafe to call
-`t.Fatal`.
+在測試或子測試中添加 `t.Parallel` 並不會使調用 `t.Fatal` 變得不安全。
 
-When all calls to the `testing` API are in the [test function](#test-functions),
-it is usually easy to spot incorrect usage because the `go` keyword is plain to
-see. Passing `testing.T` arguments around makes tracking such usage harder.
-Typically, the reason for passing these arguments is to introduce a test helper,
-and those should not depend on the system under test. Therefore, if a test
-helper [registers a fatal test failure](#test-helper-error-handling), it can and
-should do so from the test's goroutine.
+當所有對 `testing` API 的調用都在[測試函數](#test-functions)中時，通常很容易發現不正確的用法，因為 `go` 關鍵字很明顯。傳遞 `testing.T` 參數會使跟踪這種用法變得更加困難。通常，傳遞這些參數的原因是引入測試助手，而這些助手不應依賴於被測系統。因此，如果測試助手[註冊致命測試失敗](#test-helper-error-handling)，它可以並且應該從測試的 goroutine 中這樣做。
 
 <a id="t-field-names"></a>
 
