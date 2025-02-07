@@ -4,8 +4,8 @@
 
 https://google.github.io/styleguide/go/guide (英文版)
 
-[概覽](index) | [指南](guide) | [決策](decisions) |
-[最佳實踐](best-practices)
+[概覽](index.md) | [指南](guide.md) | [決策](decisions.md) |
+[最佳實踐](best-practices.md)
 
 **注意：** 這是一系列概述 Google 的 [Go 風格](index) 文件的一部分。本文件是 **[規範性](index#normative) 和 [典範性](index#canonical)** 的。更多資訊請見[概覽](index#about)。
 

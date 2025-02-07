@@ -4,8 +4,8 @@
 
 https://google.github.io/styleguide/go/best-practices (英文版)
 
-[概覽](index) | [指南](guide) | [決策](decisions) |
-[最佳實踐](best-practices)
+[概覽](index.md) | [指南](guide.md) | [決策](decisions.md) |
+[最佳實踐](best-practices.md)
 
 **注意：** 這是一系列文件的一部分，概述了 Google 的 [Go 風格](index)。本文件**既不是 [規範性的](index#normative) 也不是 [權威性的](index#canonical)**，它是 [核心風格指南](guide) 的輔助文件。更多信息請參見 [概述](index#about)。
 

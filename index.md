@@ -2,8 +2,8 @@
 
 <https://google.github.io/styleguide/go> (英文版)
 
-[概覽](index) | [指南](guide) | [決策](decisions) |
-[最佳實踐](best-practices)
+[概覽](index.md) | [指南](guide.md) | [決策](decisions.md) |
+[最佳實踐](best-practices.md)
 
 <a id="about"></a>
 
