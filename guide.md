@@ -2,7 +2,7 @@
 
 # Go 風格指南
 
-https://google.github.io/styleguide/go/guide (英文版)
+<https://google.github.io/styleguide/go> (英文版)
 
 [概覽](index.md) | [指南](guide.md) | [決策](decisions.md) |
 [最佳實踐](best-practices.md)
@@ -156,9 +156,9 @@ if err := doSomething(); err == nil { // if NO error
 }
 ```
 
-[Table-driven testing]: https://github.com/golang/go/wiki/TableDrivenTests
-[error handling]: https://go.dev/blog/errors-are-values
-["boosting"]: best-practices#signal-boost
+[表驅動測試]: https://github.com/golang/go/wiki/TableDrivenTests
+[錯誤處理]: https://go.dev/blog/errors-are-values
+["提升"]: best-practices#signal-boost
 
 <a id="maintainability"></a>
 

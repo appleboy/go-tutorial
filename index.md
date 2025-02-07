@@ -89,7 +89,7 @@ Go 風格指南及其附帶文件編碼了當前編寫可讀性和符合慣用�
 
 [Effective Go]: https://go.dev/doc/effective_go
 
-**外部參考**
+### 外部參考
 
 - [Go 語言規範](https://go.dev/ref/spec)
 - [Go FAQ](https://go.dev/doc/faq)
@@ -100,7 +100,7 @@ Go 風格指南及其附帶文件編碼了當前編寫可讀性和符合慣用�
 - <a id="gotip"></a> Go 提示集 - 敬請期待。
 - <a id="unit-testing-practices"></a> 單元測試實踐 - 敬請期待。
 
-**相關的 Testing-on-the-Toilet 文章**
+### 相關的 Testing-on-the-Toilet 文章
 
 - [TotT: 標識符命名][tott-431]
 - [TotT: 測試狀態與測試互動][tott-281]
@@ -114,7 +114,7 @@ Go 風格指南及其附帶文件編碼了當前編寫可讀性和符合慣用�
 [tott-329]: https://testing.googleblog.com/2014/05/testing-on-toilet-risk-driven-testing.html
 [tott-350]: https://testing.googleblog.com/2015/01/testing-on-toilet-change-detector-tests.html
 
-**額外的外部著作**
+### 額外的外部著作
 
 - [Go 與教條](https://research.swtch.com/dogma)
 - [少即是多](https://commandcenter.blogspot.com/2012/06/less-is-exponentially-more.html)
