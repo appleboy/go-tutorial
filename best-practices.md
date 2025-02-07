@@ -2309,15 +2309,9 @@ func TestRevEngine(t *testing.T) {
 
 <a id="t-field-names"></a>
 
-### Use field names in struct literals
+### Use field names in struct literals (在結構體字面量中使用字段名稱)
 
-<a id="t-field-labels"></a>
-
-In table-driven tests, prefer to specify field names when initializing test case
-struct literals. This is helpful when the test cases cover a large amount of
-vertical space (e.g. more than 20-30 lines), when there are adjacent fields with
-the same type, and also when you wish to omit fields which have the zero value.
-For example:
+在表驅動測試中，初始化測試案例結構體字面量時，最好指定字段名稱。當測試案例覆蓋大量垂直空間（例如超過 20-30 行）、當有相同類型的相鄰字段以及當您希望省略具有零值的字段時，這是很有幫助的。例如：
 
 ```go
 // 較佳：
@@ -2347,10 +2341,9 @@ func TestStrJoin(t *testing.T) {
 
 <a id="t-common-setup-scope"></a>
 
-### Keep setup code scoped to specific tests
+### Keep setup code scoped to specific tests (將設置代碼限定在特定測試範圍內)
 
-Where possible, setup of resources and dependencies should be as closely scoped
-to specific test cases as possible. For example, given a setup function:
+在可能的情況下，資源和依賴項的設置應盡可能限定在特定測試案例的範圍內。例如，給定一個設置函數：
 
 ```go
 // mustLoadDataSet loads a data set for the tests.
@@ -2368,7 +2361,7 @@ func mustLoadDataset(t *testing.T) []byte {
 }
 ```
 
-Call `mustLoadDataset` explicitly in test functions that need it:
+在需要的測試函數中顯式調用 `mustLoadDataset`：
 
 ```go
 // 較佳：
@@ -2403,8 +2396,7 @@ func TestRegression682831(t *testing.T) {
 }
 ```
 
-The test function `TestRegression682831` does not use the data set and therefore
-does not call `mustLoadDataset`, which could be slow and failure-prone:
+測試函數 `TestRegression682831` 不使用數據集，因此不調用 `mustLoadDataset`，這可能會很慢且容易出錯：
 
 ```go
 // 不佳：
@@ -2429,8 +2421,7 @@ func init() {
 }
 ```
 
-A user may wish to run a function in isolation of the others and should not be
-penalized by these factors:
+用戶可能希望單獨運行某個函數，不應因這些因素而受到影響：
 
 ```shell
 # No reason for this to perform the expensive initialization.
@@ -2439,23 +2430,16 @@ $ go test -run TestRegression682831
 
 <a id="t-custom-main"></a>
 
-#### When to use a custom `TestMain` entrypoint
+### When to use a custom `TestMain` entrypoint 何時使用自定義 `TestMain` 入口點
 
-If **all tests in the package** require common setup and the **setup requires
-teardown**, you can use a [custom testmain entrypoint]. This can happen if the
-resource the test cases require is especially expensive to setup, and the cost
-should be amortized. Typically you have extracted any unrelated tests from the
-test suite at that point. It is typically only used for [functional tests].
+如果**包中的所有測試**都需要共同的設置，並且**設置需要拆卸**，你可以使用[自定義 testmain 入口點]。這種情況可能發生在測試案例所需的資源設置特別昂貴，並且成本應該被攤銷的時候。通常在這種情況下，你已經從測試套件中提取了任何不相關的測試。它通常僅用於[功能測試]。
 
-Using a custom `TestMain` **should not be your first choice** due the amount of
-care that should be taken for correct use. Consider first whether the solution
-in the [*amortizing common test setup*] section or an ordinary [test helper] is
-sufficient for your needs.
+由於正確使用需要大量的注意，自定義 `TestMain` **不應該是你的首選**。首先考慮[攤銷共同測試設置]部分中的解決方案或普通的[測試助手]是否足夠滿足你的需求。
 
-[custom testmain entrypoint]: https://golang.org/pkg/testing/#hdr-Main
-[functional tests]: https://en.wikipedia.org/wiki/Functional_testing
-[*amortizing common test setup*]: #t-setup-amortization
-[test helper]: #t-common-setup-scope
+[自定義 testmain 入口點]: https://golang.org/pkg/testing/#hdr-Main
+[功能測試]: https://en.wikipedia.org/wiki/Functional_testing
+[攤銷共同測試設置]: #t-setup-amortization
+[測試助手]: #t-common-setup-scope
 
 ```go
 // 較佳：
@@ -2501,23 +2485,19 @@ func TestMain(m *testing.M) {
 }
 ```
 
-Ideally a test case is hermetic between invocations of itself and between other
-test cases.
+理想情況下，一個測試案例在自身調用之間以及與其他測試案例之間應該是獨立的。
 
-At the very least, ensure that individual test cases reset any global state they
-have modified if they have done so (for instance, if the tests are working with
-an external database).
+至少，確保個別測試案例在修改了任何全局狀態後，能夠重置這些狀態（例如，如果測試正在與外部數據庫交互）。
 
 <a id="t-setup-amortization"></a>
 
-#### Amortizing common test setup
+#### Amortizing common test setup 攤銷共同測試設置
 
-Using a `sync.Once` may be appropriate, though not required, if all of the
-following are true about the common setup:
+如果以下所有條件都適用於共同設置，則使用 `sync.Once` 可能是合適的，但不是必需的：
 
-- It is expensive.
-- It only applies to some tests.
-- It does not require teardown.
+- 它是昂貴的。
+- 它僅適用於某些測試。
+- 它不需要拆卸。
 
 ```go
 // 較佳：
@@ -2542,8 +2522,7 @@ func mustLoadDataset(t *testing.T) []byte {
 }
 ```
 
-When `mustLoadDataset` is used in multiple test functions, its cost is
-amortized:
+當 `mustLoadDataset` 在多個測試函數中使用時，其成本被攤銷：
 
 ```go
 // 較佳：
@@ -2566,12 +2545,7 @@ func TestRegression682831(t *testing.T) {
 }
 ```
 
-The reason that common teardown is tricky is there is no uniform place to
-register cleanup routines. If the setup function (in this case `loadDataset`)
-relies on a context, `sync.Once` may be problematic. This is because the second
-of two racing calls to the setup function would need to wait for the first call
-to finish before returning. This period of waiting cannot be easily made to
-respect the context's cancellation.
+共同拆卸之所以棘手，是因為沒有統一的地方來註冊清理程序。如果設置函數（在這種情況下是 `loadDataset`）依賴於上下文，`sync.Once` 可能會有問題。這是因為兩個競爭調用設置函數中的第二個調用需要等待第一個調用完成後才能返回。這段等待時間不能輕易地遵守上下文的取消。
 
 <a id="string-concat"></a>
 

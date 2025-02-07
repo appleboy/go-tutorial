@@ -1242,7 +1242,7 @@ ldb := leveldb.Open("/my/table", &db.Options{
 
 [明確的字段名稱]: #literal-field-names
 
-**簡潔**
+簡潔
 
 ```go
 tests := []struct {
@@ -1261,7 +1261,7 @@ tests := []struct {
 }
 ```
 
-**明確**
+明確
 
 ```go
 tests := []struct {
