@@ -2549,9 +2549,9 @@ func TestRegression682831(t *testing.T) {
 
 <a id="string-concat"></a>
 
-## String concatenation
+## String concatenation 字串連接
 
-There are several ways to concatenate strings in Go. Some examples include:
+在 Go 語言中，有幾種方法可以連接字串。以下是一些例子：
 
 - The "+" operator
 - `fmt.Sprintf`
@@ -2559,15 +2559,13 @@ There are several ways to concatenate strings in Go. Some examples include:
 - `text/template`
 - `safehtml/template`
 
-Though there is no one-size-fits-all rule for which to choose, the following
-guidance outlines when each method is preferred.
+雖然沒有一刀切的規則來選擇哪種方法，但以下指導方針概述了每種方法的優先使用情況。
 
 <a id="string-concat-simple"></a>
 
-### Prefer "+" for simple cases
+### Prefer "+" for simple cases 簡單情況下優先使用 "+"
 
-Prefer using "+" when concatenating few strings. This method is syntactically
-the simplest and requires no import.
+當連接少量字串時，優先使用 "+". 這種方法在語法上是最簡單的，且不需要導入任何包。
 
 ```go
 // 較佳：
@@ -2576,10 +2574,9 @@ key := "projectid: " + p
 
 <a id="string-concat-fmt"></a>
 
-### Prefer `fmt.Sprintf` when formatting
+### Prefer `fmt.Sprintf` when formatting 格式化時優先使用 `fmt.Sprintf`
 
-Prefer using `fmt.Sprintf` when building a complex string with formatting. Using
-many "+" operators may obscure the end result.
+格式化複雜字串時，優先使用 `fmt.Sprintf`。使用多個 "+" 操作符可能會使最終結果變得模糊。
 
 ```go
 // 較佳：
@@ -2591,23 +2588,20 @@ str := fmt.Sprintf("%s [%s:%d]-> %s", src, qos, mtu, dst)
 bad := src.String() + " [" + qos.String() + ":" + strconv.Itoa(mtu) + "]-> " + dst.String()
 ```
 
-**Best Practice:** When the output of the string-building operation is an
-`io.Writer`, don't construct a temporary string with `fmt.Sprintf` just to send
-it to the Writer. Instead, use `fmt.Fprintf` to emit to the Writer directly.
+**最佳實踐:** 當字串構建操作的輸出是 `io.Writer` 時，不要僅僅為了將其發送到 Writer 而構建臨時字串。相反，應直接使用 `fmt.Fprintf` 將其輸出到 Writer。
 
-When the formatting is even more complex, prefer [`text/template`] or
-[`safehtml/template`] as appropriate.
+當格式化更為複雜時，根據需要優先使用 [`text/template`] 或 [`safehtml/template`]。
 
 [`text/template`]: https://pkg.go.dev/text/template
 [`safehtml/template`]: https://pkg.go.dev/github.com/google/safehtml/template
 
 <a id="string-concat-piecemeal"></a>
 
-### Prefer `strings.Builder` for constructing a string piecemeal
+### Prefer `strings.Builder` for constructing a string piecemeal 偏好使用 `strings.Builder` 來逐步構建字串
 
-Prefer using `strings.Builder` when building a string bit-by-bit.
-`strings.Builder` takes amortized linear time, whereas "+" and `fmt.Sprintf`
-take quadratic time when called sequentially to form a larger string.
+偏好在逐步構建字串時使用 `strings.Builder`。
+`strings.Builder` 需要攤銷線性時間，而 "+" 和 `fmt.Sprintf`
+在順序調用以形成更大的字串時需要二次時間。
 
 ```go
 // 較佳：
@@ -2618,8 +2612,8 @@ for i, d := range digitsOfPi {
 str := b.String()
 ```
 
-**Note:** For more discussion, see
-[GoTip #29: Building Strings Efficiently](https://google.github.io/styleguide/go/index.html#gotip).
+**注意:** 更多討論請參見
+[GoTip #29: Building Strings Efficiently](https://google.github.io/styleguide/go/index.html#gotip)。
 
 <a id="string-constants"></a>
 
