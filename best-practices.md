@@ -2945,30 +2945,20 @@ for handling the [PNG](https://pkg.go.dev/image/png) format:
 
 <a id="globals-default-instance"></a>
 
-### Providing a default instance
+### Providing a default instance (提供預設實例)
 
-While not recommended, it is acceptable to provide a simplified API that uses
-package level state if you need to maximize convenience for the user.
+雖然不推薦，但若需要最大化使用者便利性，可以提供使用套件層級狀態的簡化 API。
 
-Follow the [litmus tests](#globals-litmus-tests) with these guidelines in such
-cases:
+在這類情況下，請依據以下指導原則並遵循 [litmus tests](#globals-litmus-tests)：
 
-1.  The package must offer clients the ability to create isolated instances of
-    package types as [described above](#globals-forms).
-2.  The public APIs that use global state must be a thin proxy to the previous
-    API. A good example of this is
-    [`http.Handle`](https://pkg.go.dev/net/http#Handle) internally calling
-    [`(*http.ServeMux).Handle`](https://pkg.go.dev/net/http#ServeMux.Handle) on
-    the package variable
-    [`http.DefaultServeMux`](https://pkg.go.dev/net/http#DefaultServeMux).
-3.  This package-level API must only be used by [binary build targets], not
-    [libraries], unless the libraries are undertaking a refactoring to support
-    dependency passing. Infrastructure libraries that can be imported by other
-    packages must not rely on package-level state of the packages they import.
+1.  套件必須提供客戶端能夠依據上述[描述](#globals-forms)建立獨立實例的能力。
+2.  使用全域狀態的公共 API 必須僅作為先前 API 的薄型代理。一個不錯的例子是
+    [`http.Handle`](https://pkg.go.dev/net/http#Handle) 在內部對套件變數
+    [`http.DefaultServeMux`](https://pkg.go.dev/net/http#DefaultServeMux) 呼叫
+    [`(*http.ServeMux).Handle`](https://pkg.go.dev/net/http#ServeMux.Handle)。
+3.  除非函式庫正在進行重構以支援依賴注入，否則此套件層級的 API 只應由 [binary build targets] 使用，而不應由 [libraries] 使用。可以被其他套件匯入的基礎設施函式庫不得依賴其匯入套件的套件層級狀態。
 
-    For example, an infrastructure provider implementing a sidecar that is to be
-    shared with other teams using the API from the top should offer an API to
-    accommodate this:
+    例如，一個實作 sidecar 的基礎設施提供者，如果預計以頂層 API 與其他團隊共享，應該提供相應的 API 以予支持：
 
     ```go
     // 較佳：
@@ -2981,16 +2971,12 @@ cases:
     }
     ```
 
-4.  This package-level API must [document](#documentation-conventions) and
-    enforce its invariants (for example, at which stage in the program's life it
-    can be called, whether it can be used concurrently). Further, it must
-    provide an API to reset global state to a known-good default (for example,
-    to facilitate testing).
+4.  此套件層級的 API 必須[文件化](#documentation-conventions)並且強制其不變性（例如，必須在程式執行的特定階段呼叫它，以及它是否可以被並行使用）。此外，它必須提供一個 API 來將全域狀態重置為已知的預設值（例如，以方便進行測試）。
 
 [binary build targets]: https://github.com/bazelbuild/rules_go/blob/master/docs/go/core/rules.md#go_binary
 [libraries]: https://github.com/bazelbuild/rules_go/blob/master/docs/go/core/rules.md#go_library
 
-See also:
+參考資料：
 
-- [Go Tip #36: Enclosing Package-Level State](https://google.github.io/styleguide/go/index.html#gotip)
-- [Go Tip #80: Dependency Injection Principles](https://google.github.io/styleguide/go/index.html#gotip)
+- [Go Tip #36: 包層級狀態的封閉](https://google.github.io/styleguide/go/index.html#gotip)
+- [Go Tip #80: 依賴注入原則](https://google.github.io/styleguide/go/index.html#gotip)
