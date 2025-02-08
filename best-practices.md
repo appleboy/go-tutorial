@@ -2827,16 +2827,16 @@ Several of the most common problematic API forms are enumerated below:
 
 - Top-level variables irrespective of whether they are exported.
 
-  ```go
-  // 不佳：
-  package logger
+```go
+// 不佳：
+package logger
 
-  // Sinks manages the default output sources for this package's logging API.  This
-  // variable should be set at package initialization time and never thereafter.
-  var Sinks []Sink
-  ```
+// Sinks manages the default output sources for this package's logging API.  This
+// variable should be set at package initialization time and never thereafter.
+var Sinks []Sink
+```
 
-  See the [litmus tests](#globals-litmus-tests) to know when these are safe.
+See the [litmus tests](#globals-litmus-tests) to know when these are safe.
 
 - The
   [service locator pattern](https://en.wikipedia.org/wiki/Service_locator_pattern).
@@ -2847,34 +2847,34 @@ Several of the most common problematic API forms are enumerated below:
   [callbacks](<https://en.wikipedia.org/wiki/Callback_(computer_programming)>)
   and similar behaviors.
 
-  ```go
-  // 不佳：
-  package health
+```go
+// 不佳：
+package health
 
-  var unhealthyFuncs []func
+var unhealthyFuncs []func
 
-  func OnUnhealthy(f func()) {
-    unhealthyFuncs = append(unhealthyFuncs, f)
-  }
-  ```
+func OnUnhealthy(f func()) {
+  unhealthyFuncs = append(unhealthyFuncs, f)
+}
+```
 
 - Thick-Client singletons for things like backends, storage, data access
   layers, and other system resources. These often pose additional problems
   with service reliability.
 
-  ```go
-  // 不佳：
-  package useradmin
+```go
+// 不佳：
+package useradmin
 
-  var client pb.UserAdminServiceClientInterface
+var client pb.UserAdminServiceClientInterface
 
-  func Client() *pb.UserAdminServiceClient {
-      if client == nil {
-          client = ...  // Set up client.
-      }
-      return client
-  }
-  ```
+func Client() *pb.UserAdminServiceClient {
+    if client == nil {
+        client = ...  // Set up client.
+    }
+    return client
+}
+```
 
 > **Note:** Many legacy APIs in the Google codebase do not follow this guidance;
 > in fact, some Go standard libraries allow for configuration via global values.
@@ -2887,61 +2887,33 @@ Several of the most common problematic API forms are enumerated below:
 
 <a id="globals-litmus-tests"></a>
 
-### Litmus tests
+### Litmus tests (檢驗測試)
 
-[APIs using the patterns above](#globals-forms) are unsafe when:
+[使用上述模式的 API](#globals-forms) 在以下情況下是不安全的：
 
-- Multiple functions interact via global state when executed in the same
-  program, despite being otherwise independent (for example, authored by
-  different authors in vastly different directories).
-- Independent test cases interact with each other through global state.
-- Users of the API are tempted to swap or replace global state for testing
-  purposes, particularly to replace any part of the state with a
-  [test double], like a stub, fake, spy, or mock.
-- Users have to consider special ordering requirements when interacting with
-  global state: `func init`, whether flags are parsed yet, etc.
+- 儘管它們在其他方面相互獨立（例如，由不同的作者在完全不同的目錄中撰寫），但在相同程式中執行時，可能會有多個函數透過全域狀態相互作用。
+- 獨立的測試案例透過全域狀態相互作用。
+- API 的使用者可能會為了測試目的而交換或替換全域狀態，特別是以 [test double]（例如存根、假物件、間諜或模擬物）方式替換狀態的任何部分。
+- 使用者在與全域狀態互動時必須考慮特殊的順序需求：例如 `func init`，以及 flags 是否已解析等。
 
-Provided the conditions above are avoided, there are a **few limited
-circumstances under which these APIs are safe**, namely when any of the
-following is true:
+只要避免以上情況，這些 API 在 **少數有限的情況下是安全的**，也就是當下列任一條件成立時：
 
-- The global state is logically constant
-  ([example](https://github.com/klauspost/compress/blob/290f4cfacb3eff892555a491e3eeb569a48665e7/zstd/snappy.go#L413)).
-- The package's observable behavior is stateless. For example, a public
-  function may use a private global variable as a cache, but so long as the
-  caller can't distinguish cache hits from misses, the function is stateless.
-- The global state does not bleed into things that are external to the
-  program, like sidecar processes or files on a shared filesystem.
-- There is no expectation of predictable behavior
-  ([example](https://pkg.go.dev/math/rand)).
+- 全域狀態在邏輯上是常數 ([範例](https://github.com/klauspost/compress/blob/290f4cfacb3eff892555a491e3eeb569a48665e7/zstd/snappy.go#L413))。
+- 套件可觀察的行為是無狀態的。例如，一個公開函數可能會使用私有的全域變數作為快取，但只要呼叫者無法區分快取命中與未命中，該函數就算無狀態。
+- 全域狀態不會滲透到程式外部的事物，例如 sidecar 進程或共享檔案系統中的檔案。
+- 不期望有可預測的行為 ([範例](https://pkg.go.dev/math/rand))。
 
-> **Note:** > [Sidecar processes](https://www.oreilly.com/library/view/designing-distributed-systems/9781491983638/ch02.html)
-> may **not** strictly be process-local. They can and often are shared with more
-> than one application process. Moreover, these sidecars often interact with
-> external distributed systems.
+> **注意：** > [Sidecar processes](https://www.oreilly.com/library/view/designing-distributed-systems/9781491983638/ch02.html)
+> 可能 **不** 嚴格局限於單一進程。它們可以且通常會被多個應用程式進程共享。此外，這些 sidecar 常常與外部分散式系統互動。
 >
-> Further, the same stateless, idempotent, and local rules in addition to the
-> base considerations above would apply to the code of the sidecar process
-> itself!
+> 此外，上述基本考量之外，同樣的無狀態、冪等且局部的規則也適用於 sidecar 進程本身的程式碼！
 
-An example of one of these safe situations is
-[`package image`](https://pkg.go.dev/image) with its
-[`image.RegisterFormat`](https://pkg.go.dev/image#RegisterFormat) function.
-Consider the litmus tests from above applied to a typical decoder, like the one
-for handling the [PNG](https://pkg.go.dev/image/png) format:
+其中一個安全情況的範例是 [`package image`](https://pkg.go.dev/image) 與其 [`image.RegisterFormat`](https://pkg.go.dev/image#RegisterFormat) 函數。請參考上述檢驗測試，應用於處理 [PNG](https://pkg.go.dev/image/png) 格式的典型解碼器：
 
-- Multiple calls to `package image`'s APIs that use the registered decoders
-  (for example, `image.Decode`) cannot interfere with one another, similarly
-  for tests. The only exception is `image.RegisterFormat`, but that is
-  mitigated by the points below.
-- It is extremely unlikely that a user would want to replace a decoder with a
-  [test double], as the PNG decoder exemplifies a case in which our codebase's
-  preference for real objects applies. However, a user would be more likely to
-  replace a decoder with a test double if the decoder statefully interacted
-  with operating system resources (for example, the network).
-- Collisions in registration are conceivable, though they are probably rare in
-  practice.
-- The decoders are stateless, idempotent, and pure.
+- 對於 `package image` 中使用已註冊解碼器的 API（例如 `image.Decode`）的多次呼叫不會互相干擾，測試亦然。唯一的例外是 `image.RegisterFormat`，但這已由下列要點緩解。
+- 使用者極不可能會希望將解碼器替換成 [test double]，因為 PNG 解碼器典範了我們程式庫偏好實體物件的情況。然而，如果解碼器以狀態性的方式與作業系統資源（例如網絡）相互作用，使用者更有可能會用測試替身來替換解碼器。
+- 在註冊時可能會出現衝突，但在實際運作中可能罕見。
+- 這些解碼器是無狀態、冪等且純粹的。
 
 <a id="globals-default-instance"></a>
 
