@@ -7,7 +7,7 @@
 [概覽](index.md) | [指南](guide.md) | [決策](decisions.md) |
 [最佳實踐](best-practices.md)
 
-**注意：** 這是一系列文件的一部分，概述了 Google 的 [Go 風格](index)。本文件**既不是 [規範性的](index#normative) 也不是 [權威性的](index#canonical)**，它是 [核心風格指南](guide) 的輔助文件。更多信息請參見 [概述](index#about)。
+**注意：** 這是一系列文件的一部分，概述了 Google 的 [Go 風格](index.md)。本文件**既不是 [規範性的](index.md#normative) 也不是 [權威性的](index.md#canonical)**，它是 [核心風格指南](guide.md) 的輔助文件。更多信息請參見 [概述](index.md#about)。
 
 <a id="about"></a>
 
@@ -15,7 +15,7 @@
 
 本文件記錄了**如何最佳應用 Go 風格指南的指導**。這些建議旨在針對經常出現的常見情況，但可能不適用於每一種情況。在可能的情況下，討論了多種替代方法以及決定何時以及何時不應用它們的考量。
 
-查看 [概述](index#about) 以獲得完整的風格指南文件集。
+查看 [概述](index.md#about) 以獲得完整的風格指南文件集。
 
 <a id="naming"></a>
 
