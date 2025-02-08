@@ -150,7 +150,7 @@ func (c *Config) WriteBinaryTo(w io.Writer) (int64, error)
 
 這些例子大多使用存根。如果您的代碼使用假物件或其他類型的測試雙元件，請相應更新您的名稱。
 
-[命名]: guide#naming
+[命名]: guide.md#naming
 [測試雙元件]: https://abseil.io/resources/swe-book/html/ch13.html#basic_concepts
 
 假設您有一個專注的包，提供類似於以下的生產代碼：
@@ -465,7 +465,7 @@ func (s *Server) innerHandler(ctx context.Context, req *pb.MyRequest) *pb.MyResp
 }
 ```
 
-在我們稱為踩踏的情況下，因為沒有新變量，所賦予的類型必須與原始變量的類型匹配。有了遮蔽，就引入了一個全新的實體，所以它可以有不同的類型。故意的遮蔽可以是一種有用的做法，但如果使用新名稱可以提高[清晰度](guide#clarity)，那麼您總是可以使用新名稱。
+在我們稱為踩踏的情況下，因為沒有新變量，所賦予的類型必須與原始變量的類型匹配。有了遮蔽，就引入了一個全新的實體，所以它可以有不同的類型。故意的遮蔽可以是一種有用的做法，但如果使用新名稱可以提高[清晰度](guide.md#clarity)，那麼您總是可以使用新名稱。
 
 在非常小的作用域之外使用與標準包同名的變量並不是一個好主意，因為這會使該包中的自由函數和值無法訪問。相反地，當為您的包選擇名稱時，避免使用可能需要[導入重命名](decisions#import-renaming)或在客戶端導致遮蔽其他好的變量名稱的名稱。
 
@@ -1593,15 +1593,15 @@ func sum(values chan int) (out int) {
 
 當函數需要許多輸入時，考慮為某些參數引入[選項結構](#option-structure)或採用更高級的[可變參數選項](#variadic-options)技術。選擇哪種策略的主要考慮因素應該是函數調用在所有預期用例中的外觀。
 
-以下建議主要適用於導出的 API，這些 API 被要求達到比未導出的 API 更高的標準。這些技術對於你的用例可能是不必要的。使用你的判斷，並平衡[清晰性](guide#clarity)和[最少機制](guide#least-mechanism)的原則。
+以下建議主要適用於導出的 API，這些 API 被要求達到比未導出的 API 更高的標準。這些技術對於你的用例可能是不必要的。使用你的判斷，並平衡[清晰性](guide.md#clarity)和[最少機制](guide.md#least-mechanism)的原則。
 
 另請參見：
 [Go Tip #24: Use Case-Specific Constructions](https://google.github.io/styleguide/go/index.html#gotip)
 
 [option struct]: #option-structure
 [variadic options]: #variadic-options
-[clarity]: guide#clarity
-[least mechanism]: guide#least-mechanism
+[clarity]: guide.md#clarity
+[least mechanism]: guide.md#least-mechanism
 
 <a id="option-structure"></a>
 
@@ -2821,11 +2821,11 @@ be approached with **extreme scrutiny**.
 
 <a id="globals-forms"></a>
 
-### Major forms of package state APIs
+### Major forms of package state APIs (套件狀態 API 的主要形式)
 
-Several of the most common problematic API forms are enumerated below:
+以下列舉幾種最常見的有問題的 API 形式：
 
-- Top-level variables irrespective of whether they are exported.
+- 不論是否被導出的頂層變數。
 
 ```go
 // 不佳：
@@ -2836,16 +2836,13 @@ package logger
 var Sinks []Sink
 ```
 
-See the [litmus tests](#globals-litmus-tests) to know when these are safe.
+請參閱 [litmus tests (檢驗測試)](#globals-litmus-tests) 以了解何時這些情況是安全的。
 
-- The
-  [service locator pattern](https://en.wikipedia.org/wiki/Service_locator_pattern).
-  See the [first example](#globals). The service locator pattern itself is not
-  problematic, rather the locator being defined as global.
+- [Service locator pattern (服務定位器模式)](https://en.wikipedia.org/wiki/Service_locator_pattern)。
+  請參閱 [第一個範例](#globals)。問題並不在於服務定位器模式本身，而在於定位器被定義為全域。
 
-- Registries for
-  [callbacks](<https://en.wikipedia.org/wiki/Callback_(computer_programming)>)
-  and similar behaviors.
+- 用於 [callbacks (回呼函數)](<https://en.wikipedia.org/wiki/Callback_(computer_programming)>)
+  以及類似行為的註冊表。
 
 ```go
 // 不佳：
@@ -2858,9 +2855,7 @@ func OnUnhealthy(f func()) {
 }
 ```
 
-- Thick-Client singletons for things like backends, storage, data access
-  layers, and other system resources. These often pose additional problems
-  with service reliability.
+- 適用於後端、儲存、資料存取層及其他系統資源等項目的 Thick-Client 單例。這些通常會對服務可靠性產生額外問題。
 
 ```go
 // 不佳：
@@ -2876,14 +2871,12 @@ func Client() *pb.UserAdminServiceClient {
 }
 ```
 
-> **Note:** Many legacy APIs in the Google codebase do not follow this guidance;
-> in fact, some Go standard libraries allow for configuration via global values.
-> Nevertheless, the legacy API's contravention of this guidance
-> **[should not be used as precedent](guide#local-consistency)** for continuing
-> the pattern.
+> **注意：** Google 程式碼庫中的許多舊有 API 並未遵循這項指導原則；  
+> 事實上，部分 Go 標準庫允許透過全域值進行配置。  
+> 儘管如此，舊有 API 違反此指導原則  
+> **[不應作為延續該模式的先例](guide.md#local-consistency)**。
 >
-> It is better to invest in proper API design today than pay for redesigning
-> later.
+> 今天投資於適當的 API 設計，比日後為重新設計而付出代價要好。
 
 <a id="globals-litmus-tests"></a>
 
