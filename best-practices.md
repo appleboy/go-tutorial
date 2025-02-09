@@ -99,7 +99,7 @@ func (c *Config) WriteBinaryTo(w io.Writer) (int64, error)
 
 <a id="function-name-conventions"></a>
 
-#### 命名慣例 Naming conventions
+#### Naming conventions 命名慣例
 
 在為函數和方法選擇名稱時，有一些其他常見的慣例：
 
@@ -731,7 +731,7 @@ if err := os.Open("settings.txt"); err != nil {
 // open settings.txt: no such file or directory
 ```
 
-如果有關於錯誤的*意義*有什麼有趣的事情要說，當然可以添加。只需考慮哪個呼叫鏈的層級最適合理解這個意義。
+如果有關於錯誤的**意義**有什麼有趣的事情要說，當然可以添加。只需考慮哪個呼叫鏈的層級最適合理解這個意義。
 
 ```go
 // 較佳：
@@ -984,7 +984,7 @@ func answer(i int) string {
 
 以熟悉的風格記錄的 Go 代碼更易於閱讀，也不太可能被誤用，而不是被錯誤記錄或根本沒有記錄的代碼。可運行的[示例]會顯示在 Godoc 和代碼搜索中，是解釋如何使用代碼的絕佳方式。
 
-[examples]: decisions.md#examples
+[示例]: decisions.md#examples
 
 <a id="documentation-conventions-params"></a>
 
@@ -1278,7 +1278,7 @@ package os
 
 Go 提供了一個[文檔服務器](https://pkg.go.dev/golang.org/x/pkgsite/cmd/pkgsite)。建議在代碼審查過程中預覽你的代碼生成的文檔，這有助於驗證[godoc 格式]是否正確渲染。
 
-[godoc formatting]: #godoc-formatting
+[godoc 格式]: #godoc-formatting
 
 <a id="godoc-formatting"></a>
 
@@ -1581,7 +1581,7 @@ func sum(values chan int) (out int) {
 
 [rethinking-concurrency-slides]: https://drive.google.com/file/d/1nPdvhB0PutEJzdCq5ms6UI58dp50fcAN/view?usp=sharing
 [rethinking-concurrency-video]: https://www.youtube.com/watch?v=5zXAHh5tJqQ
-[channel direction]: https://go.dev/ref/spec#Channel_types
+[通道方向]: https://go.dev/ref/spec#Channel_types
 
 <a id="funcargs"></a>
 
@@ -1597,11 +1597,6 @@ func sum(values chan int) (out int) {
 
 另請參見：
 [Go Tip #24: Use Case-Specific Constructions](https://google.github.io/styleguide/go/index.html#gotip)
-
-[option struct]: #option-structure
-[variadic options]: #variadic-options
-[clarity]: guide.md#clarity
-[least mechanism]: guide.md#least-mechanism
 
 <a id="option-structure"></a>
 
