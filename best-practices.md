@@ -1951,86 +1951,64 @@ type FS interface {
 
 <a id="test-validation-apis-writing"></a>
 
-#### Writing an acceptance test
+#### Writing an acceptance test / 撰寫驗收測試
 
-Now that we know what an acceptance test is and why you might use one, let's
-explore building an acceptance test for `package chess`, a package used to
-simulate chess games. Users of `chess` are expected to implement the
-`chess.Player` interface. These implementations are the primary thing we will
-validate. Our acceptance test concerns itself with whether the player
-implementation makes legal moves, not whether the moves are smart.
+既然我們知道什麼是驗收測試以及使用它的原因，接下來讓我們探討如何為 `package chess` 建立驗收測試，此 package 用於模擬棋局。`chess` 的使用者預期會實作 `chess.Player` 介面。這些實作是我們主要要驗證的部分。我們的驗收測試關注的是玩家實作是否做出合法的行棋，而非行棋是否聰明。
 
-1.  Create a new package for the validation behavior,
-    [customarily named](#naming-doubles-helper-package) by appending the word
-    `test` to the package name (for example, `chesstest`).
+1. 建立一個用於驗證行為的新 package，[依慣例命名](#naming-doubles-helper-package)方式是在原 package 名稱後加上 `test` 一詞（例如，`chesstest`）。
 
-1.  Create the function that performs the validation by accepting the
-    implementation under test as an argument and exercises it:
+1. 建立進行驗證的函式，該函式透過接收被測實作作為參數並執行其操作：
 
-    ```go
-    // ExercisePlayer tests a Player implementation in a single turn on a board.
-    // The board itself is spot checked for sensibility and correctness.
-    //
-    // It returns a nil error if the player makes a correct move in the context
-    // of the provided board. Otherwise ExercisePlayer returns one of this
-    // package's errors to indicate how and why the player failed the
-    // validation.
-    func ExercisePlayer(b *chess.Board, p chess.Player) error
-    ```
+   ```go
+   // ExercisePlayer tests a Player implementation in a single turn on a board.
+   // The board itself is spot checked for sensibility and correctness.
+   //
+   // It returns a nil error if the player makes a correct move in the context
+   // of the provided board. Otherwise ExercisePlayer returns one of this
+   // package's errors to indicate how and why the player failed the
+   // validation.
+   func ExercisePlayer(b *chess.Board, p chess.Player) error
+   ```
 
-    The test should note which invariants are broken and how. Your design can
-    choose between two disciplines for failure reporting:
+測試應記錄哪些不變量被破壞以及如何破壞。您的設計可以在兩種失敗報告方式中選擇：
 
-    - **Fail fast**: return an error as soon as the implementation violates an
-      invariant.
+- **Fail fast**: 一旦實作違反了不變量，立即返回錯誤。
 
-      This is the simplest approach, and it works well if the acceptance test
-      is expected to execute quickly. Simple error [sentinels] and
-      [custom types] can be used easily here, which conversely makes testing
-      the acceptance test easy.
+  這是最簡單的方法，如果驗收測試預期能夠快速執行，這種方法運作得很好。在這裡可以輕易地使用簡單的錯誤[標記]和[自定義類型]，這反過來又使測試驗收測試變得容易。
 
-      ```go
-      for color, army := range b.Armies {
-          // The king should never leave the board, because the game ends at
-          // checkmate.
-          if army.King == nil {
-              return &MissingPieceError{Color: color, Piece: chess.King}
-          }
+  ```go
+  for color, army := range b.Armies {
+      // The king should never leave the board, because the game ends at
+      // checkmate.
+      if army.King == nil {
+          return &MissingPieceError{Color: color, Piece: chess.King}
       }
-      ```
+  }
+  ```
 
-    - **Aggregate all failures**: collect all failures, and report them all.
+- **Aggregate all failures**: 收集所有失敗案例，並全部回報。
 
-      This approach resembles the [keep going](decisions.md#keep-going) guidance
-      in feel and may be preferable if the acceptance test is expected to
-      execute slowly.
+  此方法類似於 feel 中的 [keep going](decisions.md#keep-going) 指導原則，如果預期驗收測試執行緩慢，則可能較為適用。
 
-      How you aggregate the failures should be dictated by whether you want to
-      give users the ability or yourself the ability to interrogate individual
-      failures (for example, for you to test your acceptance test). Below
-      demonstrates using a [custom error type][custom types] that
-      [aggregates errors]:
+  您如何聚合失敗情況，應取決於您是否希望讓使用者或您自己能夠查詢各別失敗（例如，供您測試驗收測試）。下方示範了如何使用一個[自定義錯誤型別][custom types]來[聚合錯誤]：
 
-      ```go
-      var badMoves []error
+  ```go
+  var badMoves []error
 
-      move := p.Move()
-      if putsOwnKingIntoCheck(b, move) {
-          badMoves = append(badMoves, PutsSelfIntoCheckError{Move: move})
-      }
+  move := p.Move()
+  if putsOwnKingIntoCheck(b, move) {
+      badMoves = append(badMoves, PutsSelfIntoCheckError{Move: move})
+  }
 
-      if len(badMoves) > 0 {
-          return SimulationError{BadMoves: badMoves}
-      }
-      return nil
-      ```
+  if len(badMoves) > 0 {
+      return SimulationError{BadMoves: badMoves}
+  }
+  return nil
+  ```
 
-The acceptance test should honor the [keep going](decisions.md#keep-going) guidance
-by not calling `t.Fatal` unless the test detects a broken invariant in the
-system being exercised.
+驗收測試應遵循 [keep going](decisions.md#keep-going) 指導原則，除非測試檢測到正在執行的系統中的不變量被破壞，否則不要調用 `t.Fatal`。
 
-For example, `t.Fatal` should be reserved for exceptional cases such as
-[setup failure](#test-helper-error-handling) as usual:
+例如，通常將 `t.Fatal` 保留用於特殊情況，例如 [設定失敗](#test-helper-error-handling)：
 
 ```go
 func ExerciseGame(t *testing.T, cfg *Config, p chess.Player) error {
@@ -2047,10 +2025,9 @@ func ExerciseGame(t *testing.T, cfg *Config, p chess.Player) error {
 }
 ```
 
-This technique can help you create concise, canonical validations. But do not
-attempt to use it to bypass the [guidance on assertions](decisions.md#assert).
+此技術可幫助您建立簡潔且具代表性的驗證。但請勿試圖利用此技術來繞過[assertions 的指導方針](decisions.md#assert).
 
-The final product should be in a form similar to this for end users:
+最終呈現給最終用戶的產品應該類似如下形式：
 
 ```go
 // 較佳：
@@ -2070,9 +2047,9 @@ func TestAcceptance(t *testing.T) {
 }
 ```
 
-[sentinels]: https://google.github.io/styleguide/go/index.html#gotip
+[標記]: https://google.github.io/styleguide/go/index.html#gotip
 [custom types]: https://google.github.io/styleguide/go/index.html#gotip
-[aggregates errors]: https://google.github.io/styleguide/go/index.html#gotip
+[聚合錯誤]: https://google.github.io/styleguide/go/index.html#gotip
 
 <a id="use-real-transports"></a>
 
