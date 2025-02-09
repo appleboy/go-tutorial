@@ -29,7 +29,7 @@
 
 #### 避免重複
 
-在為函數或方法選擇名稱時，請考慮名稱將在何種上下文中被讀取。考慮以下建議，以避免在調用地點過度[重複](decisions#repetition)：
+在為函數或方法選擇名稱時，請考慮名稱將在何種上下文中被讀取。考慮以下建議，以避免在調用地點過度[重複](decisions.md#repetition)：
 
 - 以下通常可以從函數和方法名稱中省略：
 
@@ -37,7 +37,7 @@
   - 方法接收者的類型
   - 輸入或輸出是否為指針
 
-- 對於函數，不要[重複包的名稱](decisions#repetitive-with-package)。
+- 對於函數，不要[重複包的名稱](decisions.md#repetitive-with-package)。
 
   ```go
   // 不佳：
@@ -110,7 +110,7 @@ func (c *Config) WriteBinaryTo(w io.Writer) (int64, error)
   func (c *Config) JobName(key string) (value string, ok bool)
   ```
 
-  這的推論是函數和方法名稱應該[避免使用前綴 `Get`](decisions#getters)。
+  這的推論是函數和方法名稱應該[避免使用前綴 `Get`](decisions.md#getters)。
 
   ```go
   // 不佳：
@@ -467,7 +467,7 @@ func (s *Server) innerHandler(ctx context.Context, req *pb.MyRequest) *pb.MyResp
 
 在我們稱為踩踏的情況下，因為沒有新變量，所賦予的類型必須與原始變量的類型匹配。有了遮蔽，就引入了一個全新的實體，所以它可以有不同的類型。故意的遮蔽可以是一種有用的做法，但如果使用新名稱可以提高[清晰度](guide.md#clarity)，那麼您總是可以使用新名稱。
 
-在非常小的作用域之外使用與標準包同名的變量並不是一個好主意，因為這會使該包中的自由函數和值無法訪問。相反地，當為您的包選擇名稱時，避免使用可能需要[導入重命名](decisions#import-renaming)或在客戶端導致遮蔽其他好的變量名稱的名稱。
+在非常小的作用域之外使用與標準包同名的變量並不是一個好主意，因為這會使該包中的自由函數和值無法訪問。相反地，當為您的包選擇名稱時，避免使用可能需要[導入重命名](decisions.md#import-renaming)或在客戶端導致遮蔽其他好的變量名稱的名稱。
 
 ```go
 // 不佳：
@@ -485,7 +485,7 @@ func LongFunction() {
 
 Go 的套件有一個在 `package` 聲明上指定的名稱，與導入路徑分開。對於可讀性來說，套件名稱比路徑更重要。
 
-Go 套件名稱應該[與套件提供的內容相關](decisions#package-names)。僅將一個套件命名為 `util`、`helper`、`common` 或類似的通常是一個糟糕的選擇（雖然可以用作名稱的**一部分**）。不具信息性的名稱使代碼更難閱讀，如果使用得太廣泛，它們可能會導致不必要的[導入衝突](decisions#import-renaming)。
+Go 套件名稱應該[與套件提供的內容相關](decisions.md#package-names)。僅將一個套件命名為 `util`、`helper`、`common` 或類似的通常是一個糟糕的選擇（雖然可以用作名稱的**一部分**）。不具信息性的名稱使代碼更難閱讀，如果使用得太廣泛，它們可能會導致不必要的[導入衝突](decisions.md#import-renaming)。
 
 相反，考慮調用點將會看起來像什麼。
 
@@ -523,7 +523,7 @@ b := helper.Marshal(curve, x, y)
 
 儘管如此，將整個項目放在一個套件中可能會使該套件過大。當某些東西在概念上是獨立的，給它自己的小套件可以使它更容易使用。套件的短名稱與客戶端所知的導出類型名稱一起工作，形成一個有意義的標識符：例如 `bytes.Buffer`、`ring.New`。[博客文章][blog-pkg-names]有更多例子。
 
-Go 風格對文件大小很靈活，因為維護者可以在套件內將代碼從一個文件移動到另一個文件，而不影響調用者。但作為一般指導原則：通常不是一個好主意在一個文件中有數千行代碼，或者有許多微小的文件。與其他一些語言不同，沒有“一種類型，一個文件”的慣例。作為一個經驗法則，文件應該足夠專注，以至於維護者可以告訴文件中包含了什麼，並且文件應該足夠小，以便一旦到達那裡就容易找到。標準庫經常將大型套件分割為幾個源文件，按文件分組相關代碼。[套件 `bytes`] 的源代碼是一個很好的例子。具有長套件文檔的套件可能會選擇專門用一個名為 `doc.go` 的文件，其中包含[套件文檔](decisions#package-comments)、一個套件聲明，以及其他什麼都沒有，但這不是必需的。
+Go 風格對文件大小很靈活，因為維護者可以在套件內將代碼從一個文件移動到另一個文件，而不影響調用者。但作為一般指導原則：通常不是一個好主意在一個文件中有數千行代碼，或者有許多微小的文件。與其他一些語言不同，沒有“一種類型，一個文件”的慣例。作為一個經驗法則，文件應該足夠專注，以至於維護者可以告訴文件中包含了什麼，並且文件應該足夠小，以便一旦到達那裡就容易找到。標準庫經常將大型套件分割為幾個源文件，按文件分組相關代碼。[套件 `bytes`] 的源代碼是一個很好的例子。具有長套件文檔的套件可能會選擇專門用一個名為 `doc.go` 的文件，其中包含[套件文檔](decisions.md#package-comments)、一個套件聲明，以及其他什麼都沒有，但這不是必需的。
 
 在 Google 代碼庫和使用 Bazel 的項目中，Go 代碼的目錄布局與開源 Go 項目中的不同：您可以在單個目錄中有多個 `go_library` 目標。給每個套件自己的目錄的一個好理由是，如果您期望將來開源您的項目。
 
@@ -883,7 +883,7 @@ fmt.Println(err3) // err3-1 err2-1 err1 err2-2 err3-2
 
 - 在 Google 內部，我們有監控系統，可以設置更有效的警報，而不是寫入日誌檔案並希望有人注意到它。這類似但不完全等同於標準函式庫中的 [package `expvar`]。
 
-[好的測試失敗訊息]: https://google.github.io/styleguide/go/decisions#useful-test-failures
+[好的測試失敗訊息]: https://google.github.io/styleguide/go/decisions.md#useful-test-failures
 [停止程式]: #checks-and-panics
 [`rate.Sometimes`]: https://pkg.go.dev/golang.org/x/time/rate#Sometimes
 [個人識別資訊 (PII)]: https://en.wikipedia.org/wiki/Personal_data
@@ -938,7 +938,7 @@ log.V(2).Infof("處理 %v", sql.Explain())
 
 **注意：** 標準的 [`net/http` 服務器] 違反了這個建議，並從請求處理程序中恢復恐慌。經驗豐富的 Go 工程師一致認為這是歷史性的錯誤。如果你從其他語言的應用服務器中抽樣服務器日誌，通常會發現大量未處理的堆棧跟踪。在你的服務器中避免這個陷阱。
 
-[反對恐慌的決定]: https://google.github.io/styleguide/go/decisions#dont-panic
+[反對恐慌的決定]: https://google.github.io/styleguide/go/decisions.md#dont-panic
 [`net/http` 服務器]: https://pkg.go.dev/net/http#Server
 
 <a id="when-to-panic"></a>
@@ -948,7 +948,7 @@ log.V(2).Infof("處理 %v", sql.Explain())
 標準庫在 API 誤用時會恐慌。例如，[`reflect`] 在許多情況下發出恐慌，當值以表明它被誤解的方式訪問時。這類似於核心語言錯誤的恐慌，例如訪問超出範圍的切片元素。代碼審查和測試應該發現這些錯誤，這些錯誤不應出現在生產代碼中。這些恐慌充當不依賴於庫的不變量檢查，因為標準庫無法訪問 Google 代碼庫使用的[分級 `log`] 包。
 
 [`reflect`]: https://pkg.go.dev/reflect
-[分級 `log`]: decisions#logging
+[分級 `log`]: decisions.md#logging
 
 另一種恐慌可能有用的情況，雖然不常見，是作為包的內部實現細節，總是在調用鏈中有匹配的恢復。解析器和類似的深度嵌套、緊密耦合的內部函數組可以從這種設計中受益，其中管道錯誤返回增加了複雜性而沒有價值。這種設計的關鍵屬性是這些恐慌永遠不允許跨包邊界傳播，並且不構成包的 API 的一部分。這通常通過頂層延遲恢復來實現，將傳播的恐慌轉換為在公共 API 表面返回的錯誤。
 
@@ -984,7 +984,7 @@ func answer(i int) string {
 
 以熟悉的風格記錄的 Go 代碼更易於閱讀，也不太可能被誤用，而不是被錯誤記錄或根本沒有記錄的代碼。可運行的[示例]會顯示在 Godoc 和代碼搜索中，是解釋如何使用代碼的絕佳方式。
 
-[examples]: decisions#examples
+[examples]: decisions.md#examples
 
 <a id="documentation-conventions-params"></a>
 
@@ -1026,7 +1026,7 @@ func Sprintf(format string, data ...any) string
 - [GoTip #41: 識別函數調用參數]
 - [GoTip #51: 配置模式]
 
-[commentary]: decisions#commentary
+[commentary]: decisions.md#commentary
 [GoTip #41: 識別函數調用參數]: https://google.github.io/styleguide/go/index.html#gotip
 [GoTip #51: 配置模式]: https://google.github.io/styleguide/go/index.html#gotip
 
@@ -1255,7 +1255,7 @@ func Chdir(dir string) error {
 
 **注意：** 在 `Chdir` 示例中，返回類型寫為 `error` 而不是 `*PathError`，這是由於[空接口值的工作方式](https://go.dev/doc/faq#nil_error)。
 
-當行為適用於包中的大多數錯誤時，在[包的文檔](decisions#package-comments)中記錄整體錯誤約定：
+當行為適用於包中的大多數錯誤時，在[包的文檔](decisions.md#package-comments)中記錄整體錯誤約定：
 
 ```go
 // 較佳：
@@ -1352,7 +1352,7 @@ Go 提供了一個[文檔服務器](https://pkg.go.dev/golang.org/x/pkgsite/cmd/
 
 [Godoc]: https://pkg.go.dev/
 [格式化文檔]: https://go.dev/doc/comment
-[可運行的示例]: decisions#examples
+[可運行的示例]: decisions.md#examples
 
 <a id="signal-boost"></a>
 
@@ -1441,7 +1441,7 @@ var coords Point
 if err := json.Unmarshal(data, &coords); err != nil {
 ```
 
-如果你需要在結構中使用鎖或其他[不能被複製](decisions#copying)的字段，你可以將其設為值類型以利用零值初始化。這意味著包含該字段的類型現在必須通過指針而不是值來傳遞。該類型的方法必須使用指針接收者。
+如果你需要在結構中使用鎖或其他[不能被複製](decisions.md#copying)的字段，你可以將其設為值類型以利用零值初始化。這意味著包含該字段的類型現在必須通過指針而不是值來傳遞。該類型的方法必須使用指針接收者。
 
 ```go
 // 較佳：
@@ -1670,7 +1670,7 @@ func foo(ctx context.Context) {
 }
 ```
 
-**注意：** [上下文從不包含在選項結構中](decisions#contexts)。
+**注意：** [上下文從不包含在選項結構中](decisions.md#contexts)。
 
 當以下某些情況適用時，通常首選此選項：
 
@@ -1842,23 +1842,23 @@ func foo(ctx context.Context) {
 
 ### Leave testing to the `Test` function
 
-<!-- Note to maintainers: This section overlaps with decisions#assert and
-decisions#mark-test-helpers. The point is not to repeat information, but
+<!-- Note to maintainers: This section overlaps with decisions.md#assert and
+decisions.md#mark-test-helpers. The point is not to repeat information, but
 to have one place that summarizes the distinction that newcomers to the
 language often wonder about. -->
 
 Go 區分了“測試助手”和“斷言助手”：
 
-- **測試助手** 是執行設置或清理任務的函數。所有在測試助手中發生的失敗都預期是環境的失敗（而不是被測代碼的失敗）——例如，當測試數據庫無法啟動，因為這台機器上沒有更多的可用端口。對於這樣的函數，調用 `t.Helper` 是合適的，以[將它們標記為測試助手](decisions#mark-test-helpers)。有關更多詳細信息，請參見[測試助手中的錯誤處理](#test-helper-error-handling)。
+- **測試助手** 是執行設置或清理任務的函數。所有在測試助手中發生的失敗都預期是環境的失敗（而不是被測代碼的失敗）——例如，當測試數據庫無法啟動，因為這台機器上沒有更多的可用端口。對於這樣的函數，調用 `t.Helper` 是合適的，以[將它們標記為測試助手](decisions.md#mark-test-helpers)。有關更多詳細信息，請參見[測試助手中的錯誤處理](#test-helper-error-handling)。
 
-- **斷言助手** 是檢查系統正確性並在期望未滿足時使測試失敗的函數。在 Go 中，[斷言助手不被認為是慣用的](decisions#assert)。
+- **斷言助手** 是檢查系統正確性並在期望未滿足時使測試失敗的函數。在 Go 中，[斷言助手不被認為是慣用的](decisions.md#assert)。
 
-測試的目的是報告被測代碼的通過/失敗條件。理想的測試失敗位置是在 `Test` 函數內，因為這確保了[失敗消息](decisions#useful-test-failures)和測試邏輯是清晰的。
+測試的目的是報告被測代碼的通過/失敗條件。理想的測試失敗位置是在 `Test` 函數內，因為這確保了[失敗消息](decisions.md#useful-test-failures)和測試邏輯是清晰的。
 
-[mark them as a test helper]: decisions#mark-test-helpers
+[mark them as a test helper]: decisions.md#mark-test-helpers
 [error handling in test helpers]: #test-helper-error-handling
-[not considered idiomatic]: decisions#assert
-[failure messages]: decisions#useful-test-failures
+[not considered idiomatic]: decisions.md#assert
+[failure messages]: decisions.md#useful-test-failures
 
 As your testing code grows, it may become necessary to factor out some
 functionality to separate functions. Standard software engineering
@@ -1946,10 +1946,10 @@ in libraries should usually [not panic] except in rare circumstances; code
 called from a test should not stop the test unless there is
 [no point in proceeding].
 
-[table-driven test]: decisions#table-driven-tests
-[useful test failures]: decisions#useful-test-failures
+[table-driven test]: decisions.md#table-driven-tests
+[useful test failures]: decisions.md#useful-test-failures
 [package `cmp`]: https://pkg.go.dev/github.com/google/go-cmp/cmp
-[not panic]: decisions#dont-panic
+[not panic]: decisions.md#dont-panic
 [no point in proceeding]: #t-fatal
 
 <a id="test-validation-apis"></a>
@@ -1970,7 +1970,7 @@ what goes on in the test; they just hand the inputs over to the testing facility
 to do the work. This can be thought of as a form of [inversion of control].
 
 In a typical Go test, the test function controls the program flow, and the
-[no assert](decisions#assert) and [test functions](#test-functions) guidance
+[no assert](decisions.md#assert) and [test functions](#test-functions) guidance
 encourages you to keep it that way. This section explains how to author support
 for these tests in a way that is consistent with Go style.
 
@@ -2046,7 +2046,7 @@ implementation makes legal moves, not whether the moves are smart.
 
     - **Aggregate all failures**: collect all failures, and report them all.
 
-      This approach resembles the [keep going](decisions#keep-going) guidance
+      This approach resembles the [keep going](decisions.md#keep-going) guidance
       in feel and may be preferable if the acceptance test is expected to
       execute slowly.
 
@@ -2070,7 +2070,7 @@ implementation makes legal moves, not whether the moves are smart.
       return nil
       ```
 
-The acceptance test should honor the [keep going](decisions#keep-going) guidance
+The acceptance test should honor the [keep going](decisions.md#keep-going) guidance
 by not calling `t.Fatal` unless the test detects a broken invariant in the
 system being exercised.
 
@@ -2093,7 +2093,7 @@ func ExerciseGame(t *testing.T, cfg *Config, p chess.Player) error {
 ```
 
 This technique can help you create concise, canonical validations. But do not
-attempt to use it to bypass the [guidance on assertions](decisions#assert).
+attempt to use it to bypass the [guidance on assertions](decisions.md#assert).
 
 The final product should be in a form similar to this for end users:
 
@@ -2140,7 +2140,7 @@ func TestAcceptance(t *testing.T) {
 
 ### `t.Error` vs. `t.Fatal`
 
-如[決策](decisions#keep-going)中所述，測試通常不應在遇到第一個問題時中止。
+如[決策](decisions.md#keep-going)中所述，測試通常不應在遇到第一個問題時中止。
 
 然而，有些情況要求測試不能繼續進行。當某些測試設置失敗時，特別是在[測試設置助手](#test-helper-error-handling)中，調用 `t.Fatal` 是合適的，否則您無法運行其餘的測試。在表驅動測試中，`t.Fatal` 適用於在測試循環之前設置整個測試函數的失敗。影響測試表中單個條目的失敗，使得無法繼續該條目的測試，應報告如下：
 
@@ -2153,7 +2153,7 @@ func TestAcceptance(t *testing.T) {
 
 ### Error handling in test helpers (測試助手中的錯誤處理)
 
-**注意：** 本節討論 Go 使用術語[測試助手](decisions#mark-test-helpers)的意義：執行測試設置和清理的函數，而不是常見的斷言工具。更多討論請參見[測試函數](#test-functions)部分。
+**注意：** 本節討論 Go 使用術語[測試助手](decisions.md#mark-test-helpers)的意義：執行測試設置和清理的函數，而不是常見的斷言工具。更多討論請參見[測試函數](#test-functions)部分。
 
 測試助手執行的操作有時會失敗。例如，設置包含文件的目錄涉及 I/O，這可能會失敗。當測試助手失敗時，通常意味著測試無法繼續，因為設置前提條件失敗。當這種情況發生時，請優先調用助手中的 `Fatal` 函數：
 
@@ -2757,7 +2757,7 @@ Go 測試預設是按順序執行的，因此上述測試的運行順序為：
 
 - 如果多個客戶在同一名稱下 `Register` 一個 `Plugin`，會發生什麼？哪一個會勝出，如果有的話？
 
-  應該如何 [處理錯誤](decisions#handle-errors)？如果代碼崩潰或調用 `log.Fatal`，這對於所有 API 被調用的地方是否總是 [合適](decisions#dont-panic)？客戶能否在這樣做之前驗證它不會做壞事？
+  應該如何 [處理錯誤](decisions.md#handle-errors)？如果代碼崩潰或調用 `log.Fatal`，這對於所有 API 被調用的地方是否總是 [合適](decisions.md#dont-panic)？客戶能否在這樣做之前驗證它不會做壞事？
 
 - 在程序的啟動階段或生命周期的某些階段是否有 `Register` 可以被調用的時候，或者不能被調用的時候？
 

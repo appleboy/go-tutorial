@@ -74,7 +74,7 @@ Google 的代碼庫在很大程度上是統一和一致的。通常情況下，�
 - 同一包中的好的
   [可運行示例](https://cs.opensource.google/go/go/+/refs/tags/go1.19.2:src/sort/example_search_test.go)，
   這對用戶（它們
-  [顯示在 godoc 中](https://pkg.go.dev/sort#pkg-examples)）和維護者（它們 [作為測試的一部分運行](decisions#examples)）都有益。
+  [顯示在 godoc 中](https://pkg.go.dev/sort#pkg-examples)）和維護者（它們 [作為測試的一部分運行](decisions.md#examples)）都有益。
 - [`strings.Cut`](https://pkg.go.dev/strings#Cut) 只有四行代碼，
   但它們改善了
   [調用點的清晰性和正確性](https://github.com/golang/go/issues/46336)。
@@ -274,7 +274,7 @@ Go 源代碼沒有固定的行長。如果一行感覺太長，優先重構而�
 
 不要分割一行：
 
-- 在 [縮進變化](decisions#indentation-confusion) 之前（例如，函數聲明、條件）
+- 在 [縮進變化](decisions.md#indentation-confusion) 之前（例如，函數聲明、條件）
 - 為了使長字符串（例如，URL）適應多個較短的行
 
 <a id="naming"></a>
@@ -283,11 +283,11 @@ Go 源代碼沒有固定的行長。如果一行感覺太長，優先重構而�
 
 命名更多的是藝術而不是科學。在 Go 中，名稱傾向於比許多其他語言短一些，但相同的 [一般指南] 適用。名稱應該：
 
-- 在使用時不感覺 [重複](decisions#repetition)
+- 在使用時不感覺 [重複](decisions.md#repetition)
 - 考慮上下文
 - 不重複已經清楚的概念
 
-您可以在 [決策](decisions#naming) 中找到更具體的命名指導。
+您可以在 [決策](decisions.md#naming) 中找到更具體的命名指導。
 
 [一般指南]: https://testing.googleblog.com/2017/10/code-health-identifiernamingpostforworl.html
 
