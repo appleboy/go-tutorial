@@ -11,7 +11,7 @@
 
 <a id="about"></a>
 
-## 關於
+## About 關於
 
 本文件記錄了**如何最佳應用 Go 風格指南的指導**。這些建議旨在針對經常出現的常見情況，但可能不適用於每一種情況。在可能的情況下，討論了多種替代方法以及決定何時以及何時不應用它們的考量。
 
@@ -19,15 +19,15 @@
 
 <a id="naming"></a>
 
-## 命名
+## Naming 命名
 
 <a id="function-names"></a>
 
-### 函數和方法名稱
+### Function and method names 函數和方法名稱
 
 <a id="function-name-repetition"></a>
 
-#### 避免重複
+#### Avoid repetition 避免重複
 
 在為函數或方法選擇名稱時，請考慮名稱將在何種上下文中被讀取。考慮以下建議，以避免在調用地點過度[重複](decisions.md#repetition)：
 
@@ -144,7 +144,7 @@ func (c *Config) WriteBinaryTo(w io.Writer) (int64, error)
 
 <a id="naming-doubles"></a>
 
-### 測試雙套件和類型 Test double packages and types
+### Test double packages and types 測試雙套件和類型
 
 在為提供測試輔助工具，特別是[測試雙元件]的包和類型命名時，您可以應用幾種紀律。測試雙元件可以是存根（stub）、假物件（fake）、模擬物件（mock）或間諜（spy）。
 
@@ -184,7 +184,7 @@ func (s *Service) Charge(c *Card, amount money.Money) error { /* omitted */ }
 
 <a id="naming-doubles-helper-package"></a>
 
-#### 創建測試輔助套件 Creating test helper packages
+#### Creating test helper packages 創建測試輔助套件
 
 假設您想創建一個包含另一個包的測試雙元件的包。我們將使用上面的 `package creditcard` 作為這個例子：
 
@@ -199,7 +199,7 @@ package creditcardtest
 
 <a id="naming-doubles-simple"></a>
 
-#### 簡單情況 Simple case
+#### Simple case 簡單情況
 
 您想為 `Service` 添加一組測試雙元件。因為 `Card` 實際上是一種簡單的數據類型，類似於協議緩衝消息，所以在測試中不需要特殊處理，因此不需要雙元件。如果您預計只有一種類型（如 `Service`）的測試雙元件，您可以採取簡潔的命名方法：
 
@@ -239,7 +239,7 @@ go_library(
 
 - [Go 提示 #42：編寫用於測試的存根](https://google.github.io/styleguide/go/index.html#gotip)
 
-#### 多種測試雙元件行為 Multiple test double behaviors
+#### Multiple test double behaviors 多種測試雙元件行為
 
 當一種存根不夠時（例如，您還需要一個總是失敗的），我們建議根據它們模擬的行為命名存根。在這裡，我們將 `Stub` 重命名為 `AlwaysCharges`，並引入一個名為 `AlwaysDeclines` 的新存根：
 
@@ -260,7 +260,7 @@ func (AlwaysDeclines) Charge(*creditcard.Card, money.Money) error {
 
 <a id="naming-doubles-multiple-types"></a>
 
-#### 多種類型的多個雙元件 Multiple doubles for multiple types
+#### Multiple doubles for multiple types 多種類型的多個雙元件
 
 But now suppose that `package creditcard` contains multiple types worth creating
 doubles for, as seen below with `Service` and `StoredValue`:
@@ -304,7 +304,7 @@ func (StubStoredValue) Credit(*creditcard.Card, money.Money) error { return nil 
 
 <a id="naming-doubles-local-variables"></a>
 
-#### 測試中的局部變量 Local variables in tests
+#### Local variables in tests 測試中的局部變量
 
 當您的測試中的變量指向雙元件時，選擇一個名稱，根據上下文最清楚地區分雙元件和其他生產類型。考慮一些您想要測試的生產代碼：
 
@@ -392,7 +392,7 @@ func TestProcessor(t *testing.T) {
 
 <a id="shadowing"></a>
 
-### 變數遮蔽 Shadowing
+### Shadowing 變數遮蔽
 
 **注意：** 本解釋使用了兩個非正式術語，_踩踏_ 和 _遮蔽_。它們不是 Go 語言規範中的官方概念。
 
@@ -511,7 +511,7 @@ b := helper.Marshal(curve, x, y)
 
 <a id="package-size"></a>
 
-## 套件大小
+## Package size 套件大小
 
 如果您在問自己 Go 套件應該有多大，以及是否應該將相關類型放在同一個套件中或將它們分成不同的套件，一個好的起點是 [Go 博客文章關於套件名稱][blog-pkg-names]。儘管文章的標題只是關於命名，但它不僅僅是關於命名。它包含了一些有用的提示，並引用了幾篇有用的文章和演講。
 
@@ -541,7 +541,7 @@ Go 風格對文件大小很靈活，因為維護者可以在套件內將代碼�
 
 <a id="import-protos"></a>
 
-### Protos and stubs
+### Protos and stubs / Protos 及存根
 
 由於其跨語言特性，Proto 庫的引入與標準 Go 引入的處理方式不同。重新命名 proto 引入的慣例基於生成該套件的規則：
 
@@ -573,7 +573,7 @@ import (
 
 <a id="import-order"></a>
 
-### 引入順序 Import ordering
+### Import ordering 引入順序
 
 引入通常按以下兩個（或更多）塊的順序分組：
 
@@ -594,7 +594,7 @@ import (
 
 <a id="error-handling"></a>
 
-## 錯誤處理 Error handling
+## Error handling 錯誤處理
 
 在 Go 中，[錯誤是值]；它們由代碼創建並由代碼消費。錯誤可以是：
 
@@ -627,7 +627,7 @@ import (
 
 <a id="error-structure"></a>
 
-### Error structure
+### Error structure / 錯誤結構
 
 如果呼叫者需要檢查錯誤（例如，區分不同的錯誤情況），請給予錯誤值結構，以便可以通過程式方式完成，而不是讓呼叫者進行字串匹配。這個建議適用於生產代碼以及關心不同錯誤情況的測試。
 
@@ -714,7 +714,7 @@ func handlePet(...) {
 
 <a id="error-extra-info"></a>
 
-### 為錯誤添加資訊
+### Adding information to errors / 為錯誤添加資訊
 
 任何返回錯誤的函數都應該努力使錯誤值變得有用。通常，該函數位於調用鏈的中間，只是傳播它所調用的其他函數（可能甚至是來自另一個包）的錯誤。在這種情況下，有機會用額外的信息來註釋錯誤，但程序員應確保錯誤中有足夠的信息，而不添加重複或無關的細節。如果不確定，請嘗試在開發過程中觸發錯誤條件：這是一種評估錯誤觀察者（無論是人類還是代碼）最終會得到什麼的好方法。
 
@@ -810,7 +810,7 @@ func (*FortuneTeller) SuggestFortune(context.Context, *pb.SuggestionRequest) (*p
 
 <a id="error-percent-w"></a>
 
-### %w 在錯誤中的位置
+### Placement of %w in errors / %w 在錯誤中的位置
 
 建議將 `%w` 放在錯誤字串的末尾。
 
@@ -867,7 +867,7 @@ fmt.Println(err3) // err3-1 err2-1 err1 err2-2 err3-2
 
 <a id="error-logging"></a>
 
-### 錯誤日誌
+### Logging errors / 錯誤日誌
 
 函式有時需要告訴外部系統發生了錯誤，但不會將錯誤傳遞給它們的呼叫者。此時記錄日誌是一個明顯的選擇；但要注意你記錄錯誤的內容和方式。
 
@@ -922,13 +922,13 @@ log.V(2).Infof("處理 %v", sql.Explain())
 
 <a id="program-init"></a>
 
-### 程式初始化 (Program initialization)
+### Program initialization / 程式初始化
 
 程式初始化錯誤（例如錯誤的標誌和配置）應該向上傳遞到 `main`，`main` 應該調用 `log.Exit` 並附帶解釋如何修復錯誤的訊息。在這些情況下，一般不應使用 `log.Fatal`，因為指向檢查的堆疊追蹤不太可能像人類生成的可操作訊息那樣有用。
 
 <a id="checks-and-panics"></a>
 
-### 程式檢查和恐慌 (Program checks and panics)
+### Program checks and panics / 程式檢查和恐慌
 
 如[反對恐慌的決定]所述，標準錯誤處理應圍繞錯誤返回值進行結構化。庫應該更傾向於向調用者返回錯誤，而不是中止程式，特別是對於臨時錯誤。
 
@@ -943,7 +943,7 @@ log.V(2).Infof("處理 %v", sql.Explain())
 
 <a id="when-to-panic"></a>
 
-### 何時恐慌 (When to panic)
+### When to panic / 何時恐慌
 
 標準庫在 API 誤用時會恐慌。例如，[`reflect`] 在許多情況下發出恐慌，當值以表明它被誤解的方式訪問時。這類似於核心語言錯誤的恐慌，例如訪問超出範圍的切片元素。代碼審查和測試應該發現這些錯誤，這些錯誤不應出現在生產代碼中。這些恐慌充當不依賴於庫的不變量檢查，因為標準庫無法訪問 Google 代碼庫使用的[分級 `log`] 包。
 
@@ -974,11 +974,11 @@ func answer(i int) string {
 
 <a id="documentation"></a>
 
-## Documentation (文件)
+## Documentation / 文件
 
 <a id="documentation-conventions"></a>
 
-### Conventions (慣例)
+### Conventions / 慣例
 
 本節補充了決策文件的[評論]部分。
 
@@ -1032,7 +1032,7 @@ func Sprintf(format string, data ...any) string
 
 <a id="documentation-conventions-contexts"></a>
 
-#### Contexts (上下文)
+#### Contexts / 上下文
 
 上下文參數的取消會中斷提供給它的函數，這是隱含的。如果函數可以返回錯誤，通常是 `ctx.Err()`。
 
@@ -1099,7 +1099,7 @@ func (Worker) Run(ctx context.Context) error
 
 <a id="documentation-conventions-concurrency"></a>
 
-#### Concurrency (並發)
+#### Concurrency / 並發
 
 Go 使用者假設概念上只讀操作是安全的，可以並發使用，且不需要額外的同步。
 
@@ -1177,7 +1177,7 @@ func (*Buffer) Grow(n int)
 
 <a id="documentation-conventions-cleanup"></a>
 
-#### Cleanup (清理)
+#### Cleanup / 清理
 
 記錄 API 的任何明確清理要求。否則，調用者將無法正確使用 API，導致資源洩漏和其他可能的錯誤。
 
@@ -1219,7 +1219,7 @@ func (c *Client) Get(url string) (resp *Response, err error)
 
 <a id="documentation-conventions-errors"></a>
 
-#### Errors (錯誤)
+#### Errors / 錯誤
 
 記錄你的函數返回給調用者的重要錯誤哨兵值或錯誤類型，以便調用者可以預期他們可以在代碼中處理哪些類型的情況。
 
@@ -1274,7 +1274,7 @@ package os
 
 <a id="documentation-preview"></a>
 
-### Preview (預覽)
+### Preview / 預覽
 
 Go 提供了一個[文檔服務器](https://pkg.go.dev/golang.org/x/pkgsite/cmd/pkgsite)。建議在代碼審查過程中預覽你的代碼生成的文檔，這有助於驗證[godoc 格式]是否正確渲染。
 
@@ -1282,7 +1282,7 @@ Go 提供了一個[文檔服務器](https://pkg.go.dev/golang.org/x/pkgsite/cmd/
 
 <a id="godoc-formatting"></a>
 
-### Godoc formatting (Godoc 格式化)
+### Godoc formatting / Godoc 格式化
 
 [Godoc] 提供了一些特定的語法來[格式化文檔]。
 
@@ -1356,7 +1356,7 @@ Go 提供了一個[文檔服務器](https://pkg.go.dev/golang.org/x/pkgsite/cmd/
 
 <a id="signal-boost"></a>
 
-### Signal boosting (信號增強)
+### Signal boosting / 信號增強
 
 有時一行代碼看起來像是常見的東西，但實際上不是。最好的例子之一是 `err == nil` 檢查（因為 `err != nil` 更常見）。以下兩個條件檢查很難區分：
 
@@ -1387,11 +1387,11 @@ if err := doSomething(); err == nil { // if NO error
 
 <a id="vardecls"></a>
 
-## Variable declarations (變數宣告)
+## Variable declarations / 變數宣告
 
 <a id="vardeclinitialization"></a>
 
-### Initialization (初始化)
+### Initialization / 初始化
 
 為了一致性，當用非零值初始化新變數時，優先使用 `:=` 而不是 `var`。
 
@@ -1407,7 +1407,7 @@ var i = 42
 
 <a id="vardeclzero"></a>
 
-### Non-pointer zero values (非指針零值)
+### Non-pointer zero values / 非指針零值
 
 以下宣告使用[零值]：
 
@@ -1488,7 +1488,7 @@ var myMsg = pb.Bar{}
 
 <a id="vardeclcomposite"></a>
 
-### Composite literals (複合文字)
+### Composite literals / 複合文字
 
 以下是[複合文字]宣告：
 

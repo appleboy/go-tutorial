@@ -2243,7 +2243,6 @@ Google 代碼庫中的 Go 程序使用標準 [`log`] 包的一個變體。它具
 - 何時以及如何使用 log 包來[停止程序](best-practices#checks-and-panics)
 
 [`log`]: https://pkg.go.dev/log
-[`log/slog`]: https://pkg.go.dev/log/slog
 [package `glog`]: https://pkg.go.dev/github.com/golang/glog
 [`log.Exit`]: https://pkg.go.dev/github.com/golang/glog#Exit
 [`log.Fatal`]: https://pkg.go.dev/github.com/golang/glog#Fatal
