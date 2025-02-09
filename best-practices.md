@@ -2645,21 +2645,13 @@ usage := "" +
 
 <a id="globals"></a>
 
-## Global state
+## Global state 全域狀態
 
-Libraries should not force their clients to use APIs that rely on
-[global state](https://en.wikipedia.org/wiki/Global_variable). They are advised
-not to expose APIs or export
-[package level](https://go.dev/ref/spec#TopLevelDecl) variables that control
-behavior for all clients as parts of their API. The rest of the section uses
-"global" and "package level state" synonymously.
+庫不應迫使用戶使用依賴[全域狀態](https://en.wikipedia.org/wiki/Global_variable)的 API。建議庫不要公開控制所有用戶行為的 API 或導出[封裝層級](https://go.dev/ref/spec#TopLevelDecl)變數作為其 API 的一部分。本節餘下部分使用「全域」和「封裝層級狀態」兩個術語互換使用。
 
-Instead, if your functionality maintains state, allow your clients to create and
-use instance values.
+相反地，如果您的功能需要維護狀態，請允許您的用戶建立和使用實例值。
 
-**Important:** While this guidance is applicable to all developers, it is most
-critical for infrastructure providers who offer libraries, integrations, and
-services to other teams.
+**重要：** 雖然此指引適用於所有開發人員，但對於提供庫、整合與服務給其他團隊的基礎設施供應商來說，此指引尤為重要。
 
 ```go
 // 較佳：
@@ -2673,8 +2665,7 @@ func New() *Registry { return &Registry{plugins: make(map[string]*Plugin)} }
 func (r *Registry) Register(name string, p *Plugin) error { ... }
 ```
 
-Your users will instantiate the data they need (a `*sidecar.Registry`) and then
-pass it as an explicit dependency:
+用戶將實例化所需的數據（即一個 `*sidecar.Registry`），然後將它作為明確的依賴傳遞：
 
 ```go
 // 較佳：
@@ -2690,11 +2681,9 @@ func main() {
 }
 ```
 
-There are different approaches to migrating existing code to support dependency
-passing. The main one you will use is passing dependencies as parameters to
-constructors, functions, methods, or struct fields on the call chain.
+有多種方法可以將現有代碼遷移以支援依賴傳遞。您將主要使用的方法是將依賴作為參數傳遞給構造函數、函數、方法或呼叫鏈上的結構字段。
 
-See also:
+另見：
 
 - [Go Tip #5: Slimming Your Client Libraries](https://google.github.io/styleguide/go/index.html#gotip)
 - [Go Tip #24: Use Case-Specific Constructions](https://google.github.io/styleguide/go/index.html#gotip)
@@ -2703,8 +2692,7 @@ See also:
 - [Go Tip #44: Improving Time Testability with Struct Fields](https://google.github.io/styleguide/go/index.html#gotip)
 - [Go Tip #80: Dependency Injection Principles](https://google.github.io/styleguide/go/index.html#gotip)
 
-APIs that do not support explicit dependency passing become fragile as the
-number of clients increases:
+不支援顯式依賴傳遞的 API 隨著客戶數量的增加而變得脆弱：
 
 ```go
 // 不佳：
@@ -2715,8 +2703,7 @@ var registry = make(map[string]*Plugin)
 func Register(name string, p *Plugin) error { /* registers plugin in registry */ }
 ```
 
-Consider what happens in the case of tests exercising code that transitively
-relies on a sidecar for cloud logging.
+考慮在測試中執行依賴雲端日誌 sidecar 傳遞的程式碼時會發生什麼情況。
 
 ```go
 // 不佳：
@@ -2752,72 +2739,48 @@ func TestRegression_InvalidUser(t *testing.T) {
 }
 ```
 
-Go tests are executed sequentially by default, so the tests above run as:
+Go 測試預設是按順序執行的，因此上述測試的運行順序為：
 
 1.  `TestEndToEnd`
-2.  `TestRegression_NetworkUnavailability`, which overrides the default value of
-    cloudlogger
-3.  `TestRegression_InvalidUser`, which requires the default value of
-    cloudlogger registered in `package sidecar`
+2.  `TestRegression_NetworkUnavailability`，這會覆蓋 cloudlogger 的默認值
+3.  `TestRegression_InvalidUser`，這需要在 `package sidecar` 中註冊的 cloudlogger 默認值
 
-This creates an order-dependent test case, which breaks running with test
-filters, and prevents tests from running in parallel or being sharded.
+這會創建一個依賴順序的測試案例，這會破壞使用測試過濾器的運行，並防止測試並行運行或分片。
 
-Using global state poses problems that lack easy answers for you and the API's
-clients:
+使用全局狀態會帶來一些難以解決的問題，對你和 API 的客戶來說：
 
-- What happens if a client needs to use different and separately operating
-  sets of `Plugin`s (for example, to support multiple servers) in the same
-  process space?
+- 如果客戶需要在同一個進程空間中使用不同且獨立運行的 `Plugin` 集（例如，支持多個服務器），會發生什麼？
 
-- What happens if a client wants to replace a registered `Plugin` with an
-  alternative implementation in a test, like a [test double]?
+- 如果客戶想在測試中用替代實現替換已註冊的 `Plugin`，例如 [測試替身]，會發生什麼？
 
-  What happens if a client's tests require hermeticity between instances of a
-  `Plugin`, or between all of the plugins registered?
+  如果客戶的測試需要在 `Plugin` 實例之間或所有已註冊的插件之間保持密封性，會發生什麼？
 
-- What happens if multiple clients `Register` a `Plugin` under the same name?
-  Which one wins, if any?
+- 如果多個客戶在同一名稱下 `Register` 一個 `Plugin`，會發生什麼？哪一個會勝出，如果有的話？
 
-  How should errors be [handled](decisions#handle-errors)? If the code panics
-  or calls `log.Fatal`, will that always be
-  [appropriate for all places in which API would be called](decisions#dont-panic)?
-  Can a client verify it doesn't do something bad before doing so?
+  應該如何 [處理錯誤](decisions#handle-errors)？如果代碼崩潰或調用 `log.Fatal`，這對於所有 API 被調用的地方是否總是 [合適](decisions#dont-panic)？客戶能否在這樣做之前驗證它不會做壞事？
 
-- Are there certain stages in a program's startup phases or lifetime during
-  which `Register` can be called and when it can't?
+- 在程序的啟動階段或生命周期的某些階段是否有 `Register` 可以被調用的時候，或者不能被調用的時候？
 
-  What happens if `Register` is called at the wrong time? A client could call
-  `Register` in [`func init`](https://go.dev/ref/spec#Package_initialization),
-  before flags are parsed, or after `main`. The stage at which a function is
-  called affects error handling. If the author of an API assumes the API is
-  _only_ called during program initialization without the requirement that it
-  is, the assumption may nudge the author to design error handling to
-  [abort the program](best-practices#program-init) by modeling the API as a
-  `Must`-like function. Aborting is not appropriate for general-purpose
-  library functions that can be used at any stage.
+  如果在錯誤的時間調用 `Register` 會發生什麼？客戶可能在 [`func init`](https://go.dev/ref/spec#Package_initialization) 中調用 `Register`，在標誌解析之前，或在 `main` 之後。調用函數的階段會影響錯誤處理。如果 API 的作者假設 API _僅_ 在程序初始化期間被調用，而不要求它是，這個假設可能會促使作者設計錯誤處理來 [中止程序](best-practices#program-init)，通過將 API 模型化為 `Must` 類函數。中止對於可以在任何階段使用的通用庫函數是不合適的。
 
-- What if the client's and the designer's concurrency needs are mismatched?
+- 如果客戶和設計者的並發需求不匹配，會發生什麼？
 
-See also:
+另見：
 
 - [Go Tip #36: Enclosing Package-Level State](https://google.github.io/styleguide/go/index.html#gotip)
 - [Go Tip #71: Reducing Parallel Test Flakiness](https://google.github.io/styleguide/go/index.html#gotip)
 - [Go Tip #80: Dependency Injection Principles](https://google.github.io/styleguide/go/index.html#gotip)
-- Error Handling:
+- 錯誤處理：
   [Look Before You Leap](https://docs.python.org/3/glossary.html#term-LBYL)
-  versus
+  與
   [Easier to Ask for Forgiveness than Permission](https://docs.python.org/3/glossary.html#term-EAFP)
-- [Unit Testing Practices on Public APIs]
+- [公共 API 的單元測試實踐]
 
-Global state has cascading effects on the
-[health of the Google codebase](guide.md#maintainability). Global state should
-be approached with **extreme scrutiny**.
+全局狀態對 [Google 代碼庫的健康](guide.md#maintainability) 具有連鎖效應。應該以 **極端審慎** 的態度對待全局狀態。
 
-[Global state comes in several forms](#globals-forms), and you can use a few
-[litmus tests to identify when it is safe](#globals-litmus-tests).
+[全局狀態有多種形式](#globals-forms)，你可以使用一些 [試金石來識別何時是安全的](#globals-litmus-tests)。
 
-[Unit Testing Practices on Public APIs]: index.md#unit-testing-practices
+[公共 API 的單元測試實踐]: index.md#unit-testing-practices
 
 <a id="globals-forms"></a>
 
