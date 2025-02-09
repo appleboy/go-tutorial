@@ -1921,27 +1921,19 @@ func FuzzFencepost(f *testing.F) {
 
 <a id="test-validation-apis"></a>
 
-### Designing extensible validation APIs
+### Designing extensible validation APIs / Designing extensible validation APIs - 設計可擴展的驗證 API
 
-Most of the advice about testing in the style guide is about testing your own
-code. This section is about how to provide facilities for other people to test
-the code they write to ensure that it conforms to your library's requirements.
+大部分風格指南中關於測試的建議都是針對測試您自己的程式碼。本節介紹如何提供機制，讓其他人測試其編寫的程式碼，以確保其符合您的函式庫要求。
 
 <a id="test-validation-apis-what"></a>
 
-#### Acceptance testing
+#### Acceptance testing / Acceptance testing - 驗收測試
 
-Such testing is referred to as [acceptance testing]. The premise of this kind of
-testing is that the person using the test does not know every last detail of
-what goes on in the test; they just hand the inputs over to the testing facility
-to do the work. This can be thought of as a form of [inversion of control].
+這類測試被稱為 [驗收測試]。此類測試的前提在於，使用者並不瞭解測試中發生的每個細節；他們僅僅將輸入交由測試機制來處理。這可以被視為一種 [控制反轉]。
 
-In a typical Go test, the test function controls the program flow, and the
-[no assert](decisions.md#assert) and [test functions](#test-functions) guidance
-encourages you to keep it that way. This section explains how to author support
-for these tests in a way that is consistent with Go style.
+在典型的 Go 測試中，測試函式控制程式流程，而 [no assert](decisions.md#assert) 以及 [test functions](#test-functions) 的指導方針鼓勵您保持這種模式。本節解釋如何以與 Go 風格一致的方式撰寫這些測試的支援程式碼。
 
-Before diving into how, consider an example from [`io/fs`], excerpted below:
+在深入探討如何實現之前，請參考下方摘錄自 [`io/fs`] 的範例：
 
 ```go
 type FS interface {
@@ -1949,14 +1941,10 @@ type FS interface {
 }
 ```
 
-While there exist well-known implementations of `fs.FS`, a Go developer may be
-expected to author one. To help validate the user-implemented `fs.FS` is
-correct, a generic library has been provided in [`testing/fstest`] called
-[`fstest.TestFS`]. This API treats the implementation as a blackbox to make sure
-it upholds the most basic parts of the `io/fs` contract.
+儘管有眾所周知的 `fs.FS` 實現，Go 開發者仍可能被期望自行編寫一個。為了幫助驗證使用者所實作的 `fs.FS` 是否正確，在 [`testing/fstest`] 中提供了一個名為 [`fstest.TestFS`] 的通用函式庫。此 API 將該實作當作黑盒處理，以確保其遵守 `io/fs` 合約中最基本的部分。
 
-[acceptance testing]: https://en.wikipedia.org/wiki/Acceptance_testing
-[inversion of control]: https://en.wikipedia.org/wiki/Inversion_of_control
+[驗收測試]: https://en.wikipedia.org/wiki/Acceptance_testing
+[控制反轉]: https://en.wikipedia.org/wiki/Inversion_of_control
 [`io/fs`]: https://pkg.go.dev/io/fs
 [`testing/fstest`]: https://pkg.go.dev/testing/fstest
 [`fstest.TestFS`]: https://pkg.go.dev/testing/fstest#TestFS
