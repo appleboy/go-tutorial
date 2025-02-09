@@ -1855,43 +1855,15 @@ Go 區分了“測試助手”和“斷言助手”：
 
 測試的目的是報告被測代碼的通過/失敗條件。理想的測試失敗位置是在 `Test` 函數內，因為這確保了[失敗消息](decisions.md#useful-test-failures)和測試邏輯是清晰的。
 
-[mark them as a test helper]: decisions.md#mark-test-helpers
-[error handling in test helpers]: #test-helper-error-handling
-[not considered idiomatic]: decisions.md#assert
-[failure messages]: decisions.md#useful-test-failures
+隨著測試代碼的增長，可能需要將一些功能分解到單獨的函數中。標準的軟體工程考量仍然適用，因為 _測試代碼仍然是代碼_。如果功能不與測試框架交互，那麼所有通常的規則都適用。然而，當公共代碼與框架交互時，必須小心避免常見的陷阱，這些陷阱可能導致無信息的失敗消息和難以維護的測試。
 
-As your testing code grows, it may become necessary to factor out some
-functionality to separate functions. Standard software engineering
-considerations still apply, as _test code is still code_. If the functionality
-does not interact with the testing framework, then all of the usual rules apply.
-When the common code interacts with the framework, however, some care must be
-taken to avoid common pitfalls that can lead to uninformative failure messages
-and unmaintainable tests.
+如果許多單獨的測試案例需要相同的驗證邏輯，請按以下方式之一安排測試，而不是使用斷言助手或複雜的驗證函數：
 
-If many separate test cases require the same validation logic, arrange the test
-in one of the following ways instead of using assertion helpers or complex
-validation functions:
+- 在 `Test` 函數中內聯邏輯（包括驗證和失敗），即使它是重複的。這在簡單情況下效果最好。
+- 如果輸入相似，考慮將它們統一到 [表驅動測試] 中，同時在循環中內聯邏輯。這有助於避免重複，同時保持驗證和失敗在 `Test` 中。
+- 如果有多個調用者需要相同的驗證函數，但表測試不適用（通常是因為輸入不夠簡單或驗證是操作序列的一部分），請安排驗證函數返回一個值（通常是 `error`），而不是接受 `testing.T` 參數並使用它來使測試失敗。在 `Test` 中使用邏輯來決定是否失敗，並提供 [有用的測試失敗]。您還可以創建測試助手來分解公共樣板設置代碼。
 
-- Inline the logic (both the validation and the failure) in the `Test`
-  function, even if it is repetitive. This works best in simple cases.
-- If inputs are similar, consider unifying them into a [table-driven test]
-  while keeping the logic inlined in the loop. This helps to avoid repetition
-  while keeping the validation and failure in the `Test`.
-- If there are multiple callers who need the same validation function but
-  table tests are not suitable (typically because the inputs are not simple
-  enough or the validation is required as part of a sequence of operations),
-  arrange the validation function so that it returns a value (typically an
-  `error`) rather than taking a `testing.T` parameter and using it to fail the
-  test. Use logic within the `Test` to decide whether to fail, and to provide
-  [useful test failures]. You can also create test helpers to factor out
-  common boilerplate setup code.
-
-The design outlined in the last point maintains orthogonality. For example,
-[package `cmp`] is not designed to fail tests, but rather to compare (and to
-diff) values. It therefore does not need to know about the context in which the
-comparison was made, since the caller can supply that. If your common testing
-code provides a `cmp.Transformer` for your data type, that can often be the
-simplest design. For other validations, consider returning an `error` value.
+最後一點中概述的設計保持了正交性。例如，[package `cmp`] 並不是為了使測試失敗而設計的，而是為了比較（和差異）值。因此，它不需要知道進行比較的上下文，因為調用者可以提供這些上下文。如果您的公共測試代碼為您的數據類型提供 `cmp.Transformer`，這通常是最簡單的設計。對於其他驗證，考慮返回一個 `error` 值。
 
 ```go
 // 較佳：
@@ -1937,20 +1909,15 @@ func FuzzFencepost(f *testing.F) {
 }
 ```
 
-The `polygonCmp` function is agnostic about how it's called; it doesn't take a
-concrete input type nor does it police what to do in case two objects don't
-match. Therefore, more callers can make use of it.
+`polygonCmp` 函數對於如何被調用是不可知的；它不接受具體的輸入類型，也不會處理兩個對象不匹配的情況。因此，更多的調用者可以使用它。
 
-**Note:** There is an analogy between test helpers and plain library code. Code
-in libraries should usually [not panic] except in rare circumstances; code
-called from a test should not stop the test unless there is
-[no point in proceeding].
+**注意：** 測試助手和普通庫代碼之間有類比。庫中的代碼通常[不應該 panic]，除非在極少數情況下；從測試中調用的代碼不應該停止測試，除非 [繼續進行沒有意義]。
 
-[table-driven test]: decisions.md#table-driven-tests
-[useful test failures]: decisions.md#useful-test-failures
+[表驅動測試]: decisions.md#table-driven-tests
+[有用的測試失敗]: decisions.md#useful-test-failures
 [package `cmp`]: https://pkg.go.dev/github.com/google/go-cmp/cmp
-[not panic]: decisions.md#dont-panic
-[no point in proceeding]: #t-fatal
+[不應該 panic]: decisions.md#dont-panic
+[繼續進行沒有意義]: #t-fatal
 
 <a id="test-validation-apis"></a>
 
