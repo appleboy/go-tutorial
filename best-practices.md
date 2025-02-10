@@ -11,7 +11,7 @@
 
 <a id="about"></a>
 
-## About 關於
+## About / 關於
 
 本文件記錄了**如何最佳應用 Go 風格指南的指導**。這些建議旨在針對經常出現的常見情況，但可能不適用於每一種情況。在可能的情況下，討論了多種替代方法以及決定何時以及何時不應用它們的考量。
 
@@ -19,15 +19,15 @@
 
 <a id="naming"></a>
 
-## Naming 命名
+## Naming / 命名
 
 <a id="function-names"></a>
 
-### Function and method names 函數和方法名稱
+### Function and method names / 函數和方法名稱
 
 <a id="function-name-repetition"></a>
 
-#### Avoid repetition 避免重複
+#### Avoid repetition / 避免重複
 
 在為函數或方法選擇名稱時，請考慮名稱將在何種上下文中被讀取。考慮以下建議，以避免在調用地點過度[重複](decisions.md#repetition)：
 
@@ -99,7 +99,7 @@ func (c *Config) WriteBinaryTo(w io.Writer) (int64, error)
 
 <a id="function-name-conventions"></a>
 
-#### Naming conventions 命名慣例
+#### Naming conventions / 命名慣例
 
 在為函數和方法選擇名稱時，有一些其他常見的慣例：
 
@@ -144,13 +144,12 @@ func (c *Config) WriteBinaryTo(w io.Writer) (int64, error)
 
 <a id="naming-doubles"></a>
 
-### Test double packages and types 測試雙套件和類型
+### Test double packages and types / 測試雙套件和類型
 
 在為提供測試輔助工具，特別是[測試雙元件]的包和類型命名時，您可以應用幾種紀律。測試雙元件可以是存根（stub）、假物件（fake）、模擬物件（mock）或間諜（spy）。
 
 這些例子大多使用存根。如果您的代碼使用假物件或其他類型的測試雙元件，請相應更新您的名稱。
 
-[命名]: guide.md#naming
 [測試雙元件]: https://abseil.io/resources/swe-book/html/ch13.html#basic_concepts
 
 假設您有一個專注的包，提供類似於以下的生產代碼：
@@ -184,7 +183,7 @@ func (s *Service) Charge(c *Card, amount money.Money) error { /* omitted */ }
 
 <a id="naming-doubles-helper-package"></a>
 
-#### Creating test helper packages 創建測試輔助套件
+#### Creating test helper packages / 創建測試輔助套件
 
 假設您想創建一個包含另一個包的測試雙元件的包。我們將使用上面的 `package creditcard` 作為這個例子：
 
@@ -199,7 +198,7 @@ package creditcardtest
 
 <a id="naming-doubles-simple"></a>
 
-#### Simple case 簡單情況
+#### Simple case / 簡單情況
 
 您想為 `Service` 添加一組測試雙元件。因為 `Card` 實際上是一種簡單的數據類型，類似於協議緩衝消息，所以在測試中不需要特殊處理，因此不需要雙元件。如果您預計只有一種類型（如 `Service`）的測試雙元件，您可以採取簡潔的命名方法：
 
@@ -239,7 +238,7 @@ go_library(
 
 - [Go 提示 #42：編寫用於測試的存根](https://google.github.io/styleguide/go/index.html#gotip)
 
-#### Multiple test double behaviors 多種測試雙元件行為
+#### Multiple test double behaviors / 多種測試雙元件行為
 
 當一種存根不夠時（例如，您還需要一個總是失敗的），我們建議根據它們模擬的行為命名存根。在這裡，我們將 `Stub` 重命名為 `AlwaysCharges`，並引入一個名為 `AlwaysDeclines` 的新存根：
 
