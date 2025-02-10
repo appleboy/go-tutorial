@@ -1585,7 +1585,7 @@ func sum(values chan int) (out int) {
 
 <a id="funcargs"></a>
 
-## Function argument lists (函數參數列表)
+## Function argument lists / 函數參數列表
 
 不要讓函數的簽名變得太長。隨著函數中參數的增加，單個參數的角色變得不那麼明確，相同類型的相鄰參數更容易混淆。參數數量多的函數不易記住，並且在調用時更難閱讀。
 
@@ -1600,7 +1600,7 @@ func sum(values chan int) (out int) {
 
 <a id="option-structure"></a>
 
-### Option structure (選項結構)
+### Option structure / 選項結構
 
 選項結構是一種結構類型，它收集函數或方法的一些或全部參數，然後作為最後一個參數傳遞給函數或方法。（只有在導出函數中使用時，該結構才應導出。）
 
@@ -1675,7 +1675,7 @@ func foo(ctx context.Context) {
 
 <a id="variadic-options"></a>
 
-### Variadic options (可變參數選項)
+### Variadic options / 可變參數選項
 
 使用可變參數選項，創建導出函數，這些函數返回可以傳遞給函數的[可變參數 (`...`) 參數](https://golang.org/ref/spec#Passing_arguments_to_..._parameters)的閉包。該函數將選項的值（如果有）作為其參數，並且返回的閉包接受一個可變引用（通常是指向結構類型的指針），該引用將根據輸入進行更新。
 
