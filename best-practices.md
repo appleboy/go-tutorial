@@ -259,7 +259,7 @@ func (AlwaysDeclines) Charge(*creditcard.Card, money.Money) error {
 
 <a id="naming-doubles-multiple-types"></a>
 
-#### Multiple doubles for multiple types 多種類型的多個雙元件
+#### Multiple doubles for multiple types / 多種類型的多個雙元件
 
 But now suppose that `package creditcard` contains multiple types worth creating
 doubles for, as seen below with `Service` and `StoredValue`:
@@ -1519,7 +1519,7 @@ var (
 
 <a id="vardeclsize"></a>
 
-### Size hints (大小提示)
+### Size hints / 大小提示
 
 以下是利用大小提示來預分配容量的宣告：
 
@@ -1545,7 +1545,7 @@ var (
 
 <a id="decl-chan"></a>
 
-### Channel direction (通道方向)
+### Channel direction / 通道方向
 
 儘可能指定[通道方向]。
 
@@ -1802,7 +1802,7 @@ func foo(ctx context.Context) {
 
 <a id="complex-clis"></a>
 
-## Complex command-line interfaces (複雜的命令行介面)
+## Complex command-line interfaces / 複雜的命令行介面
 
 一些程序希望向用戶提供豐富的命令行介面，包括子命令。例如，`kubectl create`、`kubectl run` 和許多其他子命令都是由程序 `kubectl` 提供的。至少有以下常用庫可以實現這一點。
 
@@ -1915,13 +1915,13 @@ func FuzzFencepost(f *testing.F) {
 
 <a id="test-validation-apis"></a>
 
-### Designing extensible validation APIs / Designing extensible validation APIs - 設計可擴展的驗證 API
+### Designing extensible validation APIs / 設計可擴展的驗證 API
 
 大部分風格指南中關於測試的建議都是針對測試您自己的程式碼。本節介紹如何提供機制，讓其他人測試其編寫的程式碼，以確保其符合您的函式庫要求。
 
 <a id="test-validation-apis-what"></a>
 
-#### Acceptance testing / Acceptance testing - 驗收測試
+#### Acceptance testing / 驗收測試
 
 這類測試被稱為 [驗收測試]。此類測試的前提在於，使用者並不瞭解測試中發生的每個細節；他們僅僅將輸入交由測試機制來處理。這可以被視為一種 [控制反轉]。
 
@@ -2047,7 +2047,7 @@ func TestAcceptance(t *testing.T) {
 
 <a id="use-real-transports"></a>
 
-### Use real transports (使用真實傳輸)
+### Use real transports / 使用真實傳輸
 
 在測試組件集成時，尤其是使用 HTTP 或 RPC 作為組件之間的底層傳輸時，應優先使用真實的底層傳輸來連接到後端的測試版本。
 
@@ -2077,7 +2077,7 @@ func TestAcceptance(t *testing.T) {
 
 <a id="test-helper-error-handling"></a>
 
-### Error handling in test helpers (測試助手中的錯誤處理)
+### Error handling in test helpers / 測試助手中的錯誤處理
 
 **注意：** 本節討論 Go 使用術語[測試助手](decisions.md#mark-test-helpers)的意義：執行測試設置和清理的函數，而不是常見的斷言工具。更多討論請參見[測試函數](#test-functions)部分。
 
@@ -2191,7 +2191,7 @@ FAIL
 
 <a id="t-fatal-goroutine"></a>
 
-### Don't call `t.Fatal` from separate goroutines (不要從單獨的 goroutine 調用 `t.Fatal`)
+### Don't call `t.Fatal` from separate goroutines / 不要從單獨的 goroutine 調用 `t.Fatal`
 
 如[在 testing 包中記錄的](https://pkg.go.dev/testing#T)，從運行 Test 函數（或子測試）的 goroutine 之外的任何 goroutine 調用 `t.FailNow`、`t.Fatal` 等都是不正確的。如果您的測試啟動了新的 goroutine，它們不得從這些 goroutine 內部調用這些函數。
 
@@ -2235,7 +2235,7 @@ func TestRevEngine(t *testing.T) {
 
 <a id="t-field-names"></a>
 
-### Use field names in struct literals (在結構體字面量中使用字段名稱)
+### Use field names in struct literals / 在結構體字面量中使用字段名稱
 
 在表驅動測試中，初始化測試案例結構體字面量時，最好指定字段名稱。當測試案例覆蓋大量垂直空間（例如超過 20-30 行）、當有相同類型的相鄰字段以及當您希望省略具有零值的字段時，這是很有幫助的。例如：
 
@@ -2267,7 +2267,7 @@ func TestStrJoin(t *testing.T) {
 
 <a id="t-common-setup-scope"></a>
 
-### Keep setup code scoped to specific tests (將設置代碼限定在特定測試範圍內)
+### Keep setup code scoped to specific tests / 將設置代碼限定在特定測試範圍內
 
 在可能的情況下，資源和依賴項的設置應盡可能限定在特定測試案例的範圍內。例如，給定一個設置函數：
 
@@ -2356,7 +2356,7 @@ $ go test -run TestRegression682831
 
 <a id="t-custom-main"></a>
 
-### When to use a custom `TestMain` entrypoint 何時使用自定義 `TestMain` 入口點
+### When to use a custom `TestMain` entrypoint / 何時使用自定義 `TestMain` 入口點
 
 如果**包中的所有測試**都需要共同的設置，並且**設置需要拆卸**，你可以使用[自定義 testmain 入口點]。這種情況可能發生在測試案例所需的資源設置特別昂貴，並且成本應該被攤銷的時候。通常在這種情況下，你已經從測試套件中提取了任何不相關的測試。它通常僅用於[功能測試]。
 
@@ -2417,7 +2417,7 @@ func TestMain(m *testing.M) {
 
 <a id="t-setup-amortization"></a>
 
-#### Amortizing common test setup 攤銷共同測試設置
+#### Amortizing common test setup / 攤銷共同測試設置
 
 如果以下所有條件都適用於共同設置，則使用 `sync.Once` 可能是合適的，但不是必需的：
 
@@ -2475,7 +2475,7 @@ func TestRegression682831(t *testing.T) {
 
 <a id="string-concat"></a>
 
-## String concatenation 字串連接
+## String concatenation / 字串連接
 
 在 Go 語言中，有幾種方法可以連接字串。以下是一些例子：
 
@@ -2500,7 +2500,7 @@ key := "projectid: " + p
 
 <a id="string-concat-fmt"></a>
 
-### Prefer `fmt.Sprintf` when formatting 格式化時優先使用 `fmt.Sprintf`
+### Prefer `fmt.Sprintf` when formatting / 格式化時優先使用 `fmt.Sprintf`
 
 格式化複雜字串時，優先使用 `fmt.Sprintf`。使用多個 "+" 操作符可能會使最終結果變得模糊。
 
@@ -2523,7 +2523,7 @@ bad := src.String() + " [" + qos.String() + ":" + strconv.Itoa(mtu) + "]-> " + d
 
 <a id="string-concat-piecemeal"></a>
 
-### Prefer `strings.Builder` for constructing a string piecemeal 偏好使用 `strings.Builder` 來逐步構建字串
+### Prefer `strings.Builder` for constructing a string piecemeal / 偏好使用 `strings.Builder` 來逐步構建字串
 
 偏好在逐步構建字串時使用 `strings.Builder`。
 `strings.Builder` 需要攤銷線性時間，而 "+" 和 `fmt.Sprintf`
@@ -2543,10 +2543,9 @@ str := b.String()
 
 <a id="string-constants"></a>
 
-### Constant strings
+### Constant strings / 常量字串
 
-Prefer to use backticks (\`) when constructing constant, multi-line string
-literals.
+偏好在構建常量、多行字串字面量時使用反引號 (\`)。
 
 ```go
 // 較佳：
@@ -2571,7 +2570,7 @@ usage := "" +
 
 <a id="globals"></a>
 
-## Global state 全域狀態
+## Global state / 全域狀態
 
 庫不應迫使用戶使用依賴[全域狀態](https://en.wikipedia.org/wiki/Global_variable)的 API。建議庫不要公開控制所有用戶行為的 API 或導出[封裝層級](https://go.dev/ref/spec#TopLevelDecl)變數作為其 API 的一部分。本節餘下部分使用「全域」和「封裝層級狀態」兩個術語互換使用。
 
@@ -2710,7 +2709,7 @@ Go 測試預設是按順序執行的，因此上述測試的運行順序為：
 
 <a id="globals-forms"></a>
 
-### Major forms of package state APIs (套件狀態 API 的主要形式)
+### Major forms of package state APIs / 套件狀態 API 的主要形式
 
 以下列舉幾種最常見的有問題的 API 形式：
 
@@ -2769,7 +2768,7 @@ func Client() *pb.UserAdminServiceClient {
 
 <a id="globals-litmus-tests"></a>
 
-### Litmus tests (檢驗測試)
+### Litmus tests / 檢驗測試
 
 [使用上述模式的 API](#globals-forms) 在以下情況下是不安全的：
 
@@ -2799,7 +2798,7 @@ func Client() *pb.UserAdminServiceClient {
 
 <a id="globals-default-instance"></a>
 
-### Providing a default instance (提供預設實例)
+### Providing a default instance / 提供預設實例
 
 雖然不推薦，但若需要最大化使用者便利性，可以提供使用套件層級狀態的簡化 API。
 
