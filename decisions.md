@@ -257,22 +257,6 @@ Go 源代碼應該避免不必要的重複。一個常見的來源是重複的�
 
 #### 套件與導出符號名稱
 
-在命名導出符號時，套件名稱在套件外部始終可見，因此應該減少或消除兩者之間的冗餘資訊。如果一個套件只導出一種類型，並且它以套件本身命名，如果需要構造函數，則標準名稱為 `New`。
-
-> **例子：** 重複的名稱 -> 更好的名稱
->
-> - `widget.NewWidget` -> `widget.New`
-> - `widget.NewWidgetWithName` -> `widget.NewWithName`
-> - `db.LoadFromDatabase` -> `db.Load`
-> - `goatteleportutil.CountGoatsTeleported` -> `gtutil.CountGoatsTeleported`
->   或 `goatteleport.Count`
-> - `myteampb.MyTeamMethodRequest` -> `mtpb.MyTeamMethodRequest` 或
->   `myteampb.MethodRequest`
-
-<a id="repetitive-with-type"></a>
-
-#### 套件與導出符號名稱
-
 在命名導出符號時，套件的名稱在套件外總是可見的，因此兩者之間的冗餘信息應該被減少或消除。如果一個套件只導出一種類型，且以套件本身命名，則構造函數的標準名稱為 `New`（如果需要的話）。
 
 > **範例：** 重複的名稱 -> 更好的名稱
@@ -2223,7 +2207,6 @@ var (
 - [Go 提示 #80: 依賴注入原則](https://google.github.io/styleguide/go/index.html#gotip)
 
 [標準 `flag` 包]: https://golang.org/pkg/flag/
-[混合大小寫]: guide.md#mixed-caps
 [複雜 CLI]: best-practices#complex-clis
 [totw-45]: https://abseil.io/tips/45
 
@@ -2440,7 +2423,6 @@ func TestBlogPost_VeritableRant(t *testing.T) {
 
 [有用的失敗消息]: #useful-test-failures
 [`fmt`]: https://golang.org/pkg/fmt/
-[標記測試輔助工具]: #mark-test-helpers
 
 <a id="identify-the-function"></a>
 
@@ -2472,7 +2454,7 @@ func TestBlogPost_VeritableRant(t *testing.T) {
 
 **注意：** 如果你的數據包含不相關的字段，這些字段會掩蓋測試的意圖，則此建議不適用。
 
-如果你的結構體需要進行大致相等（或等價類型的語義）比較，或者它包含無法進行相等比較的字段（例如，如果其中一個字段是 `io.Reader`），使用 [`cmp.Diff`] 或 [`cmp.Equal`] 比較並配合 [`cmpopts`] 選項，如 [`cmpopts.IgnoreInterfaces`]，可能滿足你的需求（[示例](https://play.golang.org/p/vrCUNVfxsvF)）。
+如果你的結構體需要進行大致相等（或等價類型的語義）比較，或者它包含無法進行相等比較的字段（例如，如果其中一個字段是 `io.Reader`），使用 [`cmp.Diff`] 或 [`cmp.Equal`] 比較並配合 [`cmpopts`] 選項，如 [`cmpopts.IgnoreInterfaces`]，可能滿足你的需求（[範例](https://play.golang.org/p/vrCUNVfxsvF)）。
 
 如果你的函數返回多個返回值，你不需要在比較它們之前將這些值包裝在一個結構體中。只需單獨比較返回值並打印它們。
 
@@ -2992,7 +2974,6 @@ go_test(
 
 同一套件中的測試可以訪問套件中未導出的標識符。這可能使得測試覆蓋率更好並且測試更簡潔。請注意，測試中聲明的任何[範例]都不會有用戶在其代碼中需要的套件名稱。
 
-[`library`]: https://github.com/bazelbuild/rules_go/blob/master/docs/go/core/rules.md#go_library
 [範例]: #examples
 
 <a id="test-different-package"></a>
