@@ -13,9 +13,9 @@ Go 風格指南及其附帶文件編碼了當前編寫可讀性和符合慣用�
 
 | 文件         | 鏈接                                                    | 主要受眾       | [規範性] | [典範性] |
 | ------------ | ------------------------------------------------------- | -------------- | -------- | -------- |
-| **風格指南** | <https://google.github.io/styleguide/go/guide>          | 所有人         | Yes      | Yes      |
-| **風格決策** | <https://google.github.io/styleguide/go/decisions>      | 可讀性導師     | Yes      | No       |
-| **最佳實踐** | <https://google.github.io/styleguide/go/best-practices> | 任何有興趣的人 | No       | No       |
+| **風格指南** | <https://google.github.io/styleguide/go/guide>          | 所有人         | 是       | 是       |
+| **風格決策** | <https://google.github.io/styleguide/go/decisions>      | 可讀性導師     | 是       | 否       |
+| **最佳實踐** | <https://google.github.io/styleguide/go/best-practices> | 任何有興趣的人 | 否       | 否       |
 
 [規範性]: #normative
 [典範性]: #canonical
