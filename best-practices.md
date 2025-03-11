@@ -11,7 +11,7 @@
 
 <a id="about"></a>
 
-## About / 關於
+## 關於
 
 本文件記錄了**如何最佳應用 Go 風格指南的指導**。這些建議旨在針對經常出現的常見情況，但可能不適用於每一種情況。在可能的情況下，討論了多種替代方法以及決定何時應用或不應用它們的考量。
 
@@ -19,15 +19,15 @@
 
 <a id="naming"></a>
 
-## Naming / 命名
+## 命名
 
 <a id="function-names"></a>
 
-### Function and method names / 函數和方法名稱
+### 函數和方法名稱
 
 <a id="function-name-repetition"></a>
 
-#### Avoid repetition / 避免重複
+#### 避免重複
 
 在為函數或方法選擇名稱時，請考慮名稱將在何種上下文中被讀取。考慮以下建議，以避免在調用時過度[重複](decisions.md#repetition)：
 
@@ -99,7 +99,7 @@ func (c *Config) WriteBinaryTo(w io.Writer) (int64, error)
 
 <a id="function-name-conventions"></a>
 
-#### Naming conventions / 命名慣例
+#### 命名慣例
 
 在為函數和方法選擇名稱時，有一些其他常見的命名慣例：
 
@@ -144,7 +144,7 @@ func (c *Config) WriteBinaryTo(w io.Writer) (int64, error)
 
 <a id="naming-doubles"></a>
 
-### Test double packages and types / 測試雙套件和類型
+### 測試雙套件和類型
 
 在為提供測試輔助工具，特別是[測試雙元件]的包和類型命名時，您可以應用幾種規則。測試雙元件可以是存根（stub）、假物件（fake）、模擬物件（mock）或間諜（spy）。
 
@@ -183,7 +183,7 @@ func (s *Service) Charge(c *Card, amount money.Money) error { /* omitted */ }
 
 <a id="naming-doubles-helper-package"></a>
 
-#### Creating test helper packages / 創建測試輔助套件
+#### 創建測試輔助套件
 
 假設您想創建一個包含另一個包的測試雙元件的包。我們將使用上面的 `package creditcard` 作為這個例子：
 
@@ -198,7 +198,7 @@ package creditcardtest
 
 <a id="naming-doubles-simple"></a>
 
-#### Simple case / 簡單情況
+#### 簡單情況
 
 您想為 `Service` 添加一組測試雙元件。因為 `Card` 實際上是一種簡單的數據類型，類似於協議緩衝消息，所以在測試中不需要特殊處理，因此不需要雙元件。如果您預計只有一種類型（如 `Service`）的測試雙元件，您可以採取簡潔的命名方法：
 
@@ -238,7 +238,7 @@ go_library(
 
 - [Go 提示 #42：編寫用於測試的存根](https://google.github.io/styleguide/go/index.html#gotip)
 
-#### Multiple test double behaviors / 多種測試雙元件行為
+#### 多種測試雙元件行為
 
 當一種存根不夠時（例如，您還需要一個總是失敗的），我們建議根據它們模擬的行為命名存根。在這裡，我們將 `Stub` 重命名為 `AlwaysCharges`，並引入一個名為 `AlwaysDeclines` 的新存根：
 
@@ -259,7 +259,7 @@ func (AlwaysDeclines) Charge(*creditcard.Card, money.Money) error {
 
 <a id="naming-doubles-multiple-types"></a>
 
-#### Multiple doubles for multiple types / 多種類型的多個雙元件
+#### 多種類型的多個雙元件
 
 But now suppose that `package creditcard` contains multiple types worth creating
 doubles for, as seen below with `Service` and `StoredValue`:
@@ -303,7 +303,7 @@ func (StubStoredValue) Credit(*creditcard.Card, money.Money) error { return nil 
 
 <a id="naming-doubles-local-variables"></a>
 
-#### Local variables in tests 測試中的局部變量
+#### 測試中的局部變量
 
 當您的測試中的變數指向雙元件時，選擇一個名稱，根據上下文最清楚地區分雙元件和其他生產類型。考慮一些您想要測試的生產代碼：
 
@@ -391,7 +391,7 @@ func TestProcessor(t *testing.T) {
 
 <a id="shadowing"></a>
 
-### Shadowing 變數遮蔽
+### 變數遮蔽
 
 **注意：** 本解釋使用了兩個非正式術語，_踩踏_ 和 _遮蔽_。它們不是 Go 語言規範中的官方概念。
 
@@ -480,7 +480,7 @@ func LongFunction() {
 
 <a id="util-packages"></a>
 
-### Util 套件
+### 套件
 
 Go 的套件有一個在 `package` 聲明上指定的名稱，與導入路徑分開。對於可讀性來說，套件名稱比路徑更重要。
 
@@ -510,7 +510,7 @@ b := helper.Marshal(curve, x, y)
 
 <a id="package-size"></a>
 
-## Package size 套件大小
+## 套件大小
 
 如果您在問自己 Go 套件應該有多大，以及是否應該將相關類型放在同一個套件中或將它們分成不同的套件，一個好的起點是 [Go 博客文章關於套件名稱][blog-pkg-names]。儘管文章的標題只是關於命名，但它不僅僅是關於命名。它包含了一些有用的提示，並引用了幾篇有用的文章和演講。
 
@@ -536,11 +536,11 @@ Go 風格對文件大小很靈活，因為維護者可以在套件內將代碼�
 
 <a id="imports"></a>
 
-## 引入 Imports
+## 引入
 
 <a id="import-protos"></a>
 
-### Protos and stubs / Protos 及存根
+### Protos 及存根
 
 由於其跨語言特性，Proto 庫的引入與標準 Go 引入的處理方式不同。重新命名 proto 引入的慣例基於生成該套件的規則：
 
@@ -572,7 +572,7 @@ import (
 
 <a id="import-order"></a>
 
-### Import ordering 引入順序
+### 引入順序
 
 引入通常按以下兩個（或更多）塊的順序分組：
 
@@ -593,7 +593,7 @@ import (
 
 <a id="error-handling"></a>
 
-## Error handling 錯誤處理
+## 錯誤處理
 
 在 Go 中，[錯誤是值]；它們由代碼創建並由代碼消費。錯誤可以是：
 
@@ -626,7 +626,7 @@ import (
 
 <a id="error-structure"></a>
 
-### Error structure / 錯誤結構
+### 錯誤結構
 
 如果呼叫者需要檢查錯誤（例如，區分不同的錯誤情況），請給予錯誤值結構，以便可以通過程式方式完成，而不是讓呼叫者進行字串匹配。這個建議適用於生產代碼以及關心不同錯誤情況的測試。
 
@@ -713,7 +713,7 @@ func handlePet(...) {
 
 <a id="error-extra-info"></a>
 
-### Adding information to errors / 為錯誤添加資訊
+### 為錯誤添加資訊
 
 任何返回錯誤的函數都應該努力使錯誤值變得有用。通常，該函數位於調用鏈的中間，只是傳播它所調用的其他函數（可能甚至是來自另一個包）的錯誤。在這種情況下，有機會用額外的信息來註釋錯誤，但程序員應確保錯誤中有足夠的信息，而不添加重複或無關的細節。如果不確定，請嘗試在開發過程中觸發錯誤條件：這是一種評估錯誤觀察者（無論是人類還是代碼）最終會得到什麼的好方法。
 
@@ -809,7 +809,7 @@ func (*FortuneTeller) SuggestFortune(context.Context, *pb.SuggestionRequest) (*p
 
 <a id="error-percent-w"></a>
 
-### Placement of %w in errors / %w 在錯誤中的位置
+### %w 在錯誤中的位置
 
 建議將 `%w` 放在錯誤字串的末尾。
 
@@ -866,7 +866,7 @@ fmt.Println(err3) // err3-1 err2-1 err1 err2-2 err3-2
 
 <a id="error-logging"></a>
 
-### Logging errors / 錯誤日誌
+### 錯誤日誌
 
 函式有時需要告訴外部系統發生了錯誤，但不會將錯誤傳遞給它們的呼叫者。此時記錄日誌是一個明顯的選擇；但要注意你記錄錯誤的內容和方式。
 
@@ -890,7 +890,7 @@ fmt.Println(err3) // err3-1 err2-1 err1 err2-2 err3-2
 
 <a id="vlog"></a>
 
-#### 自訂詳細等級
+#### 詳細等級
 
 善用詳細日誌記錄（[`log.V`]）。詳細日誌記錄對於開發和追蹤非常有用。建立一個關於詳細等級的慣例會很有幫助。例如：
 
@@ -921,13 +921,13 @@ log.V(2).Infof("處理 %v", sql.Explain())
 
 <a id="program-init"></a>
 
-### Program initialization / 程式初始化
+### 程式初始化
 
 程式初始化錯誤（例如錯誤的標誌和配置）應該向上傳遞到 `main`，`main` 應該調用 `log.Exit` 並附帶解釋如何修復錯誤的訊息。在這些情況下，一般不應使用 `log.Fatal`，因為指向檢查的堆疊追蹤不太可能像人類生成的可操作訊息那樣有用。
 
 <a id="checks-and-panics"></a>
 
-### Program checks and panics / 程式檢查和恐慌
+### 程式檢查和恐慌
 
 如[反對恐慌的決定]所述，標準錯誤處理應圍繞錯誤返回值進行結構化。庫應該更傾向於向調用者返回錯誤，而不是中止程式，特別是對於臨時錯誤。
 
@@ -942,7 +942,7 @@ log.V(2).Infof("處理 %v", sql.Explain())
 
 <a id="when-to-panic"></a>
 
-### When to panic / 何時恐慌
+### 何時恐慌
 
 標準庫在 API 誤用時會恐慌。例如，[`reflect`] 在許多情況下發出恐慌，當值以表明它被誤解的方式訪問時。這類似於核心語言錯誤的恐慌，例如訪問超出範圍的切片元素。代碼審查和測試應該發現這些錯誤，這些錯誤不應出現在生產代碼中。這些恐慌充當不依賴於庫的不變量檢查，因為標準庫無法訪問 Google 代碼庫使用的[分級 `log`] 包。
 
@@ -973,11 +973,11 @@ func answer(i int) string {
 
 <a id="documentation"></a>
 
-## Documentation / 文件
+## 文件
 
 <a id="documentation-conventions"></a>
 
-### Conventions / 慣例
+### 慣例
 
 本節補充了決策文件的[評論]部分。
 
@@ -987,7 +987,7 @@ func answer(i int) string {
 
 <a id="documentation-conventions-params"></a>
 
-#### Parameters and configuration (參數和配置)
+#### 參數和配置
 
 並非每個參數都必須在文檔中列出。這適用於：
 
@@ -1030,7 +1030,7 @@ func Sprintf(format string, data ...any) string
 
 <a id="documentation-conventions-contexts"></a>
 
-#### Contexts / 上下文
+#### 上下文
 
 上下文參數的取消會中斷提供給它的函數，這是隱含的。如果函數可以返回錯誤，通常是 `ctx.Err()`。
 
@@ -1097,7 +1097,7 @@ func (Worker) Run(ctx context.Context) error
 
 <a id="documentation-conventions-concurrency"></a>
 
-#### Concurrency / 並發
+#### 並發
 
 Go 使用者假設概念上只讀操作是安全的，可以並發使用，且不需要額外的同步。
 
@@ -1175,7 +1175,7 @@ func (*Buffer) Grow(n int)
 
 <a id="documentation-conventions-cleanup"></a>
 
-#### Cleanup / 清理
+#### 清理
 
 記錄 API 的任何明確清理要求。否則，調用者將無法正確使用 API，導致資源洩漏和其他可能的錯誤。
 
@@ -1217,7 +1217,7 @@ func (c *Client) Get(url string) (resp *Response, err error)
 
 <a id="documentation-conventions-errors"></a>
 
-#### Errors / 錯誤
+#### 錯誤
 
 記錄你的函數返回給調用者的重要錯誤哨兵值或錯誤類型，以便調用者可以預期他們可以在代碼中處理哪些類型的情況。
 
@@ -1272,7 +1272,7 @@ package os
 
 <a id="documentation-preview"></a>
 
-### Preview / 預覽
+### 預覽
 
 Go 提供了一個[文檔服務器](https://pkg.go.dev/golang.org/x/pkgsite/cmd/pkgsite)。建議在代碼審查過程中預覽你的代碼生成的文檔，這有助於驗證[godoc 格式]是否正確渲染。
 
@@ -1280,7 +1280,7 @@ Go 提供了一個[文檔服務器](https://pkg.go.dev/golang.org/x/pkgsite/cmd/
 
 <a id="godoc-formatting"></a>
 
-### Godoc formatting / Godoc 格式化
+### Godoc 格式化
 
 [Godoc] 提供了一些特定的語法來[格式化文檔]。
 
@@ -1353,7 +1353,7 @@ Go 提供了一個[文檔服務器](https://pkg.go.dev/golang.org/x/pkgsite/cmd/
 
 <a id="signal-boost"></a>
 
-### Signal boosting / 信號增強
+### 信號增強
 
 有時一行代碼看起來像是常見的東西，但實際上不是。最好的例子之一是 `err == nil` 檢查（因為 `err != nil` 更常見）。以下兩個條件檢查很難區分：
 
@@ -1384,11 +1384,11 @@ if err := doSomething(); err == nil { // if NO error
 
 <a id="vardecls"></a>
 
-## Variable declarations / 變數宣告
+## 變數宣告
 
 <a id="vardeclinitialization"></a>
 
-### Initialization / 初始化
+### 初始化
 
 為了一致性，當用非零值初始化新變數時，優先使用 `:=` 而不是 `var`。
 
@@ -1404,7 +1404,7 @@ var i = 42
 
 <a id="vardeclzero"></a>
 
-### Non-pointer zero values / 非指針零值
+### 非指針零值
 
 以下宣告使用[零值]：
 
@@ -1485,7 +1485,7 @@ var myMsg = pb.Bar{}
 
 <a id="vardeclcomposite"></a>
 
-### Composite literals / 複合文字
+### 複合文字
 
 以下是[複合文字]宣告：
 
@@ -1517,7 +1517,7 @@ var (
 
 <a id="vardeclsize"></a>
 
-### Size hints / 大小提示
+### 大小提示
 
 以下是利用大小提示來預分配容量的宣告：
 
@@ -1543,7 +1543,7 @@ var (
 
 <a id="decl-chan"></a>
 
-### Channel direction / 通道方向
+### 通道方向
 
 儘可能指定[通道方向]。
 
@@ -1582,7 +1582,7 @@ func sum(values chan int) (out int) {
 
 <a id="funcargs"></a>
 
-## Function argument lists / 函數參數列表
+## 函數參數列表
 
 不要讓函數的簽名變得太長。隨著函數中參數的增加，單個參數的角色變得不那麼明確，相同類型的相鄰參數更容易混淆。參數數量多的函數不易記住，並且在調用時更難閱讀。
 
@@ -1597,7 +1597,7 @@ func sum(values chan int) (out int) {
 
 <a id="option-structure"></a>
 
-### Option structure / 選項結構
+### 選項結構
 
 選項結構是一種結構類型，它收集函數或方法的一些或全部參數，然後作為最後一個參數傳遞給函數或方法。（只有在導出函數中使用時，該結構才應導出。）
 
@@ -1672,7 +1672,7 @@ func foo(ctx context.Context) {
 
 <a id="variadic-options"></a>
 
-### Variadic options / 可變參數選項
+### 可變參數選項
 
 使用可變參數選項，創建導出函數，這些函數返回可以傳遞給函數的[可變參數 (`...`) 參數](https://golang.org/ref/spec#Passing_arguments_to_..._parameters)的閉包。該函數將選項的值（如果有）作為其參數，並且返回的閉包接受一個可變引用（通常是指向結構類型的指針），該引用將根據輸入進行更新。
 
@@ -1800,7 +1800,7 @@ func foo(ctx context.Context) {
 
 <a id="complex-clis"></a>
 
-## Complex command-line interfaces / 複雜的命令行介面
+## 複雜的命令行介面
 
 一些程序希望向用戶提供豐富的命令行介面，包括子命令。例如，`kubectl create`、`kubectl run` 和許多其他子命令都是由程序 `kubectl` 提供的。至少有以下常用庫可以實現這一點。
 
@@ -1828,11 +1828,11 @@ func foo(ctx context.Context) {
 
 <a id="tests"></a>
 
-## Tests
+## 測試
 
 <a id="test-functions"></a>
 
-### Leave testing to the `Test` function
+### 測試留給 `Test` 函數
 
 <!-- Note to maintainers: This section overlaps with decisions.md#assert and
 decisions.md#mark-test-helpers. The point is not to repeat information, but
@@ -1913,13 +1913,13 @@ func FuzzFencepost(f *testing.F) {
 
 <a id="test-validation-apis"></a>
 
-### Designing extensible validation APIs / 設計可擴展的驗證 API
+### 設計可擴展的驗證 API
 
 大部分風格指南中關於測試的建議都是針對測試您自己的程式碼。本節介紹如何提供機制，讓其他人測試其編寫的程式碼，以確保其符合您的函式庫要求。
 
 <a id="test-validation-apis-what"></a>
 
-#### Acceptance testing / 驗收測試
+#### 驗收測試
 
 這類測試被稱為 [驗收測試]。此類測試的前提在於，使用者並不瞭解測試中發生的每個細節；他們僅僅將輸入交由測試機制來處理。這可以被視為一種 [控制反轉]。
 
@@ -1943,7 +1943,7 @@ type FS interface {
 
 <a id="test-validation-apis-writing"></a>
 
-#### Writing an acceptance test / 撰寫驗收測試
+#### 撰寫驗收測試
 
 既然我們知道什麼是驗收測試以及使用它的原因，接下來讓我們探討如何為 `package chess` 建立驗收測試，此 package 用於模擬棋局。`chess` 的使用者預期會實作 `chess.Player` 介面。這些實作是我們主要要驗證的部分。我們的驗收測試關注的是玩家實作是否做出合法的行棋，而非行棋是否聰明。
 
@@ -2045,7 +2045,7 @@ func TestAcceptance(t *testing.T) {
 
 <a id="use-real-transports"></a>
 
-### Use real transports / 使用真實傳輸
+### 使用真實傳輸
 
 在測試組件集成時，尤其是使用 HTTP 或 RPC 作為組件之間的底層傳輸時，應優先使用真實的底層傳輸來連接到後端的測試版本。
 
@@ -2075,7 +2075,7 @@ func TestAcceptance(t *testing.T) {
 
 <a id="test-helper-error-handling"></a>
 
-### Error handling in test helpers / 測試助手中的錯誤處理
+### 測試助手中的錯誤處理
 
 **注意：** 本節討論 Go 使用術語[測試助手](decisions.md#mark-test-helpers)的意義：執行測試設置和清理的函數，而不是常見的斷言工具。更多討論請參見[測試函數](#test-functions)部分。
 
@@ -2189,7 +2189,7 @@ FAIL
 
 <a id="t-fatal-goroutine"></a>
 
-### Don't call `t.Fatal` from separate goroutines / 不要從單獨的 goroutine 調用 `t.Fatal`
+### 不要從單獨的 goroutine 調用 `t.Fatal`
 
 如[在 testing 包中記錄的](https://pkg.go.dev/testing#T)，從運行 Test 函數（或子測試）的 goroutine 之外的任何 goroutine 調用 `t.FailNow`、`t.Fatal` 等都是不正確的。如果您的測試啟動了新的 goroutine，它們不得從這些 goroutine 內部調用這些函數。
 
@@ -2233,7 +2233,7 @@ func TestRevEngine(t *testing.T) {
 
 <a id="t-field-names"></a>
 
-### Use field names in struct literals / 在結構體字面量中使用字段名稱
+### 在結構體字面量中使用字段名稱
 
 在表驅動測試中，初始化測試案例結構體字面量時，最好指定字段名稱。當測試案例覆蓋大量垂直空間（例如超過 20-30 行）、當有相同類型的相鄰字段以及當您希望省略具有零值的字段時，這是很有幫助的。例如：
 
@@ -2265,7 +2265,7 @@ func TestStrJoin(t *testing.T) {
 
 <a id="t-common-setup-scope"></a>
 
-### Keep setup code scoped to specific tests / 將設置代碼限定在特定測試範圍內
+### 將設置代碼限定在特定測試範圍內
 
 在可能的情況下，資源和依賴項的設置應盡可能限定在特定測試案例的範圍內。例如，給定一個設置函數：
 
@@ -2354,7 +2354,7 @@ $ go test -run TestRegression682831
 
 <a id="t-custom-main"></a>
 
-### When to use a custom `TestMain` entrypoint / 何時使用自定義 `TestMain` 入口點
+### 何時使用自定義 `TestMain` 入口點
 
 如果**包中的所有測試**都需要共同的設置，並且**設置需要拆卸**，你可以使用[自定義 testmain 入口點]。這種情況可能發生在測試案例所需的資源設置特別昂貴，並且成本應該被攤銷的時候。通常在這種情況下，你已經從測試套件中提取了任何不相關的測試。它通常僅用於[功能測試]。
 
@@ -2415,7 +2415,7 @@ func TestMain(m *testing.M) {
 
 <a id="t-setup-amortization"></a>
 
-#### Amortizing common test setup / 攤銷共同測試設置
+#### 攤銷共同測試設置
 
 如果以下所有條件都適用於共同設置，則使用 `sync.Once` 可能是合適的，但不是必需的：
 
@@ -2473,7 +2473,7 @@ func TestRegression682831(t *testing.T) {
 
 <a id="string-concat"></a>
 
-## String concatenation / 字串連接
+## 字串連接
 
 在 Go 語言中，有幾種方法可以連接字串。以下是一些例子：
 
@@ -2487,7 +2487,7 @@ func TestRegression682831(t *testing.T) {
 
 <a id="string-concat-simple"></a>
 
-### Prefer "+" for simple cases 簡單情況下優先使用 "+"
+### 簡單情況下優先使用 "+"
 
 當連接少量字串時，優先使用 "+". 這種方法在語法上是最簡單的，且不需要導入任何包。
 
@@ -2498,7 +2498,7 @@ key := "projectid: " + p
 
 <a id="string-concat-fmt"></a>
 
-### Prefer `fmt.Sprintf` when formatting / 格式化時優先使用 `fmt.Sprintf`
+### 格式化時優先使用 `fmt.Sprintf`
 
 格式化複雜字串時，優先使用 `fmt.Sprintf`。使用多個 "+" 操作符可能會使最終結果變得模糊。
 
@@ -2521,7 +2521,7 @@ bad := src.String() + " [" + qos.String() + ":" + strconv.Itoa(mtu) + "]-> " + d
 
 <a id="string-concat-piecemeal"></a>
 
-### Prefer `strings.Builder` for constructing a string piecemeal / 偏好使用 `strings.Builder` 來逐步構建字串
+### 偏好使用 `strings.Builder` 來逐步構建字串
 
 偏好在逐步構建字串時使用 `strings.Builder`。
 `strings.Builder` 需要攤銷線性時間，而 "+" 和 `fmt.Sprintf`
@@ -2541,7 +2541,7 @@ str := b.String()
 
 <a id="string-constants"></a>
 
-### Constant strings / 常量字串
+### 常量字串
 
 偏好在構建常量、多行字串字面量時使用反引號 (\`)。
 
@@ -2568,7 +2568,7 @@ usage := "" +
 
 <a id="globals"></a>
 
-## Global state / 全域狀態
+## 全域狀態
 
 庫不應迫使用戶使用依賴[全域狀態](https://en.wikipedia.org/wiki/Global_variable)的 API。建議庫不要公開控制所有用戶行為的 API 或導出[封裝層級](https://go.dev/ref/spec#TopLevelDecl)變數作為其 API 的一部分。本節餘下部分使用「全域」和「封裝層級狀態」兩個術語互換使用。
 
@@ -2707,7 +2707,7 @@ Go 測試預設是按順序執行的，因此上述測試的運行順序為：
 
 <a id="globals-forms"></a>
 
-### Major forms of package state APIs / 套件狀態 API 的主要形式
+### 套件狀態 API 的主要形式
 
 以下列舉幾種最常見的有問題的 API 形式：
 
@@ -2766,7 +2766,7 @@ func Client() *pb.UserAdminServiceClient {
 
 <a id="globals-litmus-tests"></a>
 
-### Litmus tests / 檢驗測試
+### 檢驗測試
 
 [使用上述模式的 API](#globals-forms) 在以下情況下是不安全的：
 
@@ -2796,7 +2796,7 @@ func Client() *pb.UserAdminServiceClient {
 
 <a id="globals-default-instance"></a>
 
-### Providing a default instance / 提供預設實例
+### 提供預設實例
 
 雖然不推薦，但若需要最大化使用者便利性，可以提供使用套件層級狀態的簡化 API。
 
