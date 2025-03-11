@@ -476,7 +476,7 @@ func LongFunction() {
 }
 ```
 
-[短變量聲明]: https://go.dev/ref/spec#Short_variable_declarations
+[短變數聲明]: https://go.dev/ref/spec#Short_variable_declarations
 
 <a id="util-packages"></a>
 
