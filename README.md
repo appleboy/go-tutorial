@@ -6,3 +6,5 @@
 
 [概覽](index.md) | [指南](guide.md) | [決策](decisions.md) |
 [最佳實踐](best-practices.md)
+
+這份文件旨在提供 Go 語言的教學指南，涵蓋風格指南、概覽、指南、決策和最佳實踐。
