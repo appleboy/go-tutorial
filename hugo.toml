@@ -1,0 +1,23 @@
+baseURL = 'https://appleboy.github.io/go-tutorial/'
+languageCode = 'zh-tw'
+title = 'Go 風格指南（繁體中文）'
+theme = 'book'
+
+enableGitInfo = true
+
+[params]
+  BookTheme = 'auto'
+  BookToC = true
+  BookRepo = 'https://github.com/appleboy/go-tutorial'
+  BookEditPath = 'edit/main/content'
+  BookSearch = true
+  BookSection = '*'
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 4
+    ordered = false
+

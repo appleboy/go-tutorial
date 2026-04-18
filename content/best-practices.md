@@ -1,3 +1,8 @@
++++
+title = '最佳實踐'
+weight = 3
++++
+
 <!--* toc_depth: 3 *-->
 <!--
   本文件譯自 https://google.github.io/styleguide/go/best-practices,授權條款為
@@ -9,16 +14,14 @@
 
 <https://google.github.io/styleguide/go/best-practices>
 
-[總覽](index.md) | [指南](guide.md) | [決策](decisions.md) |
-[最佳實踐](best-practices.md)
+[總覽](/) | [指南](/guide/) | [決策](/decisions/) |
+[最佳實踐](/best-practices/)
 
 <!--
 
 -->
 
-{% raw %}
-
-**注意:** 本文件屬於 Google 內部 [Go 風格](index.md) 系列文件之一。本份文件**既非 [規範性](index.md#normative) 也非 [典範性](index.md#canonical)**,屬於[核心風格指南](guide.md)的輔助文件。詳細說明請見[總覽](index.md#about)。
+**注意:** 本文件屬於 Google 內部 [Go 風格](/) 系列文件之一。本份文件**既非 [規範性](/#normative) 也非 [典範性](/#canonical)**,屬於[核心風格指南](/guide/)的輔助文件。詳細說明請見[總覽](/#about)。
 
 <a id="about"></a>
 
@@ -26,7 +29,7 @@
 
 本檔記錄了**如何最妥善地套用 Go 風格指南**的指引。這些指引針對的是常見、頻繁出現的情境,但未必適用所有狀況。可能時,我們會討論多種替代方案,並說明在何時適用、何時不適用的考量。
 
-完整的風格文件清單請參考[總覽](index.md#about)。
+完整的風格文件清單請參考[總覽](/#about)。
 
 <a id="naming"></a>
 
@@ -50,7 +53,7 @@
   - 方法接收者的型別
   - 輸入或輸出是否為指標
 
-- 對函式而言,不要[重複套件名稱](decisions.md#repetitive-with-package)。
+- 對函式而言,不要[重複套件名稱](/decisions/#repetitive-with-package)。
 
   ```go
   // Bad:
@@ -123,7 +126,7 @@ func (c *Config) WriteBinaryTo(w io.Writer) (int64, error)
   func (c *Config) JobName(key string) (value string, ok bool)
   ```
 
-  由此延伸出的另一個原則是:函式與方法名稱應[避免使用 `Get` 前綴](decisions.md#getters)。
+  由此延伸出的另一個原則是:函式與方法名稱應[避免使用 `Get` 前綴](/decisions/#getters)。
 
   ```go
   // Bad:
@@ -476,7 +479,7 @@ func (s *Server) innerHandler(ctx context.Context, req *pb.MyRequest) *pb.MyResp
 }
 ```
 
-在我們稱為 stomping 的情況中,因為沒有產生新變數,所以被賦值的型別必須與原本的變數相同。在 shadowing 中,則是引入了一個全新的實體,所以它可以是不同的型別。刻意的 shadowing 可以是一種有用的做法,但若能改個新名字提升[清晰性](guide.md#clarity),儘管使用新名字。
+在我們稱為 stomping 的情況中,因為沒有產生新變數,所以被賦值的型別必須與原本的變數相同。在 shadowing 中,則是引入了一個全新的實體,所以它可以是不同的型別。刻意的 shadowing 可以是一種有用的做法,但若能改個新名字提升[清晰性](/guide/#clarity),儘管使用新名字。
 
 除了非常小的 scope 之外,儘量不要使用與標準套件同名的變數,因為這樣會使該套件中的免費函式 (free function) 與值無法存取。反過來,當你為自己的套件命名時,避免使用容易需要[匯入改名][import renaming]、或會在使用端遮蔽其他常用變數名稱的名字。
 
@@ -497,7 +500,7 @@ func LongFunction() {
 
 Go 套件在 `package` 宣告中指定的名字,與 import 路徑分開。對可讀性而言,套件名稱比路徑更重要。
 
-Go 套件名稱應該[與套件提供的內容相關](decisions.md#package-names)。把套件取名為 `util`、`helper`、`common` 之類通常是不好的選擇 (雖然作為名稱的*一部分*是可以接受的)。語意不明的名字會讓程式碼更難讀,如果用得太廣泛,還容易導致無謂的[匯入衝突](decisions.md#import-renaming)。
+Go 套件名稱應該[與套件提供的內容相關](/decisions/#package-names)。把套件取名為 `util`、`helper`、`common` 之類通常是不好的選擇 (雖然作為名稱的*一部分*是可以接受的)。語意不明的名字會讓程式碼更難讀,如果用得太廣泛,還容易導致無謂的[匯入衝突](/decisions/#import-renaming)。
 
 相對地,試著想像呼叫端會長什麼樣子。
 
@@ -535,7 +538,7 @@ b := helper.Marshal(curve, x, y)
 
 話雖如此,把整個專案塞在單一套件裡,通常會讓該套件過於龐大。當某件事在概念上是獨立的,給它一個自己的小套件能讓使用更方便。在使用者眼中,套件名稱與其匯出型別名稱會合在一起組成一個有意義的識別字,例如 `bytes.Buffer`、`ring.New`。[Go blog 的套件命名文章][blog-pkg-names]裡有更多範例。
 
-Go 風格對檔案大小相對寬鬆,因為維護者可以在不影響呼叫者的情況下,在套件內把程式碼從一份檔案搬到另一份。但作為一般原則:把幾千行程式碼塞在單一檔案裡通常不是好主意,但檔案太多、每份都很小也不好。Go 沒有像某些其他語言那樣的「一個型別一份檔案」慣例。經驗法則是:每份檔案應該夠專注,讓維護者能猜出某個東西在哪份檔案;每份檔案也要夠小,讓人在進到該檔案後容易找到。標準函式庫經常把大型套件拆成多份原始檔,以相關程式碼分組。[`package bytes`][package `bytes`] 的原始碼就是不錯的例子。對於有較長套件文件的套件,可以選擇用一個叫做 `doc.go` 的檔案,內容只放[套件文件](decisions.md#package-comments)與套件宣告,別無其他;但這並非強制。
+Go 風格對檔案大小相對寬鬆,因為維護者可以在不影響呼叫者的情況下,在套件內把程式碼從一份檔案搬到另一份。但作為一般原則:把幾千行程式碼塞在單一檔案裡通常不是好主意,但檔案太多、每份都很小也不好。Go 沒有像某些其他語言那樣的「一個型別一份檔案」慣例。經驗法則是:每份檔案應該夠專注,讓維護者能猜出某個東西在哪份檔案;每份檔案也要夠小,讓人在進到該檔案後容易找到。標準函式庫經常把大型套件拆成多份原始檔,以相關程式碼分組。[`package bytes`][package `bytes`] 的原始碼就是不錯的例子。對於有較長套件文件的套件,可以選擇用一個叫做 `doc.go` 的檔案,內容只放[套件文件](/decisions/#package-comments)與套件宣告,別無其他;但這並非強制。
 
 在 Google 程式碼庫中,以及使用 Bazel 的專案內,Go 程式碼的目錄結構與一般開源 Go 專案不同:同一個目錄底下可以有多個 `go_library` 目標。如果你預期將來會把專案開源,讓每個套件自己擁有一個目錄會是個合理的理由。
 
@@ -620,7 +623,7 @@ import (
 
 ### 匯入順序
 
-請參考 [Go 風格決策:匯入分組](decisions.md#import-grouping)。
+請參考 [Go 風格決策:匯入分組](/decisions/#import-grouping)。
 
 <a id="error-handling"></a>
 
@@ -1100,7 +1103,7 @@ func answer(i int) string {
 }
 ```
 
-[在 flag 解析之前不要呼叫 `log` 函式](https://pkg.go.dev/github.com/golang/glog#pkg-overview)。如果你必須在套件初始化函式 (`init` 或["must" 函式](decisions.md#must-functions)) 中讓程式中止,使用 panic 取代 fatal logging 呼叫是可以接受的。
+[在 flag 解析之前不要呼叫 `log` 函式](https://pkg.go.dev/github.com/golang/glog#pkg-overview)。如果你必須在套件初始化函式 (`init` 或["must" 函式](/decisions/#must-functions)) 中讓程式中止,使用 panic 取代 fatal logging 呼叫是可以接受的。
 
 延伸閱讀:
 
@@ -1403,7 +1406,7 @@ func Chdir(dir string) error {
 
 **注意:** 在 `Chdir` 範例中,回傳型別寫成 `error` 而不是 `*PathError`,是因為 [nil interface 值的運作方式](https://go.dev/doc/faq#nil_error)。
 
-當行為適用於套件內大多數錯誤時,在[套件文件](decisions.md#package-comments)中說明整體錯誤慣例:
+當行為適用於套件內大多數錯誤時,在[套件文件](/decisions/#package-comments)中說明整體錯誤慣例:
 
 ```go
 // Good:
@@ -1601,7 +1604,7 @@ msg := new(pb.Bar) // or "&pb.Bar{}"
 if err := proto.Unmarshal(data, msg); err != nil {
 ```
 
-如果你的 struct 中需要一個 lock 或其他[不可被複製的欄位](decisions.md#copying),可以把它做成 value 型別,以利用零值初始化。這代表外層型別必須以指標而非值的形式傳遞,且其方法必須使用指標接收者。
+如果你的 struct 中需要一個 lock 或其他[不可被複製的欄位](/decisions/#copying),可以把它做成 value 型別,以利用零值初始化。這代表外層型別必須以指標而非值的形式傳遞,且其方法必須使用指標接收者。
 
 ```go
 // Good:
@@ -1829,7 +1832,7 @@ func foo(ctx context.Context) {
 }
 ```
 
-**注意:** [Context 永遠不應放進選項 struct](decisions.md#contexts)。
+**注意:** [Context 永遠不應放進選項 struct](/decisions/#contexts)。
 
 當下列其中幾項成立時,通常會偏好這個選項:
 
@@ -2097,7 +2100,7 @@ func FuzzFencepost(f *testing.F) {
 
 這類測試稱為[接受度測試 (acceptance testing)][acceptance testing]。這種測試的前提是:使用測試的人不需要知道測試裡每一個細節;他只要把輸入交給測試設施去處理即可。可以視為一種[控制反轉 (inversion of control)][inversion of control]。
 
-在典型的 Go 測試中,測試函式控制程式流程,而[不要 assert](decisions.md#assert) 與[測試函式](#test-functions)的指引也鼓勵你保持這種寫法。本節說明如何以符合 Go 風格的方式,為這類測試撰寫支援。
+在典型的 Go 測試中,測試函式控制程式流程,而[不要 assert](/decisions/#assert) 與[測試函式](#test-functions)的指引也鼓勵你保持這種寫法。本節說明如何以符合 Go 風格的方式,為這類測試撰寫支援。
 
 在進入「怎麼做」之前,先看一個來自 [`io/fs`] 的例子 (節錄):
 
@@ -2154,7 +2157,7 @@ type FS interface {
 
    - **彙整所有失敗 (aggregate all failures)**:收集所有失敗,一次回報。
 
-     這個做法在感受上接近[「繼續往下走」(keep going)](decisions.md#keep-going) 指引,當預期接受度測試執行較慢時,可能更合適。
+     這個做法在感受上接近[「繼續往下走」(keep going)](/decisions/#keep-going) 指引,當預期接受度測試執行較慢時,可能更合適。
 
      如何彙整失敗,應該由「你想讓使用者或自己有沒有能力檢視單一失敗」(例如為了測試你的接受度測試) 決定。下面示範使用[自訂錯誤型別][custom types],可以[彙整錯誤][aggregates errors]:
 
@@ -2172,7 +2175,7 @@ type FS interface {
      return nil
      ```
 
-接受度測試應遵守[「繼續往下走」(keep going)](decisions.md#keep-going) 指引:除非偵測到受測系統破壞了某項不變條件,否則不要呼叫 `t.Fatal`。
+接受度測試應遵守[「繼續往下走」(keep going)](/decisions/#keep-going) 指引:除非偵測到受測系統破壞了某項不變條件,否則不要呼叫 `t.Fatal`。
 
 例如 `t.Fatal` 應像往常一樣保留給特殊情況,例如[setup 失敗](#test-helper-error-handling):
 
@@ -2191,7 +2194,7 @@ func ExerciseGame(t *testing.T, cfg *Config, p chess.Player) error {
 }
 ```
 
-這個技巧可以協助你建立精煉、典範的驗證。但不要試圖用它來繞過[關於 assertion 的指引](decisions.md#assert)。
+這個技巧可以協助你建立精煉、典範的驗證。但不要試圖用它來繞過[關於 assertion 的指引](/decisions/#assert)。
 
 對終端使用者而言,最終成果應該類似下列:
 
@@ -2238,7 +2241,7 @@ func TestAcceptance(t *testing.T) {
 
 ### `t.Error` vs. `t.Fatal`
 
-如同[決策](decisions.md#keep-going)中所述,測試一般不應在遇到第一個問題時就中止。
+如同[決策](/decisions/#keep-going)中所述,測試一般不應在遇到第一個問題時就中止。
 
 不過,某些情境會要求測試不再繼續。當部分測試 setup 失敗時 (尤其是在[測試 setup helper][test setup helpers] 中),呼叫 `t.Fatal` 是合適的,因為沒有它就無法執行其餘測試。在 table-driven 測試中,`t.Fatal` 適合用在「測試迴圈之前、會準備整個測試函式」的失敗。對於只影響表中單一項目、無法繼續處理該項目的失敗,應依下列方式回報:
 
@@ -2741,8 +2744,6 @@ usage := "" +
 
 -->
 
-{% endraw %}
-
 <a id="globals"></a>
 
 ## 全域狀態
@@ -2857,11 +2858,11 @@ Go 測試預設依序執行,因此上面的測試會以下列順序跑:
 
 - 如果多個用戶端用相同名稱呼叫 `Register` 註冊 `Plugin`,哪一個會勝出 (如果有的話)?
 
-  錯誤該如何[處理](decisions.md#handle-errors)?如果程式碼 panic 或呼叫 `log.Fatal`,這對 [API 可能被呼叫的所有地方](decisions.md#dont-panic)都合適嗎?用戶端能在動作前驗證自己不會做出壞事嗎?
+  錯誤該如何[處理](/decisions/#handle-errors)?如果程式碼 panic 或呼叫 `log.Fatal`,這對 [API 可能被呼叫的所有地方](/decisions/#dont-panic)都合適嗎?用戶端能在動作前驗證自己不會做出壞事嗎?
 
 - 是否在程式啟動階段或生命週期的某些時段才能呼叫 `Register`,其他時候不行?
 
-  如果在錯誤的時間呼叫 `Register` 會發生什麼?用戶端可能在 [`func init`](https://go.dev/ref/spec#Package_initialization)、flag 解析之前、或 `main` 之後呼叫 `Register`。函式被呼叫的階段會影響錯誤處理。如果 API 作者假設 API *只* 會在程式初始化時被呼叫,但其實沒有強制這項要求,這個假設可能讓作者把錯誤處理設計成[讓程式中止](best-practices.md#program-init),把 API 模型化為類似 `Must` 的函式。對於可在任何階段被呼叫的通用函式庫函式,中止並不合適。
+  如果在錯誤的時間呼叫 `Register` 會發生什麼?用戶端可能在 [`func init`](https://go.dev/ref/spec#Package_initialization)、flag 解析之前、或 `main` 之後呼叫 `Register`。函式被呼叫的階段會影響錯誤處理。如果 API 作者假設 API *只* 會在程式初始化時被呼叫,但其實沒有強制這項要求,這個假設可能讓作者把錯誤處理設計成[讓程式中止](/best-practices/#program-init),把 API 模型化為類似 `Must` 的函式。對於可在任何階段被呼叫的通用函式庫函式,中止並不合適。
 
 - 如果用戶端與設計者的並行需求不一致,該怎麼辦?
 
@@ -2873,7 +2874,7 @@ Go 測試預設依序執行,因此上面的測試會以下列順序跑:
 - 錯誤處理:[Look Before You Leap](https://docs.python.org/3/glossary.html#term-LBYL) vs [Easier to Ask for Forgiveness than Permission](https://docs.python.org/3/glossary.html#term-EAFP)
 - [Unit Testing Practices on Public APIs]
 
-全域狀態會對 [Google 程式碼庫的健康](guide.md#maintainability)產生連鎖影響。對待全域狀態應採取**極為嚴謹**的態度。
+全域狀態會對 [Google 程式碼庫的健康](/guide/#maintainability)產生連鎖影響。對待全域狀態應採取**極為嚴謹**的態度。
 
 [全域狀態有多種形式](#globals-forms),也有一些[判定何時安全的試紙測試](#globals-litmus-tests)可用。
 
@@ -2929,7 +2930,7 @@ Go 測試預設依序執行,因此上面的測試會以下列順序跑:
   }
   ```
 
-> **注意:** Google 程式碼庫中許多遺留 API 並不遵守此指引;事實上,某些 Go 標準函式庫也允許透過全域值設定。儘管如此,這些遺留 API 違反指引的情況**[不應作為延續此模式的先例](guide.md#local-consistency)**。
+> **注意:** Google 程式碼庫中許多遺留 API 並不遵守此指引;事實上,某些 Go 標準函式庫也允許透過全域值設定。儘管如此,這些遺留 API 違反指引的情況**[不應作為延續此模式的先例](/guide/#local-consistency)**。
 >
 > 今天就投入良好的 API 設計,勝過日後再付出重構成本。
 
@@ -3003,13 +3004,13 @@ Go 測試預設依序執行,因此上面的測試會以下列順序跑:
 
 Go 的 interface 強大,但容易被過度使用或誤解。因為 Go 的 interface 是隱式滿足,它是一種結構性的工具,而非宣告式的工具。下列指引提供如何在不對程式碼庫過度設計的前提下,設計與回傳 interface 的最佳實踐。
 
-請參考[「決策」中的 interface 章節](decisions.md#interfaces)取得摘要。
+請參考[「決策」中的 interface 章節](/decisions/#interfaces)取得摘要。
 
 <a id="avoid-unnecessary-interfaces"></a>
 
 ### 避免不必要的 interface
 
-最常見的錯誤,是在[真有需要](guide.md#simplicity)之前就建立 interface。
+最常見的錯誤,是在[真有需要](/guide/#simplicity)之前就建立 interface。
 
 1. **不要把概念與關鍵字混淆:** 即使你正在設計一個「服務」、「儲存庫」或類似模式,並不代表你需要一個具名的 interface 型別 (例如 `type Service interface`)。先聚焦於行為與其具體實作。
 
@@ -3019,7 +3020,7 @@ Go 的 interface 強大,但容易被過度使用或誤解。因為 Go 的 interf
 
    每個匯出型別都會增加讀者的認知負擔。當你把測試替身與真正實作一起匯出,你就強迫讀者去理解三個實體 (interface、真正實作、測試替身),而不是一個。
 
-   只有在你有[實質需求](guide.md#least-mechanism)需要支援替換時,才匯出測試替身的 interface。
+   只有在你有[實質需求](/guide/#least-mechanism)需要支援替換時,才匯出測試替身的 interface。
 
 當建立 interface 確實合理時:
 
@@ -3065,7 +3066,7 @@ Go 的 interface 強大,但容易被過度使用或誤解。因為 Go 的 interf
 
 有幾個常見情境,回傳 interface 是慣用的選擇:
 
-1. **封裝:** 雖然 interface 嚴格上無法隱藏匯出方法 (它們仍可透過型別斷言 (type assertion) 取得),回傳 interface 仍是限制預設 API 表面、引導呼叫端行為的強大工具。最常見的例子就是 `error` interface;你[幾乎不會回傳具體錯誤型別](decisions.md#errors)如 `*MyCustomError`。
+1. **封裝:** 雖然 interface 嚴格上無法隱藏匯出方法 (它們仍可透過型別斷言 (type assertion) 取得),回傳 interface 仍是限制預設 API 表面、引導呼叫端行為的強大工具。最常見的例子就是 `error` interface;你[幾乎不會回傳具體錯誤型別](/decisions/#errors)如 `*MyCustomError`。
 
    考慮一個 `ThrottledReader`,它實作 `io.Reader`,但也有一個用於內部 bucket 管理的 `Refill` 方法。回傳具體 `*ThrottledReader` 會誘使呼叫端自己管理 bucket,可能導致競態條件或破壞速率限制邏輯。藉由回傳 interface,你告訴呼叫端:你的工作只是消費這個 reader。如果你嘗試把它型別斷言回 `ThrottledReader` 來呼叫 `Refill` 操作內部 bucket,就是違反契約。
 
