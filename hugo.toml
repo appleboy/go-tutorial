@@ -4,6 +4,7 @@ title = 'Go 風格指南（繁體中文）'
 theme = 'book'
 
 enableGitInfo = true
+canonifyURLs = true
 
 [params]
   BookTheme = 'auto'

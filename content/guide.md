@@ -167,7 +167,7 @@ if err := doSomething(); err == nil { // if NO error
 
 [表格驅動測試 (Table-driven testing)]: https://go.dev/wiki/TableDrivenTests
 [錯誤處理]: https://go.dev/blog/errors-are-values
-[boost]: best-practices.md#signal-boost
+[boost]: /best-practices/#signal-boost
 
 <a id="maintainability"></a>
 
