@@ -606,7 +606,7 @@ import (
 )
 ```
 
-請遵循[套件命名](https://google.github.io/styleguide/go/decisions#package-names)的風格指引。優先使用完整的單字。短名字是好的,但避免歧義。拿不定主意時,使用 proto 套件名稱去掉 `_go` 之後加上 `pb` 後綴:
+請遵循[套件命名](/decisions/#package-names)的風格指引。優先使用完整的單字。短名字是好的,但避免歧義。拿不定主意時,使用 proto 套件名稱去掉 `_go` 之後加上 `pb` 後綴:
 
 ```go
 // Good:
@@ -982,7 +982,7 @@ err2 := fmt.Errorf("couldn't find fortune database: %v: %w", err, ErrInternal)
 
 - 在 Google 內部,我們有監控系統可以提供比寫到 log 檔再寄望有人注意更有效的告警設定。這與標準函式庫的 [package `expvar`] 概念類似但不同。
 
-[good test failure messages]: https://google.github.io/styleguide/go/decisions#useful-test-failures
+[good test failure messages]: /decisions/#useful-test-failures
 [stopping the program]: #checks-and-panics
 [`rate.Sometimes`]: https://pkg.go.dev/golang.org/x/time/rate#Sometimes
 [PII]: https://en.wikipedia.org/wiki/Personal_data
@@ -1037,7 +1037,7 @@ log.V(2).Infof("Handling %v", sql.Explain())
 
 **注意:** 標準的 [`net/http` server] 違反此建議,它會 recover 來自 request handler 的 panic。資深 Go 工程師之間的共識是:這在歷史上是個錯誤。如果你抽樣其他語言應用伺服器的 server log,常常會看到大量未被處理的堆疊追蹤,這是常態。請避免在你自己的伺服器中重蹈覆轍。
 
-[decision against panics]: https://google.github.io/styleguide/go/decisions#dont-panic
+[decision against panics]: /decisions/#dont-panic
 [`net/http` server]: https://pkg.go.dev/net/http#Server
 
 <a id="when-to-panic"></a>
