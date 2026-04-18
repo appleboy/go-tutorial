@@ -1,7 +1,10 @@
 +++
 title = '總覽'
 type = 'docs'
-bookToc = false
+weight = 0
+
+[cascade]
+  type = 'docs'
 +++
 
 <!--
@@ -9,8 +12,6 @@ bookToc = false
   Creative Commons Attribution 3.0 (CC-BY-3.0)。原文版權屬於 Google LLC,
   本中文版本為翻譯之衍生著作,僅供學習與內部參考。
 -->
-
-# Go 風格指南
 
 <https://google.github.io/styleguide/go>
 

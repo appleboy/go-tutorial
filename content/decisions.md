@@ -10,8 +10,6 @@ weight = 2
   本中文版本為翻譯之衍生著作,僅供學習與內部參考。
 -->
 
-# Go 風格決策
-
 <https://google.github.io/styleguide/go/decisions>
 
 [總覽](/) | [指南](/guide/) | [決策](/decisions/) |

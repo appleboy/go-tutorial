@@ -1,24 +1,84 @@
 baseURL = 'https://appleboy.github.io/go-tutorial/'
 languageCode = 'zh-tw'
 title = 'Go 風格指南（繁體中文）'
-theme = 'book'
+theme = 'hextra'
 
+enableRobotsTXT = true
 enableGitInfo = true
+enableEmoji = true
+
 canonifyURLs = true
 
-[params]
-  BookTheme = 'auto'
-  BookToC = true
-  BookRepo = 'https://github.com/appleboy/go-tutorial'
-  BookEditPath = 'edit/main/content'
-  BookSearch = true
-  BookSection = '*'
+[outputs]
+  home = ['HTML', 'RSS']
+  page = ['HTML']
+  section = ['HTML', 'RSS']
 
 [markup]
   [markup.goldmark.renderer]
     unsafe = true
+  [markup.highlight]
+    noClasses = false
   [markup.tableOfContents]
     startLevel = 2
     endLevel = 4
     ordered = false
 
+[menu]
+  [[menu.main]]
+    name = '指南'
+    pageRef = '/guide'
+    weight = 1
+  [[menu.main]]
+    name = '決策'
+    pageRef = '/decisions'
+    weight = 2
+  [[menu.main]]
+    name = '最佳實踐'
+    pageRef = '/best-practices'
+    weight = 3
+  [[menu.main]]
+    name = 'Search'
+    weight = 4
+    [menu.main.params]
+      type = 'search'
+  [[menu.main]]
+    name = 'GitHub'
+    weight = 5
+    url = 'https://github.com/appleboy/go-tutorial'
+    [menu.main.params]
+      icon = 'github'
+
+[params]
+  description = 'Google Go Style Guide 繁體中文翻譯'
+
+  [params.navbar]
+    displayTitle = true
+    displayLogo = false
+
+  [params.theme]
+    default = 'system'
+    displayToggle = true
+
+  [params.page]
+    width = 'normal'
+
+  [params.footer]
+    enable = true
+    displayCopyright = true
+    displayPoweredBy = true
+
+  [params.search]
+    enable = true
+    type = 'flexsearch'
+    [params.search.flexsearch]
+      index = 'content'
+      tokenize = 'forward'
+
+  [params.editURL]
+    enable = true
+    base = 'https://github.com/appleboy/go-tutorial/edit/main/content'
+
+  [params.toc]
+    displayTags = false
+    displayTimeToRead = false
